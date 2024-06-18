@@ -14,14 +14,40 @@ execute:
 In this lecture, we will be focusing on the following optimization problem,
 
 $$\min_x f(x)$$
-where $f(x)$ is our *objective function* (or loss function), and $x\in\mathbb{R}^n$ is a vector of parameters (variables) which we can change. Minimization problems arise in numerous physical and real-world circumstances, including:
+
+where $f: \mathbb{R}^n \to \mathbb{R}$ is our *objective function* (or loss function), and $x\in\mathbb{R}^n$ is a vector of parameters (variables) which we can change. Minimization problems arise in numerous physical and real-world circumstances, including:
 
 * adjusting parameters to optimize performance in engeneering design
 * finding the minimum state of energy in a system
 * minimizing a loss function when training a neural network
 
-For this lecture, our approach for solving the above minimization problem will be a *gradient-based* one. This means that we will make use of information from the gradient of $f(x)$ (first-order information), and the curvature of $f(x)$ (second-order information).
+For this lecture, our approach for solving the above minimization problem will be a *gradient-based* one. This means that we will make use of information from the gradient of $f$ (first-order information), and the curvature of $f$ (second-order information).
 
-# Gradient and Curvature
+# Solutions, Gradient, and Curvature
+To start, we first need to motivate some fundamental definitions regarding the nature of the solution we are looking for. Namely, we want
+
+
+
+```{python}
+#| echo: false
+import numpy as np
+import matplotlib.pyplot as plt
+
+def f(x):
+    return x * np.sin(x)
+
+# Generate x values
+x = np.linspace(-10 * np.pi, 10 * np.pi, 1000)
+# Compute y values
+y = f(x)
+
+# Plot the function
+plt.figure(figsize=(9, 5))
+plt.plot(x, y, linewidth = 2)
+plt.title('Plot of $f(x) = x \sin(x)$')
+plt.xlabel('x')
+plt.grid(True)
+plt.show()
+```
 
 

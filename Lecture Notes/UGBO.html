@@ -94,16 +94,33 @@ window.Quarto = {
 <section id="problem-motivation" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Problem Motivation</h1>
 <p>In this lecture, we will be focusing on the following optimization problem,</p>
-<p><span class="math display">\[\min_x f(x)\]</span> where <span class="math inline">\(f(x)\)</span> is our <em>objective function</em> (or loss function), and <span class="math inline">\(x\in\mathbb{R}^n\)</span> is a vector of parameters (variables) which we can change. Minimization problems arise in numerous physical and real-world circumstances, including:</p>
+<p><span class="math display">\[\min_x f(x)\]</span></p>
+<p>where <span class="math inline">\(f: \mathbb{R}^n \to \mathbb{R}\)</span> is our <em>objective function</em> (or loss function), and <span class="math inline">\(x\in\mathbb{R}^n\)</span> is a vector of parameters (variables) which we can change. Minimization problems arise in numerous physical and real-world circumstances, including:</p>
 <ul>
 <li>adjusting parameters to optimize performance in engeneering design</li>
 <li>finding the minimum state of energy in a system</li>
 <li>minimizing a loss function when training a neural network</li>
 </ul>
-<p>For this lecture, our approach for solving the above minimization problem will be a <em>gradient-based</em> one. This means that we will make use of information from the gradient of <span class="math inline">\(f(x)\)</span> (first-order information), and the curvature of <span class="math inline">\(f(x)\)</span> (second-order information).</p>
+<p>For this lecture, our approach for solving the above minimization problem will be a <em>gradient-based</em> one. This means that we will make use of information from the gradient of <span class="math inline">\(f\)</span> (first-order information), and the curvature of <span class="math inline">\(f\)</span> (second-order information).</p>
 </section>
-<section id="gradient-and-curvature" class="level1" data-number="2">
-<h1 data-number="2"><span class="header-section-number">2</span> Gradient and Curvature</h1>
+<section id="solutions-gradient-and-curvature" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Solutions, Gradient, and Curvature</h1>
+<p>To start, we first need to motivate some fundamental definitions regarding the nature of the solution we are looking for. Namely, we want</p>
+<div id="4fe74f71" class="cell" data-execution_count="1">
+<div class="cell-output cell-output-stderr">
+<pre><code>&lt;&gt;:15: SyntaxWarning: invalid escape sequence '\s'
+&lt;&gt;:15: SyntaxWarning: invalid escape sequence '\s'
+C:\Users\pavlo\AppData\Local\Temp\ipykernel_22556\3350613484.py:15: SyntaxWarning: invalid escape sequence '\s'
+  plt.title('Plot of $f(x) = x \sin(x)$')</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="UGBO_files/figure-html/cell-2-output-2.png" width="726" height="450" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 
 </main>
