@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Elizabeth Qian">
 
-<title>Example Quarto HTML Document</title>
+<title>Unconstrained Gradient Based Optimization (UGBO)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -21,39 +20,19 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-  margin-bottom: 0em;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
-<script src="example_files/libs/clipboard/clipboard.min.js"></script>
-<script src="example_files/libs/quarto-html/quarto.js"></script>
-<script src="example_files/libs/quarto-html/popper.min.js"></script>
-<script src="example_files/libs/quarto-html/tippy.umd.min.js"></script>
-<script src="example_files/libs/quarto-html/anchor.min.js"></script>
-<link href="example_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="example_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="example_files/libs/bootstrap/bootstrap.min.js"></script>
-<link href="example_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="example_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="UGBO_files/libs/clipboard/clipboard.min.js"></script>
+<script src="UGBO_files/libs/quarto-html/quarto.js"></script>
+<script src="UGBO_files/libs/quarto-html/popper.min.js"></script>
+<script src="UGBO_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="UGBO_files/libs/quarto-html/anchor.min.js"></script>
+<link href="UGBO_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="UGBO_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="UGBO_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="UGBO_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="UGBO_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript"></script>
@@ -95,19 +74,13 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Example Quarto HTML Document</h1>
+<h1 class="title">Unconstrained Gradient Based Optimization (UGBO)</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Elizabeth Qian </p>
-          </div>
-  </div>
     
   
     
@@ -118,84 +91,22 @@ window.Quarto = {
 </header>
 
 
-<section id="section" class="level1" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> Section</h1>
-<p>here is a paragraph with some <strong>bold text</strong> and some <em>italicized text</em> and some <strong><em>bold italicized text</em></strong></p>
-<section id="subsection" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="subsection"><span class="header-section-number">1.1</span> subsection</h2>
-<p>This is a bulleted list</p>
+<section id="problem-motivation" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Problem Motivation</h1>
+<p>In this lecture, we will be focusing on the following optimization problem,</p>
+<p><span class="math display">\[\min_x f(x)\]</span> where <span class="math inline">\(f(x)\)</span> is our <em>objective function</em> (or loss function), and <span class="math inline">\(x\in\mathbb{R}^n\)</span> is a vector of parameters (variables) which we can change. Minimization problems arise in numerous physical and real-world circumstances, including:</p>
 <ul>
-<li>spatial discretization of governing PDEs → high-dimensional systems of equations</li>
-<li>high-dimensionality → high cost</li>
+<li>adjusting parameters to optimize performance in engeneering design</li>
+<li>finding the minimum state of energy in a system</li>
+<li>minimizing a loss function when training a neural network</li>
 </ul>
-<p>and this is an enumerated one (note you need to have full blank lines between paragraphs/lists)</p>
-<ol type="1">
-<li>examples: control, optimization, uncertainty quantification</li>
-<li>traditional simulation is <strong>too expensive</strong> for the many-query setting</li>
-</ol>
-<p>Here is some in-line math: <span class="math inline">\(\pmb{x}\in\mathbb{R}^d\)</span>, and here is some display math:</p>
-<p><span class="math display">\[
-\hat{\pmb{A}} = \pmb{W}_r^\top\pmb{A}\pmb{V}_r
-\]</span></p>
-<p>and here are some references (if you hover over the rendered link it will show the full citation, which is cool):</p>
-<ul>
-<li><span class="citation" data-cites="antoulasApproximationLargeScaleDynamical2005">(<a href="#ref-antoulasApproximationLargeScaleDynamical2005" role="doc-biblioref">Antoulas 2005</a>)</span></li>
-<li><span class="citation" data-cites="bennerSurveyProjectionBasedModel2015">(<a href="#ref-bennerSurveyProjectionBasedModel2015" role="doc-biblioref">Benner, Gugercin, and Willcox 2015</a>)</span></li>
-<li><span class="citation" data-cites="bennerModelReductionApproximation2017">(<a href="#ref-bennerModelReductionApproximation2017" role="doc-biblioref">Benner et al. 2017</a>)</span></li>
-</ul>
+<p>For this lecture, our approach for solving the above minimization problem will be a <em>gradient-based</em> one. This means that we will make use of information from the gradient of <span class="math inline">\(f(x)\)</span> (first-order information), and the curvature of <span class="math inline">\(f(x)\)</span> (second-order information).</p>
 </section>
-<section id="column-layout" class="level2" data-number="1.2">
-<h2 data-number="1.2" class="anchored" data-anchor-id="column-layout"><span class="header-section-number">1.2</span> column layout</h2>
-<p>this is how you make columns (not sure why you’d need to for notes, but handy for slides)</p>
-<div class="columns">
-<div class="column" style="width:50%;">
-<p>Static problems: <span class="math display">\[
-\mathbf{A}\pmb{x} = \pmb{b},
-\]</span></p>
-<p><span class="math display">\[
-\pmb{f}(\pmb{x})=\pmb{0},
-\]</span></p>
-</div><div class="column" style="width:50%;">
-<p>Dynamic problems: <span class="math display">\[
-\dot{\pmb{x}}(t) = \mathbf{A}\pmb{x}(t) + \pmb{b}\,u(t)
-\]</span></p>
-<p><span class="math display">\[
-\dot{\pmb{x}}(t) = \pmb{f}(\pmb{x}(t)) + \pmb{b}\,u(t)
-\]</span></p>
-</div>
-</div>
-</section>
-<section id="executable-code-demo" class="level2" data-number="1.3">
-<h2 data-number="1.3" class="anchored" data-anchor-id="executable-code-demo"><span class="header-section-number">1.3</span> executable code demo</h2>
-<p>you can toggle the echo option at the top of the code block to either render the code or not render it. There are also quarto options to fold the code (make it so you have to click to open it) and you can set some of these options at the top of the document.</p>
-<p>note that you need to have all relevant python packages installed in the environment that you run this from.</p>
-<div id="b1aa06d4" class="cell" data-execution_count="1">
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="example_files/figure-html/cell-2-output-1.png" width="594" height="398" class="figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-</section>
-<section id="bibliography" class="level1 unnumbered" data-number="2">
-
-
+<section id="gradient-and-curvature" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Gradient and Curvature</h1>
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">2 Bibliography</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
-<div id="ref-antoulasApproximationLargeScaleDynamical2005" class="csl-entry" role="listitem">
-Antoulas, Athanasios C. 2005. <em>Approximation of <span>Large-Scale Dynamical Systems</span></em>. Advances in <span>Design</span> and <span>Control</span>. <span>Society for Industrial and Applied Mathematics</span>. <a href="https://doi.org/10.1137/1.9780898718713">https://doi.org/10.1137/1.9780898718713</a>.
-</div>
-<div id="ref-bennerSurveyProjectionBasedModel2015" class="csl-entry" role="listitem">
-Benner, Peter, Serkan Gugercin, and Karen Willcox. 2015. <span>“A <span>Survey</span> of <span>Projection-Based Model Reduction Methods</span> for <span>Parametric Dynamical Systems</span>.”</span> <em>SIAM Review</em> 57 (4): 483–531. <a href="https://doi.org/10.1137/130932715">https://doi.org/10.1137/130932715</a>.
-</div>
-<div id="ref-bennerModelReductionApproximation2017" class="csl-entry" role="listitem">
-Benner, Peter, Mario Ohlberger, Albert Cohen, and Karen Willcox. 2017. <em>Model <span>Reduction</span> and <span>Approximation</span></em>. Computational <span>Science</span> &amp; <span>Engineering</span>. <span>Society for Industrial and Applied Mathematics</span>. <a href="https://doi.org/10.1137/1.9781611974829">https://doi.org/10.1137/1.9781611974829</a>.
-</div>
-</div></section></div></main>
+</main>
 <!-- /main column -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {

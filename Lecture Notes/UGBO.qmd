@@ -1,0 +1,27 @@
+---
+title: "Unconstrained Gradient Based Optimization (UGBO)"
+html-math-method:
+  method: mathjax
+  url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+number-sections: true
+format: 
+    html: default
+execute:
+    echo: true
+---
+
+# Problem Motivation 
+In this lecture, we will be focusing on the following optimization problem,
+
+$$\min_x f(x)$$
+where $f(x)$ is our *objective function* (or loss function), and $x\in\mathbb{R}^n$ is a vector of parameters (variables) which we can change. Minimization problems arise in numerous physical and real-world circumstances, including:
+
+* adjusting parameters to optimize performance in engeneering design
+* finding the minimum state of energy in a system
+* minimizing a loss function when training a neural network
+
+For this lecture, our approach for solving the above minimization problem will be a *gradient-based* one. This means that we will make use of information from the gradient of $f(x)$ (first-order information), and the curvature of $f(x)$ (second-order information).
+
+# Gradient and Curvature
+
+
