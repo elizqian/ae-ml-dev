@@ -105,22 +105,55 @@ window.Quarto = {
 </section>
 <section id="solutions-gradient-and-curvature" class="level1" data-number="2">
 <h1 data-number="2"><span class="header-section-number">2</span> Solutions, Gradient, and Curvature</h1>
-<p>To start, we first need to motivate some fundamental definitions regarding the nature of the solution we are looking for. Namely, we want</p>
-<div id="4fe74f71" class="cell" data-execution_count="1">
-<div class="cell-output cell-output-stderr">
-<pre><code>&lt;&gt;:15: SyntaxWarning: invalid escape sequence '\s'
-&lt;&gt;:15: SyntaxWarning: invalid escape sequence '\s'
-C:\Users\pavlo\AppData\Local\Temp\ipykernel_22556\3350613484.py:15: SyntaxWarning: invalid escape sequence '\s'
-  plt.title('Plot of $f(x) = x \sin(x)$')</code></pre>
-</div>
+<section id="what-are-we-looking-for" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="what-are-we-looking-for"><span class="header-section-number">2.1</span> What are we looking for?</h2>
+<p>To start, we first need to motivate some fundamental definitions regarding the nature of the solution we are looking for.</p>
+<p><strong>Definition:</strong> We say that a point <span class="math inline">\(x^\star\)</span> is a <em>global minimizer</em> of <span class="math inline">\(f\)</span> if: <span class="math display">\[f(x^\star)\leq f(x) \text{ for all }x\in \mathcal{D}\subseteq\mathbb{R}^n.\]</span></p>
+<p>Although a global minimizer is the most desireable outcome from our minimization problem, finding a global minimizer is often quite challenging. This is because a global minimizer may not always exist, and because we often only possess <em>local</em> information about the function <span class="math inline">\(f\)</span>. This motivates the following defintion:</p>
+<p><strong>Definition:</strong> We say that a point <span class="math inline">\(x^\star\)</span> is a <em>local minimizer</em> of <span class="math inline">\(f\)</span> if there exists some open set <span class="math inline">\(\mathcal{B}\)</span>, that contains <span class="math inline">\(x^\star\)</span>, such that: <span class="math display">\[
+f(x^\star)\leq f(x) \text{ for all }x\in\mathcal{B}.
+\]</span> If the inequality becomes strict, then <span class="math inline">\(x^\star\)</span> is referred to as a <em>strict</em> local minimizer. To illustrate the above definitions, let us look at the function <span class="math inline">\(f(x) = 2 + \cos(x) + \frac{1}{2} \cos\left(5x - \frac{1}{2}\right)\)</span> over the domain <span class="math inline">\(\mathcal{D} = [0, 3.7]\)</span>. In this domain, the function has two local minimizers and one global minimizer, as illustrated in the plot below.</p>
+<div id="2264b17a" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="UGBO_files/figure-html/cell-2-output-2.png" width="726" height="450" class="figure-img"></p>
+<p><img src="UGBO_files/figure-html/cell-2-output-1.png" width="757" height="449" class="figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
+<p>We now have a way to understand and characterize our solutions. However, the above definitions suggest that we need to examine all points that are next to <span class="math inline">\(x^\star\)</span> in order to properly characterize it. However, if our function is <em>smooth</em>, i.e., its higher order derivatives exist and are continuous, then we can classify <span class="math inline">\(x^\star\)</span> by examining the derivatives of <span class="math inline">\(f\)</span>.</p>
+</section>
+<section id="gradient" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="gradient"><span class="header-section-number">2.2</span> Gradient</h2>
+<p>Recall that the <em>gradient</em> of a function <span class="math inline">\(f(x)\)</span>, denoted <span class="math inline">\(\nabla f(x)\)</span>, is the column vector of partial derivaties with respect to each parameter: <span class="math display">\[
+\nabla f(x) =
+\begin{bmatrix}
+\frac{\partial f}{\partial x_1}\\
+\vdots\\
+\frac{\partial f}{\partial x_i}\\
+\vdots\\
+\frac{\partial f}{\partial x_n}
+\end{bmatrix}
+\]</span> Each element of <span class="math inline">\(\nabla f(x)\)</span> captures the rate of change of the function <span class="math inline">\(f\)</span> with respect to the parameter <span class="math inline">\(x_i\)</span>. The gradient of a function helps us identify <em>local</em> minimizers and allows us to state (without proof) the first fundamental result of gradient-based optimization.</p>
+<p><strong>Theorem (first-order necessary conditions):</strong> If <span class="math inline">\(x^\star\)</span> is a local minimizer and <span class="math inline">\(f\)</span> is continuously differentiable in an open nieghborhood of <span class="math inline">\(x^\star\)</span>, then <span class="math inline">\(\nabla f(x^\star) = 0\)</span>.</p>
+<p>A point <span class="math inline">\(x^\star\)</span> is called a <em>stationary point</em> if <span class="math inline">\(\nabla f(x^\star) = 0\)</span>. The above theorem guarantees that all local minimizers must be stationary points. However, the theorem cannot guarantee that all stationary points are local minimizers. This is because the conditions are necessary but not sufficient. As a counterexample, a stationary point may be a local maximizer instead of a local minimizer. In order to obtain necessary and suffient conditions, we need to move one derivative higher.</p>
+</section>
+<section id="curvature" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="curvature"><span class="header-section-number">2.3</span> Curvature</h2>
+<p>The <em>curvature</em> of a function <span class="math inline">\(f\)</span> is the rate of change of the gradient, and tells us whether the slope is stationary, increasing, or decreasing. To compute the curvature of <span class="math inline">\(f\)</span>, we need to take a partial derivate of every component of the gradient with respect to each coordinate direction. This leads to an <span class="math inline">\((n\times n)\)</span> matrix of second partial derivatives called the <em>Hessian</em>:</p>
+<p><span class="math display">\[
+H = \begin{bmatrix}
+\frac{\partial^2 f}{\partial x_1^2} &amp; \frac{\partial^2 f}{\partial x_1 \partial x_2} &amp; \cdots &amp; \frac{\partial^2 f}{\partial x_1 \partial x_n} \\
+\frac{\partial^2 f}{\partial x_2 \partial x_1} &amp; \frac{\partial^2 f}{\partial x_2^2} &amp; \cdots &amp; \frac{\partial^2 f}{\partial x_2 \partial x_n} \\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+\frac{\partial^2 f}{\partial x_n \partial x_1} &amp; \frac{\partial^2 f}{\partial x_n \partial x_2} &amp; \cdots &amp; \frac{\partial^2 f}{\partial x_n^2}
+\end{bmatrix}
+\]</span></p>
+<p>If our function <span class="math inline">\(f\)</span> has continuous second partial derivatives, then the order of differentiation does not matter and the matrix <span class="math inline">\(H\)</span> becomes symmetric. The Hessian allows us to establish two more (stronger) fundamental results of gradient-based optimization. Before stating them, let us recall that a matrix <span class="math inline">\(A\)</span> is <em>positive definite</em> if <span class="math inline">\(x^\top A x &gt; 0\)</span> for all <span class="math inline">\(x\neq 0\)</span> and <em>positive semidefinite</em> if <span class="math inline">\(x^\top A x \geq 0\)</span> for all <span class="math inline">\(x\)</span>.</p>
+<p><strong>Theorem (second-order necessary conditions):</strong> If <span class="math inline">\(x^\star\)</span> is a local minimizer of <span class="math inline">\(f\)</span> and the Hessian <span class="math inline">\(H\)</span> exists and is continuous in an open neighborhood of <span class="math inline">\(x^\star\)</span>, then <span class="math inline">\(\nabla f(x^\star) = 0\)</span> and <span class="math inline">\(H\)</span> is positive semidefinite.</p>
+<p><strong>Theorem (second-order sufficient conditions):</strong></p>
+</section>
 </section>
 
 </main>

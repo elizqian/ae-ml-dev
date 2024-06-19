@@ -24,8 +24,20 @@ where $f: \mathbb{R}^n \to \mathbb{R}$ is our *objective function* (or loss func
 For this lecture, our approach for solving the above minimization problem will be a *gradient-based* one. This means that we will make use of information from the gradient of $f$ (first-order information), and the curvature of $f$ (second-order information).
 
 # Solutions, Gradient, and Curvature
-To start, we first need to motivate some fundamental definitions regarding the nature of the solution we are looking for. Namely, we want
+## What are we looking for?
 
+To start, we first need to motivate some fundamental definitions regarding the nature of the solution we are looking for.
+
+**Definition:** We say that a point $x^\star$ is a *global minimizer* of $f$ if:
+$$f(x^\star)\leq f(x) \text{ for all }x\in \mathcal{D}\subseteq\mathbb{R}^n.$$ 
+
+Although a global minimizer is the most desireable outcome from our minimization problem, finding a global minimizer is often quite challenging. This is because a global minimizer may not always exist, and because we often only possess *local* information about the function $f$. This motivates the following defintion:
+
+**Definition:** We say that a point $x^\star$ is a *local minimizer* of $f$ if there exists some open set $\mathcal{B}$, that contains $x^\star$, such that:
+$$
+f(x^\star)\leq f(x) \text{ for all }x\in\mathcal{B}.
+$$
+If the inequality becomes strict, then $x^\star$ is referred to as a *strict* local minimizer. To illustrate the above definitions, let us look at the function $f(x) = 2 + \cos(x) + \frac{1}{2} \cos\left(5x - \frac{1}{2}\right)$ over the domain $\mathcal{D} = [0, 3.7]$. In this domain, the function has two local minimizers and one global minimizer, as illustrated in the plot below.
 
 
 ```{python}
@@ -33,21 +45,74 @@ To start, we first need to motivate some fundamental definitions regarding the n
 import numpy as np
 import matplotlib.pyplot as plt
 
+# Define the function
 def f(x):
-    return x * np.sin(x)
+    return 2 + np.cos(x) + 0.5 * np.cos(5 * x - 0.5)
 
 # Generate x values
-x = np.linspace(-10 * np.pi, 10 * np.pi, 1000)
+x = np.linspace(0, 3.7, 1000)
+
 # Compute y values
 y = f(x)
 
+# Define the known minima
+local_minima = [(0.786, 2.227), (2.057, 1.065)]
+global_minimum = (3.234, 0.505)
+
 # Plot the function
-plt.figure(figsize=(9, 5))
-plt.plot(x, y, linewidth = 2)
-plt.title('Plot of $f(x) = x \sin(x)$')
+plt.figure(figsize=(9.5, 5))
+plt.plot(x, y, label=r'$f(x) = 2 + \cos(x) + \frac{1}{2} \cos(5x - \frac{1}{2})$', linewidth=2)
+
+# Plot and label local minima
+for (xm, ym) in local_minima:
+    plt.scatter(xm, ym, color='blue')
+    plt.text(xm, ym-0.1, ' Local Min', horizontalalignment='right', color='blue')
+
+# Plot and label global minimum
+plt.scatter(*global_minimum, color='red')
+plt.text(global_minimum[0], global_minimum[1]-0.1, ' Global Min', horizontalalignment='right', color='red')
+
+plt.title('Example of local and global minimizers')
 plt.xlabel('x')
 plt.grid(True)
 plt.show()
-```
 
+```
+We now have a way to understand and characterize our solutions. However, the above definitions suggest that we need to examine all points that are next to $x^\star$ in order to properly characterize it. However, if our function is *smooth*, i.e., its higher order derivatives exist and are continuous, then we can classify $x^\star$ by examining the derivatives of $f$.
+
+## Gradient
+Recall that the *gradient* of a function $f(x)$, denoted $\nabla f(x)$, is the column vector of partial derivaties with respect to each parameter:
+$$
+\nabla f(x) = 
+\begin{bmatrix}
+\frac{\partial f}{\partial x_1}\\
+\vdots\\
+\frac{\partial f}{\partial x_i}\\
+\vdots\\
+\frac{\partial f}{\partial x_n}
+\end{bmatrix}
+$$
+Each element of $\nabla f(x)$ captures the rate of change of the function $f$ with respect to the parameter $x_i$. The gradient of a function helps us identify *local* minimizers and allows us to state (without proof) the first fundamental result of gradient-based optimization.
+
+**Theorem (first-order necessary conditions):** If $x^\star$ is a local minimizer and $f$ is continuously differentiable in an open nieghborhood of $x^\star$, then $\nabla f(x^\star) = 0$.
+
+A point $x^\star$ is called a *stationary point* if $\nabla f(x^\star) = 0$. The above theorem guarantees that all local minimizers must be stationary points. However, the theorem cannot guarantee that all stationary points are local minimizers. This is because the conditions are necessary but not sufficient. As a counterexample, a stationary point may be a local maximizer instead of a local minimizer. In order to obtain necessary and suffient conditions, we need to move one derivative higher.
+
+## Curvature
+The *curvature* of a function $f$ is the rate of change of the gradient, and tells us whether the slope is stationary, increasing, or decreasing. To compute the curvature of $f$, we need to take a partial derivate of every component of the gradient with respect to each coordinate direction. This leads to an $(n\times n)$ matrix of second partial derivatives called the *Hessian*:
+
+$$
+H = \begin{bmatrix}
+\frac{\partial^2 f}{\partial x_1^2} & \frac{\partial^2 f}{\partial x_1 \partial x_2} & \cdots & \frac{\partial^2 f}{\partial x_1 \partial x_n} \\
+\frac{\partial^2 f}{\partial x_2 \partial x_1} & \frac{\partial^2 f}{\partial x_2^2} & \cdots & \frac{\partial^2 f}{\partial x_2 \partial x_n} \\
+\vdots & \vdots & \ddots & \vdots \\
+\frac{\partial^2 f}{\partial x_n \partial x_1} & \frac{\partial^2 f}{\partial x_n \partial x_2} & \cdots & \frac{\partial^2 f}{\partial x_n^2}
+\end{bmatrix}
+$$
+
+If our function $f$ has continuous second partial derivatives, then the order of differentiation does not matter and the matrix $H$ becomes symmetric. The Hessian allows us to establish two more (stronger) fundamental results of gradient-based optimization. Before stating them, let us recall that a matrix $A$ is *positive definite* if $x^\top A x > 0$ for all $x\neq 0$ and *positive semidefinite* if $x^\top A x \geq 0$ for all $x$.
+
+**Theorem (second-order necessary conditions):** If $x^\star$ is a local minimizer of $f$ and the Hessian $H$ exists and is continuous in an open neighborhood of $x^\star$, then $\nabla f(x^\star) = 0$ and $H$ is positive semidefinite.
+
+**Theorem (second-order sufficient conditions):** 
 
