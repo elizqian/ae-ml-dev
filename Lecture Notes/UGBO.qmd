@@ -65,8 +65,8 @@ plt.plot(x, y, label=r'$f(x) = 2 + \cos(x) + \frac{1}{2} \cos(5x - \frac{1}{2})$
 
 # Plot and label local minima
 for (xm, ym) in local_minima:
-    plt.scatter(xm, ym, color='blue')
-    plt.text(xm, ym-0.1, ' Local Min', horizontalalignment='right', color='blue')
+    plt.scatter(xm, ym, color='black')
+    plt.text(xm, ym-0.1, ' Local Min', horizontalalignment='right', color='black')
 
 # Plot and label global minimum
 plt.scatter(*global_minimum, color='red')
@@ -102,7 +102,7 @@ A point $x^\star$ is called a *stationary point* if $\nabla f(x^\star) = 0$. The
 The *curvature* of a function $f$ is the rate of change of the gradient, and tells us whether the slope is stationary, increasing, or decreasing. To compute the curvature of $f$, we need to take a partial derivate of every component of the gradient with respect to each coordinate direction. This leads to an $(n\times n)$ matrix of second partial derivatives called the *Hessian*:
 
 $$
-H = \begin{bmatrix}
+H(x) = \begin{bmatrix}
 \frac{\partial^2 f}{\partial x_1^2} & \frac{\partial^2 f}{\partial x_1 \partial x_2} & \cdots & \frac{\partial^2 f}{\partial x_1 \partial x_n} \\
 \frac{\partial^2 f}{\partial x_2 \partial x_1} & \frac{\partial^2 f}{\partial x_2^2} & \cdots & \frac{\partial^2 f}{\partial x_2 \partial x_n} \\
 \vdots & \vdots & \ddots & \vdots \\
@@ -114,5 +114,133 @@ If our function $f$ has continuous second partial derivatives, then the order of
 
 **Theorem (second-order necessary conditions):** If $x^\star$ is a local minimizer of $f$ and the Hessian $H$ exists and is continuous in an open neighborhood of $x^\star$, then $\nabla f(x^\star) = 0$ and $H$ is positive semidefinite.
 
-**Theorem (second-order sufficient conditions):** 
+**Theorem (second-order sufficient conditions):** Suppose that $H$ is is continuous in an open neighborhood of $x^\star$ and that $\nabla f(x^\star) =0$ and $H$ is positive definite. Then, $x^\star$ is a *strict* local minimizer of $f$.
 
+It is important to remark that the second-order sufficient condition gurantee a stronger result when compared to the second-order necessary condtions. Namely, the second-order sufficient conditions lead to a *strict* local minimizer. Furthermore, we should also note that the sufficient condtions are not necessary; it is possible for a point $x^\star$ to be a strict local minimizer but fail to satisfy the sufficient conditions. As an example, consider $f(x) = x^6$, where $x^\star = 0$ is a strict local minimizer, yet the Hessian evaluates to zero at $x^\star = 0$ and is therefore not positive definite. 
+
+## A complete example
+Here, we work our way through an example problem where we can see how the concepts from above can be applied to help us identify and characterize critical points. Consider the function:
+
+$$
+f(x_1, x_2) = 0.5x_1^4 + 2x_1^3 + 1.5x_1^2 + x_2^2 - 2x_1x_2
+$$
+
+Let's plot the contours of $f$.
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Define the function
+def f(x1, x2):
+    return 0.5 * x1**4 + 2 * x1**3 + (3/2) * x1**2 + x2**2 - 2 * x1 * x2
+
+# Create the contour plot
+x = np.linspace(-4, 2, 1000)
+y = np.linspace(-4, 2, 1000)
+X, Y = np.meshgrid(x, y)
+Z = f(X, Y)
+
+plt.figure(figsize=(9.5, 5))
+contour = plt.contour(X, Y, Z, levels=75)
+plt.xlabel(r'$x_1$')
+plt.ylabel(r'$x_2$')
+```
+
+To start, we need to identify all critical points of $f$. We can do that by solving for all points such that $\nabla f(x) = 0$, i.e.,
+
+$$
+\nabla f(x_1, x_2) = 
+\begin{bmatrix}
+\frac{\partial f}{\partial x_1} \\ \frac{\partial f}{\partial x_2}
+\end{bmatrix} = 
+\begin{bmatrix}
+2x_1^3 + 6x_1^2 + 3x_1 - 2x_2 \\ 2x_2 - 2x_1
+\end{bmatrix} = 
+\begin{bmatrix}
+0 \\ 0
+\end{bmatrix}
+$$
+
+We can do that by using <code>fsolve()</code> from <code>scipy.optimize</code>.
+
+```{python}
+from scipy.optimize import fsolve
+
+# Define the first partial derivatives
+def df_dx1(x1, x2):
+    return 2 * x1**3 + 6 * x1**2 + 3 * x1 - 2 * x2
+
+def df_dx2(x1, x2):
+    return 2 * x2 - 2 * x1
+
+# Define the system of equations
+def equations(vars):
+    x1, x2 = vars
+    return [df_dx1(x1, x2), df_dx2(x1, x2)]
+
+# Solve for critical points
+initial_guesses = [(0, 0), (-1, -1), (-10, -10)]
+critical_points = [fsolve(equations, guess) for guess in initial_guesses]
+
+print(critical_points)
+```
+
+Now, we need to classify each critical point. To do so, let's compute the Hessian:
+
+$$
+H(x_1, x_2) = 
+\begin{bmatrix}
+\frac{\partial^2 f}{\partial x_1^2} & \frac{\partial^2 f}{\partial x_1 \partial x_2} \\
+\frac{\partial^2 f}{\partial x_2 \partial x_1} & \frac{\partial^2 f}{\partial x_2^2}
+\end{bmatrix}
+=
+\begin{bmatrix}
+6x_1^2 + 12x_1 + 3 & -2 \\
+-2 & 2
+\end{bmatrix}
+$$
+
+We now need to evaluate the Hessian at each one of the critical points and check whether is it positive semidefinite. There are a number of ways we can check this, but we will be examining the eigenvalues of the Hessian and checking whether they are all positive.
+
+
+```{python}
+# Define the Hessian
+def Hessian(x1, x2):
+    return np.array([[6 * x1**2 + 12 * x1 + 3, -2], [-2, 2]])
+
+eigs = [np.linalg.eigvals(Hessian(pt[0], pt[1])) for pt in critical_points]
+
+print(eigs)
+```
+
+Based on these results, we know that the first and third critical points are local minimizers. The second critical point is classifies as a *saddle point* because the Hessian is not positive semidefinite. To find out which of the local minimizers is the global minimzer, we evaluate the function at each of these points. Let's go ahead and label the points accordingly.
+
+```{python}
+
+# Create the contour plot
+x = np.linspace(-4, 2, 1000)
+y = np.linspace(-4, 2, 1000)
+X, Y = np.meshgrid(x, y)
+Z = f(X, Y)
+
+plt.figure(figsize=(9.5, 5))
+contour = plt.contour(X, Y, Z, levels=75)
+plt.xlabel(r'$x_1$')
+plt.ylabel(r'$x_2$')
+
+# Plot and label the critical points
+labels = ["local minimum", "saddle point", "global minimum"]
+
+for (x, y), label in zip(critical_points, labels):
+    plt.scatter(x, y, label=f'{label} ({x:.2f}, {y:.2f})', s=100)
+    if label == "saddle point":
+        plt.text(x, y, f' {label}', fontsize=12, ha='right', weight='bold')
+    else:
+        plt.text(x, y, f' {label}', fontsize=12, ha='left', weight='bold')
+
+plt.grid(False)
+plt.show()
+
+
+```

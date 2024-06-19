@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -113,7 +147,7 @@ window.Quarto = {
 <p><strong>Definition:</strong> We say that a point <span class="math inline">\(x^\star\)</span> is a <em>local minimizer</em> of <span class="math inline">\(f\)</span> if there exists some open set <span class="math inline">\(\mathcal{B}\)</span>, that contains <span class="math inline">\(x^\star\)</span>, such that: <span class="math display">\[
 f(x^\star)\leq f(x) \text{ for all }x\in\mathcal{B}.
 \]</span> If the inequality becomes strict, then <span class="math inline">\(x^\star\)</span> is referred to as a <em>strict</em> local minimizer. To illustrate the above definitions, let us look at the function <span class="math inline">\(f(x) = 2 + \cos(x) + \frac{1}{2} \cos\left(5x - \frac{1}{2}\right)\)</span> over the domain <span class="math inline">\(\mathcal{D} = [0, 3.7]\)</span>. In this domain, the function has two local minimizers and one global minimizer, as illustrated in the plot below.</p>
-<div id="2264b17a" class="cell" data-execution_count="1">
+<div id="ab8f492a" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -143,7 +177,7 @@ f(x^\star)\leq f(x) \text{ for all }x\in\mathcal{B}.
 <h2 data-number="2.3" class="anchored" data-anchor-id="curvature"><span class="header-section-number">2.3</span> Curvature</h2>
 <p>The <em>curvature</em> of a function <span class="math inline">\(f\)</span> is the rate of change of the gradient, and tells us whether the slope is stationary, increasing, or decreasing. To compute the curvature of <span class="math inline">\(f\)</span>, we need to take a partial derivate of every component of the gradient with respect to each coordinate direction. This leads to an <span class="math inline">\((n\times n)\)</span> matrix of second partial derivatives called the <em>Hessian</em>:</p>
 <p><span class="math display">\[
-H = \begin{bmatrix}
+H(x) = \begin{bmatrix}
 \frac{\partial^2 f}{\partial x_1^2} &amp; \frac{\partial^2 f}{\partial x_1 \partial x_2} &amp; \cdots &amp; \frac{\partial^2 f}{\partial x_1 \partial x_n} \\
 \frac{\partial^2 f}{\partial x_2 \partial x_1} &amp; \frac{\partial^2 f}{\partial x_2^2} &amp; \cdots &amp; \frac{\partial^2 f}{\partial x_2 \partial x_n} \\
 \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
@@ -152,7 +186,142 @@ H = \begin{bmatrix}
 \]</span></p>
 <p>If our function <span class="math inline">\(f\)</span> has continuous second partial derivatives, then the order of differentiation does not matter and the matrix <span class="math inline">\(H\)</span> becomes symmetric. The Hessian allows us to establish two more (stronger) fundamental results of gradient-based optimization. Before stating them, let us recall that a matrix <span class="math inline">\(A\)</span> is <em>positive definite</em> if <span class="math inline">\(x^\top A x &gt; 0\)</span> for all <span class="math inline">\(x\neq 0\)</span> and <em>positive semidefinite</em> if <span class="math inline">\(x^\top A x \geq 0\)</span> for all <span class="math inline">\(x\)</span>.</p>
 <p><strong>Theorem (second-order necessary conditions):</strong> If <span class="math inline">\(x^\star\)</span> is a local minimizer of <span class="math inline">\(f\)</span> and the Hessian <span class="math inline">\(H\)</span> exists and is continuous in an open neighborhood of <span class="math inline">\(x^\star\)</span>, then <span class="math inline">\(\nabla f(x^\star) = 0\)</span> and <span class="math inline">\(H\)</span> is positive semidefinite.</p>
-<p><strong>Theorem (second-order sufficient conditions):</strong></p>
+<p><strong>Theorem (second-order sufficient conditions):</strong> Suppose that <span class="math inline">\(H\)</span> is is continuous in an open neighborhood of <span class="math inline">\(x^\star\)</span> and that <span class="math inline">\(\nabla f(x^\star) =0\)</span> and <span class="math inline">\(H\)</span> is positive definite. Then, <span class="math inline">\(x^\star\)</span> is a <em>strict</em> local minimizer of <span class="math inline">\(f\)</span>.</p>
+<p>It is important to remark that the second-order sufficient condition gurantee a stronger result when compared to the second-order necessary condtions. Namely, the second-order sufficient conditions lead to a <em>strict</em> local minimizer. Furthermore, we should also note that the sufficient condtions are not necessary; it is possible for a point <span class="math inline">\(x^\star\)</span> to be a strict local minimizer but fail to satisfy the sufficient conditions. As an example, consider <span class="math inline">\(f(x) = x^6\)</span>, where <span class="math inline">\(x^\star = 0\)</span> is a strict local minimizer, yet the Hessian evaluates to zero at <span class="math inline">\(x^\star = 0\)</span> and is therefore not positive definite.</p>
+</section>
+<section id="a-complete-example" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="a-complete-example"><span class="header-section-number">2.4</span> A complete example</h2>
+<p>Here, we work our way through an example problem where we can see how the concepts from above can be applied to help us identify and characterize critical points. Consider the function:</p>
+<p><span class="math display">\[
+f(x_1, x_2) = 0.5x_1^4 + 2x_1^3 + 1.5x_1^2 + x_2^2 - 2x_1x_2
+\]</span></p>
+<p>Let’s plot the contours of <span class="math inline">\(f\)</span>.</p>
+<div id="d540d077" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the function</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> f(x1, x2):</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fl">0.5</span> <span class="op">*</span> x1<span class="op">**</span><span class="dv">4</span> <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> x1<span class="op">**</span><span class="dv">3</span> <span class="op">+</span> (<span class="dv">3</span><span class="op">/</span><span class="dv">2</span>) <span class="op">*</span> x1<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> x2<span class="op">**</span><span class="dv">2</span> <span class="op">-</span> <span class="dv">2</span> <span class="op">*</span> x1 <span class="op">*</span> x2</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the contour plot</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">1000</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">1000</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>X, Y <span class="op">=</span> np.meshgrid(x, y)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>Z <span class="op">=</span> f(X, Y)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="fl">9.5</span>, <span class="dv">5</span>))</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>contour <span class="op">=</span> plt.contour(X, Y, Z, levels<span class="op">=</span><span class="dv">75</span>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="vs">r'$x_1$'</span>)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="vs">r'$x_2$'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
+<pre><code>Text(0, 0.5, '$x_2$')</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="UGBO_files/figure-html/cell-3-output-2.png" width="778" height="434" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>To start, we need to identify all critical points of <span class="math inline">\(f\)</span>. We can do that by solving for all points such that <span class="math inline">\(\nabla f(x) = 0\)</span>, i.e.,</p>
+<p><span class="math display">\[
+\nabla f(x_1, x_2) =
+\begin{bmatrix}
+\frac{\partial f}{\partial x_1} \\ \frac{\partial f}{\partial x_2}
+\end{bmatrix} =
+\begin{bmatrix}
+2x_1^3 + 6x_1^2 + 3x_1 - 2x_2 \\ 2x_2 - 2x_1
+\end{bmatrix} =
+\begin{bmatrix}
+0 \\ 0
+\end{bmatrix}
+\]</span></p>
+<p>We can do that by using <code>fsolve()</code> from <code>scipy.optimize</code>.</p>
+<div id="bd68de23" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.optimize <span class="im">import</span> fsolve</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the first partial derivatives</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> df_dx1(x1, x2):</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">2</span> <span class="op">*</span> x1<span class="op">**</span><span class="dv">3</span> <span class="op">+</span> <span class="dv">6</span> <span class="op">*</span> x1<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> <span class="dv">3</span> <span class="op">*</span> x1 <span class="op">-</span> <span class="dv">2</span> <span class="op">*</span> x2</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> df_dx2(x1, x2):</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">2</span> <span class="op">*</span> x2 <span class="op">-</span> <span class="dv">2</span> <span class="op">*</span> x1</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the system of equations</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> equations(<span class="bu">vars</span>):</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    x1, x2 <span class="op">=</span> <span class="bu">vars</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> [df_dx1(x1, x2), df_dx2(x1, x2)]</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Solve for critical points</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>initial_guesses <span class="op">=</span> [(<span class="dv">0</span>, <span class="dv">0</span>), (<span class="op">-</span><span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>), (<span class="op">-</span><span class="dv">10</span>, <span class="op">-</span><span class="dv">10</span>)]</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>critical_points <span class="op">=</span> [fsolve(equations, guess) <span class="cf">for</span> guess <span class="kw">in</span> initial_guesses]</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(critical_points)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[array([0., 0.]), array([-0.17712434, -0.17712434]), array([-2.82287566, -2.82287566])]</code></pre>
+</div>
+</div>
+<p>Now, we need to classify each critical point. To do so, let’s compute the Hessian:</p>
+<p><span class="math display">\[
+H(x_1, x_2) =
+\begin{bmatrix}
+\frac{\partial^2 f}{\partial x_1^2} &amp; \frac{\partial^2 f}{\partial x_1 \partial x_2} \\
+\frac{\partial^2 f}{\partial x_2 \partial x_1} &amp; \frac{\partial^2 f}{\partial x_2^2}
+\end{bmatrix}
+=
+\begin{bmatrix}
+6x_1^2 + 12x_1 + 3 &amp; -2 \\
+-2 &amp; 2
+\end{bmatrix}
+\]</span></p>
+<p>We now need to evaluate the Hessian at each one of the critical points and check whether is it positive semidefinite. There are a number of ways we can check this, but we will be examining the eigenvalues of the Hessian and checking whether they are all positive.</p>
+<div id="cbde7441" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the Hessian</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> Hessian(x1, x2):</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.array([[<span class="dv">6</span> <span class="op">*</span> x1<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> <span class="dv">12</span> <span class="op">*</span> x1 <span class="op">+</span> <span class="dv">3</span>, <span class="op">-</span><span class="dv">2</span>], [<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>]])</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>eigs <span class="op">=</span> [np.linalg.eigvals(Hessian(pt[<span class="dv">0</span>], pt[<span class="dv">1</span>])) <span class="cf">for</span> pt <span class="kw">in</span> critical_points]</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(eigs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[array([4.56155281, 0.43844719]), array([-0.5227962 ,  3.58554227]), array([17.20040482,  1.73684911])]</code></pre>
+</div>
+</div>
+<p>Based on these results, we know that the first and third critical points are local minimizers. The second critical point is classifies as a <em>saddle point</em> because the Hessian is not positive semidefinite. To find out which of the local minimizers is the global minimzer, we evaluate the function at each of these points. Let’s go ahead and label the points accordingly.</p>
+<div id="d53aeec0" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the contour plot</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">1000</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">1000</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>X, Y <span class="op">=</span> np.meshgrid(x, y)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>Z <span class="op">=</span> f(X, Y)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="fl">9.5</span>, <span class="dv">5</span>))</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>contour <span class="op">=</span> plt.contour(X, Y, Z, levels<span class="op">=</span><span class="dv">75</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="vs">r'$x_1$'</span>)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="vs">r'$x_2$'</span>)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot and label the critical points</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>labels <span class="op">=</span> [<span class="st">"local minimum"</span>, <span class="st">"saddle point"</span>, <span class="st">"global minimum"</span>]</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (x, y), label <span class="kw">in</span> <span class="bu">zip</span>(critical_points, labels):</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    plt.scatter(x, y, label<span class="op">=</span><span class="ss">f'</span><span class="sc">{</span>label<span class="sc">}</span><span class="ss"> (</span><span class="sc">{</span>x<span class="sc">:.2f}</span><span class="ss">, </span><span class="sc">{</span>y<span class="sc">:.2f}</span><span class="ss">)'</span>, s<span class="op">=</span><span class="dv">100</span>)</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> label <span class="op">==</span> <span class="st">"saddle point"</span>:</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>        plt.text(x, y, <span class="ss">f' </span><span class="sc">{</span>label<span class="sc">}</span><span class="ss">'</span>, fontsize<span class="op">=</span><span class="dv">12</span>, ha<span class="op">=</span><span class="st">'right'</span>, weight<span class="op">=</span><span class="st">'bold'</span>)</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>        plt.text(x, y, <span class="ss">f' </span><span class="sc">{</span>label<span class="sc">}</span><span class="ss">'</span>, fontsize<span class="op">=</span><span class="dv">12</span>, ha<span class="op">=</span><span class="st">'left'</span>, weight<span class="op">=</span><span class="st">'bold'</span>)</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">False</span>)</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="UGBO_files/figure-html/cell-6-output-1.png" width="778" height="434" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 </section>
 
