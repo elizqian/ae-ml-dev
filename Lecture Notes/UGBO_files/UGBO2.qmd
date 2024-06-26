@@ -1,0 +1,117 @@
+---
+title: "Unconstrained Gradient Based Optimization (UGBO) II - Steepest Descent"
+html-math-method:
+  method: mathjax
+  url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+number-sections: true
+format: 
+    html: default
+execute:
+    echo: true
+---
+
+# Problem Motivation
+So far, we have developed analytical tools that allow us to find and classify critical points of functions. However, this analytical approach to finding minima is often infeasible, esecially when the objective function is a result of a numerical model. To combat this, we turn to interative algorithms that prgressively work towards finding a minimum while only relying on function and gradient evaluations. The main idea is that we will start from some initial guess $x_0$ and produce a sequence of points $x_1, x_2, x_3, \ldots, x_j, \ldots$, eventually converging to some local minimizer $x^\star$. 
+
+There are two major classes of iterative optimization methods that produce the aforementioned sequence of points: *line search* methods and *trust region* methods. In this course, we will focus on the former, but we will provide some resources for those interested in the latter. Line search methods consist of three main steps that occur at each iteration:
+
+1. Identify a suitable *search direction* from the current point
+2. Determine a *step size* (by performing a line search)
+3. Move to the new point and update all function and gradient values
+
+The whole process is summarized in the diagram below.
+
+```{mermaid}
+%%| echo: false
+flowchart LR
+  A(Starting guess) --> B(Search direction)
+  B --> C(Step size)
+  C --> D(Is this a minimum?)
+  D -->|Yes| E(Converged)
+  D -->|No| F(Update values)
+  F --> B
+
+```
+
+Steps 1 and 2 can be understood as two separate subproblems in the overall optimization scheme. In this note, we will examine the first of these subproblems by introducing the *steepest descent* algorithm, and seeing how the subproblem of determining a suitable step size arises as a natural consequence.
+
+
+
+# Steepest Descent
+## Motivation
+Given some objective function $f$, recall that the gradient $\nabla f$ is a vector with each component quantifying the function's local rate of change with respect to each variable.
+
+**Fact:** The gradient is a vector that points to the direction that yields the greatest function increase from the current point. 
+
+**Idea:** From any given point $x$, we can find the direction of steepest descent by taking $-\nabla f(x)$. So, we can define our search direction at iteration $k$ as: $p_k = -\nabla f(x_k)$
+
+One problem with the above idea is that the gradient does not give us any information regarding the step size we should take. Hence, the search direction is often normalized as:
+
+$$
+p_k = -\frac{\nabla f(x_k)}{\|\nabla f(x_k)\|_2}
+$$
+
+## Algorithm
+Need to include an algorithm block here. 
+
+## Example
+Consider the quadratic function:
+$$
+f(x_1, x_2) = x_1^2 + \beta x_2^2
+$$
+
+First, let us consider the case where $\beta = 1$ and the starting point is $x_0 = (10,1)$.
+
+```{python}
+#| echo : false
+import numpy as np
+import matplotlib.pyplot as plt
+
+b = 1
+
+def f(x):
+    return x[0]**2 + b*x[1]**2
+
+def df(x):
+    return np.array([2*x[0], 2*b*x[1]]).transpose()
+
+# Create the contour plot
+x = np.linspace(-5, 11, 1000)
+y = np.linspace(-6, 6, 1000)
+X, Y = np.meshgrid(x, y)
+Z = f((X, Y))
+
+def SD(f, df, x0, alpha, max_iter=50000, tol=1e-4):
+    x = np.array(x0, dtype=float)
+    history = np.empty((2, max_iter+1))
+    history[:, 0] = x0
+    k = 1
+    
+    for _ in range(max_iter):
+        grad = df(x)
+        p = -grad/np.linalg.norm(grad)
+        x += alpha * p
+        history[:, k] = x
+        k += 1
+        
+        if np.linalg.norm(grad) < tol:
+            print("Tolerance achieved!")
+            break
+    
+    return x, history, k
+
+x0 = np.array([10, 1]).transpose()
+x_star, history, iters = SD(f, df, x0, 0.001)
+print(np.linalg.norm(df(x_star)))
+
+
+plt.figure(figsize=(9.5, 5))
+contour = plt.contour(X, Y, Z, levels=25)
+plt.plot(history[0, :], history[1, :], 'ro-', markersize=5, label='Optimization Path')
+plt.scatter(x0[0], x0[1], color='blue', label='Start Point')
+plt.scatter(x_star[0], x_star[1], color='green', label='Optimal Point')
+plt.annotate(f"Total Iterations: {iters}", xy=(0.05, 0.95), xycoords='axes fraction',
+             fontsize=12, bbox=dict(facecolor='white', alpha=0.6))
+plt.xlabel(r'$x_1$')
+plt.ylabel(r'$x_2$') 
+```

@@ -241,6 +241,5 @@ for (x, y), label in zip(critical_points, labels):
 
 plt.grid(False)
 plt.show()
-
-
 ```
+
