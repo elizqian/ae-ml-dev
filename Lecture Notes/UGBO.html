@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.45">
+<meta name="generator" content="quarto-1.5.56">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -147,7 +147,7 @@ window.Quarto = {
 <p><strong>Definition:</strong> We say that a point <span class="math inline">\(x^\star\)</span> is a <em>local minimizer</em> of <span class="math inline">\(f\)</span> if there exists some open set <span class="math inline">\(\mathcal{B}\)</span>, that contains <span class="math inline">\(x^\star\)</span>, such that: <span class="math display">\[
 f(x^\star)\leq f(x) \text{ for all }x\in\mathcal{B}.
 \]</span> If the inequality becomes strict, then <span class="math inline">\(x^\star\)</span> is referred to as a <em>strict</em> local minimizer. To illustrate the above definitions, let us look at the function <span class="math inline">\(f(x) = 2 + \cos(x) + \frac{1}{2} \cos\left(5x - \frac{1}{2}\right)\)</span> over the domain <span class="math inline">\(\mathcal{D} = [0, 3.7]\)</span>. In this domain, the function has two local minimizers and one global minimizer, as illustrated in the plot below.</p>
-<div id="53c36ed8" class="cell" data-execution_count="1">
+<div id="98d1b58c" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -196,7 +196,7 @@ H(x) = \begin{bmatrix}
 f(x_1, x_2) = 0.5x_1^4 + 2x_1^3 + 1.5x_1^2 + x_2^2 - 2x_1x_2
 \]</span></p>
 <p>Let’s plot the contours of <span class="math inline">\(f\)</span>.</p>
-<div id="356e6d54" class="cell" data-execution_count="2">
+<div id="d1694539" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -239,7 +239,7 @@ f(x_1, x_2) = 0.5x_1^4 + 2x_1^3 + 1.5x_1^2 + x_2^2 - 2x_1x_2
 \end{bmatrix}
 \]</span></p>
 <p>We can do that by using <code>fsolve()</code> from <code>scipy.optimize</code>.</p>
-<div id="6aaa339b" class="cell" data-execution_count="3">
+<div id="d61b9ddd" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.optimize <span class="im">import</span> fsolve</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the first partial derivatives</span></span>
@@ -277,7 +277,7 @@ H(x_1, x_2) =
 \end{bmatrix}
 \]</span></p>
 <p>We now need to evaluate the Hessian at each one of the critical points and check whether is it positive semidefinite. There are a number of ways we can check this, but we will be examining the eigenvalues of the Hessian and checking whether they are all positive.</p>
-<div id="711fffab" class="cell" data-execution_count="4">
+<div id="f352f282" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the Hessian</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> Hessian(x1, x2):</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.array([[<span class="dv">6</span> <span class="op">*</span> x1<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> <span class="dv">12</span> <span class="op">*</span> x1 <span class="op">+</span> <span class="dv">3</span>, <span class="op">-</span><span class="dv">2</span>], [<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>]])</span>
@@ -290,7 +290,7 @@ H(x_1, x_2) =
 </div>
 </div>
 <p>Based on these results, we know that the first and third critical points are local minimizers. The second critical point is classifies as a <em>saddle point</em> because the Hessian is not positive semidefinite. To find out which of the local minimizers is the global minimzer, we evaluate the function at each of these points. Let’s go ahead and label the points accordingly.</p>
-<div id="70ccbd51" class="cell" data-execution_count="5">
+<div id="4c059131" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the contour plot</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">1000</span>)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">1000</span>)</span>
@@ -323,10 +323,6 @@ H(x_1, x_2) =
 </div>
 </div>
 </section>
-</section>
-<section id="finding-a-minimum" class="level1" data-number="3">
-<h1 data-number="3"><span class="header-section-number">3</span> Finding a Minimum</h1>
-<p>In the previous section, we saw how we can use optimality conditions to analytically solve for the minimizers of a function. This approach, however, is not always possible (in fact it is almost never possible in real-world apprications). Instead, we must turn to iterative methods that help us prgressively find a minimizer by only relying on function and derivative evaluations.</p>
 </section>
 
 </main>

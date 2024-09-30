@@ -1,0 +1,202 @@
+---
+title: "ML for AE: Least Squares Regression"
+html-math-method:
+  method: mathjax
+  url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+number-sections: false
+format: pptx
+---
+
+## A Motivating Example
+
+![Image Source: Embry-Riddle Aeronautical University](images/AirfoilDrag.png){fig-align="center" width=80%}
+
+Suppose we wish to efficiently approximate the force of drag ($F_d$), measured in $N$, on a specific airplane wing if we only have access to the following information about the wing and its operating conditions: 
+
+* The angle of attack ($\alpha$), measured in degrees
+* The density of the fluid ($\rho$), measured in $kg/m^3$ 
+* The velocity of the fluid ($v$), measured in $m/s$ 
+
+## Linear Approximation of an Unknown Function
+
+Let's bundle our inputs into a single vector, defined by: 
+
+$$ \mathbf{x} = \begin{bmatrix} \alpha \\ \rho \\ v\end{bmatrix} $$ 
+
+
+We assume there is some unknown function, $f(\cdot):\mathbb{R}^3 \rightarrow \mathbb{R}$, that gives us an optimal estimate for drag-force based on these "features": 
+
+$$ F_d = f (\mathbf{x}) + \varepsilon $$ 
+
+where $\varepsilon$ is some external noise, disturbances or information entirely independent of the input variables. 
+
+Now consider a function $h(\mathbf{x}; \beta):\mathbb{R}^3 \rightarrow \mathbb{R}$ which is a simple linear combination of the inputs: 
+
+$$ h(\mathbf{x}; \beta) = \begin{bmatrix} 1 & \mathbf{x}^\top \end{bmatrix} \begin{bmatrix}  \beta_0 \\ \beta_1 \\ \beta_2 \\ \beta_3  \end{bmatrix} = \beta_0 + \beta_1 \alpha + \beta_2 \rho + \beta_3 v $$
+
+**The Million Dollar Question:**
+
+Given we know the structure of $h(\mathbf{x}; \beta)$, how can we efficiently optimize the parameters of $h(\mathbf{x}; \beta)$ to best approximate $f(\mathbf{x})$? 
+
+## Representing Observed Input-Output Data
+
+Suppose we have taken $N$ real-life samples of the input variables and their corresponding drag-force, $F_d$. Let each sample of the system under various operating conditions form row of a matrix $\mathbf{X} \in \mathbb{R}^{N \times 4}$ for the inputs and a matrix $\mathbf{Y} \in \mathbb{R}^N$ for their corresponding outputs: 
+
+$$ \mathbf{X} = \begin{bmatrix} 1 & \alpha_1 & \rho_1 & v_1 \\ 1 & \alpha_2 & \rho_2 & v_2 \\ & & \vdots & \\ 1 & \alpha_N & \rho_N & v_N \end{bmatrix} , \mathbf{Y} = \begin{bmatrix} F_{d1} \\ F_{d2} \\ \vdots \\ F_{d3} \end{bmatrix} $$ 
+
+ 
+We can efficiently compute the predictions of $h(\mathbf{X}; \beta)$ with a simple matrix-vector multiplication: 
+
+$$ \hat{\mathbf{Y}} = \mathbf{X} \beta = \begin{bmatrix} 1 & \alpha_1 & \rho_1 & v_1 \\ 1 & \alpha_2 & \rho_2 & v_2 \\ & & \vdots & \\ 1 & \alpha_N & \rho_N & v_N \end{bmatrix} \begin{bmatrix} \beta_0 \\ \beta_1 \\ \beta_2 \\ \beta_3 \end{bmatrix} = \begin{bmatrix}  \beta_0 + \beta_1 \alpha_1 + \beta_2 \rho_1 + \beta_3 v_1 \\ \beta_0 + \beta_1 \alpha_2 + \beta_2 \rho_2 + \beta_3 v_2  \\ \vdots \\ \beta_0 + \beta_1 \alpha_N + \beta_2 \rho_N + \beta_3 v_N \end{bmatrix}  \in \mathbb{R}^N $$ 
+
+## The Least-Squares Optimization Problem
+
+Our goal is to adjust the parameters $\beta$ so that our predictions, $\hat{\mathbf{Y}}$, are as close to the true outputs, $\mathbf{Y}$ as possible. One way to measure prediction error is with Mean Squared Error: 
+
+$$ \text{MSE} = \frac{1}{N} \sum_{i=1}^N (\hat{y}_i - y_i)^2 = \frac{1}{N} || \hat{\mathbf{Y}} - \mathbf{Y}||_2^2 = \frac{1}{N} || \mathbf{X} \beta - \mathbf{Y} ||_2^2 $$ 
+
+the $\frac{1}{N}$ is only a scalar, we wish to choose the value of $\beta$ that minimizes the following loss-function: 
+
+$$ L(\beta) = ||\mathbf{X} \beta - \mathbf{Y}||_2^2 $$
+
+## Solving the Least-Squares Problem
+
+Because the squared 2-Norm can be rewritten as an inner product, we can rewrite this loss-function as: 
+
+$$ L(\beta) = ||\mathbf{X} \beta - \mathbf{Y}||_2^2= (\mathbf{X} \beta - \mathbf{Y})^\top (\mathbf{X} \beta - \mathbf{Y}) $$
+$$ = (\beta^\top \mathbf{X}^\top - \mathbf{Y}^\top) (\mathbf{X} \beta - \mathbf{Y}) $$
+
+$$ = \beta^\top \mathbf{X^\top X} \beta - 2 \beta^\top \mathbf{X^\top \mathbf{Y}} + \mathbf{Y^\top Y}$$
+
+As we learned in multivariable calculus, to find a the extrema of a continuous function, we need to identify the critical points of the function. This means setting the gradient of the loss-function equal to the zero-vector:
+
+$$ \nabla L_\beta = 2 \mathbf{X^\top X} \beta - 2 \mathbf{X^\top Y} = \mathbf{0}$$ 
+
+Solving this equation for $\beta$ yields only one critical point: 
+
+$$ \hat{\beta} = (\mathbf{X^\top X})^{-1} \mathbf{X^\top Y} $$ 
+
+To check whether this point is a local minimum, maximum, or neither, we examine the nature of the Hessian: 
+
+$$ \nabla^2 L_\beta = 2 \mathbf{X^\top X} $$ 
+
+Because the Hessian is symmetric positive semidefinite and does not depend on $\beta$, this means that $L(\beta)$ is convex everywhere. Hence, $\hat{\beta}$ must be a global local minimum. 
+
+## Experimental Example
+
+Now suppose we have 100 experimental observations of various angles of attack, air-densities and velocities with the corresponding drag-force in a pandas DataFrame called `df`: 
+
+```{python}
+#| echo: false
+import numpy as np 
+import matplotlib.pyplot as plt 
+import pandas as pd
+import math
+
+np.random.seed(42)
+
+def Cd(alpha):
+    return 0.1 * np.exp(math.pi / 180.0 * alpha)
+
+def Fd(alpha, rho, v):
+    C_d = Cd(alpha)
+    A = 1.2 # m^2 
+    return 0.5*rho*alpha*v**2*C_d +1
+
+N = 100
+alpha = np.random.rand(N)*45
+rho = np.random.randn(N)*0.3 + 1.293 
+v = np.random.rand(N)*100
+F_d = Fd(alpha, rho, v) + 0*np.random.randn(N)
+
+df_dict = {
+    "alpha":alpha,
+    "rho":rho,
+    "velocity":v, 
+    "f_drag":F_d
+}
+
+df = pd.DataFrame(df_dict)
+```
+
+```{python}
+df.head()
+```
+
+We can create $\mathbf{X}$ and $\mathbf{Y}$ matrices by extracting the input features and outputs from the dataframe: 
+
+```{python}
+X = np.hstack((np.ones((N, 1)), df[['alpha', 'rho', 'velocity']].values))
+Y = df['f_drag'].values
+```
+
+We can solve for $\hat{\beta}$ by computing the normal equations: 
+
+```{python}
+beta_hat = np.linalg.inv(X.T @ X) @ (X.T @ Y)
+```
+
+And then compute the model's predictions at the training inputs: 
+
+```{python}
+Y_hat = X @ beta_hat
+```
+
+Now let's plot the $\hat{\mathbf{Y}}$ and $\mathbf{Y}$ to examine how closely correlated the two are. A straight line with slope-1 would mean the model exactly fitted all of the outputs: 
+
+```{python}
+plt.figure(figsize=(8,4))
+plt.scatter(Y, Y_hat)
+plt.grid()
+plt.xlabel("True Drag Force")
+plt.ylabel("Model Predicted Drag Force")
+```
+
+There is clearly a strong, but nonlinear correlation between the true and model-predicted drag-force. This indicates that there is a nonlinear relationship between the features and the output values. Let us quantify the MSE: 
+
+```{python}
+linear_mse = np.linalg.norm(Y_hat - Y, 2) / N
+print("Linear Features Mean-Squared Error: %.2f" % (linear_mse))
+```
+
+## Using Nonlinear Features to Improve Model Performance
+
+We know the underlying formula for drag-force is: 
+
+$$ F_d = \frac{1}{2} \rho v^2 C_d A  $$ 
+
+While this function doesn't depend on the angle of attack, we do see how the features are polynomially related to one another. Naturally, it is going to be difficult for a linear combination of features to replicate this. However, if we take the log of both sides, something interesting happens: 
+
+$$ \ln(F_d) = \ln(\frac{1}{2} \rho v^2 C_d A) = \ln(\frac{1}{2}) + \ln(\rho) + 2\ln(v) + \ln(C_d) + \ln(A) $$
+
+When our features and outputs are log-scaled, we see a friendly linear-combination of log-scaled versions features emerge! Let's alter our inputs and outputs accordingly, so our problem becomes: 
+
+$$ \mathbf{X} = \begin{bmatrix} 1 & \ln \alpha_1 & \ln \rho_1 & \ln v_1 \\ 1 & \ln \alpha_2 & \ln \rho_2 & \ln v_2 \\ & & \vdots & \\ 1 & \ln \alpha_N & \ln \rho_N & \ln v_N \end{bmatrix} , \mathbf{Y} = \begin{bmatrix} \ln F_{d1} \\ \ln F_{d2} \\ \vdots \\ \ln F_{d3} \end{bmatrix} $$ 
+
+Let's see how this works programmatically: 
+
+```{python}
+X_log = np.hstack((np.ones((N, 1)), np.log(df[['alpha', 'rho', 'velocity']].values)))
+Y_log = np.log(df['f_drag'].values - df['f_drag'].min() + 1)
+
+beta_log = np.linalg.inv(X_log.T @ X_log) @ (X_log.T @ Y_log)
+
+Y_hat_log = np.exp(X_log @ beta_log)+ df['f_drag'].min() - 1
+
+plt.figure(figsize=(8,4))
+plt.scatter(Y, Y_hat_log)
+plt.grid()
+plt.xlabel("True Drag Force")
+plt.ylabel("Model Predicted Drag Force")
+```
+
+Now let's see if our MSE has changed: 
+
+```{python}
+log_mse = np.linalg.norm(Y_hat_log - Y, 2)/N
+print("Logarithmically Scaled Features Mean-Squared Error: %.2f" % (log_mse))
+```
+
+We have nearly a 5x reduction in MSE just by log-scaling our features! If we choose the right features, linear regression can be an extremely powerful method for approximating complex functions. 
+
+---
