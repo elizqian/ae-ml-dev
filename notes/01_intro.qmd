@@ -8,11 +8,13 @@ execute:
     freeze: auto
 ---
 
+{{< include _macros.qmd >}}
+
 Welcome to AE 4803 AIM: Foundations of Scientific Machine Learning. This is a new course offered in the Spring 2025 term at Georgia Tech and is intended to be a "foundations" level course in the new College of Engineering AI for Engineering minor. 
 
-## What's in a name? Artificial intelligence, machine learning, and data science
+## What's in a name? Artificial intelligence, machine learning, data science, and the scope of this course.
 
-I googled "artificial intelligence" and the first result comes from Google's new "AI overview" feature[^1]:
+I googled "artificial intelligence" (often abbreviated AI) and the first result comes from Google's new "AI overview" feature[^1]:
 ![Image Source: Google.com](images/01_intro_AIgoogle.png){fig-align="center" width=100% fig-alt="Artificial intelligence (AI) is a field of study that focuses on developing machines that can learn, reason, and act in ways that are usually associated with human intelligence."}
 
 [^1]: It seems apt to use AI to define AI, and I'm quoting it for illustrative purposes here, but I do want to point out that Google's AI Overview is not at all transparent about how these responses are generated and thus does not meet the standards for being cited as a source in most publishing venues. 
@@ -27,30 +29,63 @@ These are probably both reasonable definitions for casual conversation, but that
 Consider the two different definitions of "AI" above carefully. In what (if any) senses are they (a) exactly the same, (b) similar, (c) somewhat different, (d) very different? What consequences might these differences have (a) developing AI algorithms, (b) evaluating AI impacts, (c) creating AI policies?
 :::
 
-I'm not going to provide a definition of AI for now and instead I'm going to throw two more terms into the mix that you may have heard. The first is "machine learning". Rather than get an AI definition for this too, I decided to go to the dictionary Merriam-Webster, which provides the following primary definition [@merriamML2024]: 
+I'm not going to provide a definition of AI for now and instead I'm going to throw two more terms into the mix that you may have heard. The first is "machine learning" (often abbreviated ML). Rather than get an AI definition for this too, I decided to go to the dictionary Merriam-Webster, which provides the following primary definition [@merriamML2024]: 
 
 > a computational method that is a subfield of artificial intelligence and that enables a computer to learn to perform tasks by analyzing a large dataset without being explicitly programmed
 
-And finally I'll add the term "data science." I wanted to give you a Merriam-Webster definition here, but the term isn't in their dictionary as of writing this on October 28, 2024. So instead I'm going to use Cambridge Dictionary's definition [@cambridgeDS2024]:
+And finally I'll add the term "data science" (curiously, rarely abbreviated DS). I wanted to give you a Merriam-Webster definition here, but the term isn't in their dictionary as of writing this on October 28, 2024. So instead I'm going to use Cambridge Dictionary's definition [@cambridgeDS2024]:
 
 > the use of scientific methods to obtain useful information from computer data, especially large amounts of data
 
+::: {.callout-note}
+## Exercise
+For both the terms "machine learning" and "data science", find an alternative definition from a source that is not a generative AI. What differences exist between the new definitions you've found and the ones I've cited above? 
+:::
 
-<!-- That's certainly one view. Another view comes from Yann LeCun, an NYU professor who is widely viewed as one of the "godfathers" of AI research, who negatively compares today's so-called AI capability with the intelligence of domestic cats: "Felines, after all, have a mental model of the physical world, persistent memory, some reasoning ability and a capacity for planning, he says. None of these qualities are present in today’s 'frontier' AIs" [@wsjLeCun2024].  -->
+Clearly, different people/entities may have different ideas of what AI, ML, and data science may mean. Some people may use these terms  to describe generative tools like ChatGPT, GitHub copilot, and Dall-E (or similar products developed by other entities). Others use these terms to refer to more purpose-built algorithms like AlphaGo (for playing Go) or GraphCast (for weather prediction).[^2] Many academics use these terms to describe the study of the underlying mathematical and programming ideas on which such products are built.
 
-That's probably a reasonable definition for casual conversation, although
+[^2]: this paragraph lists examples that came to me most quickly and thus reflects to some extent my own cognitive biases based on the media I've consumed. I welcome suggestions of other examples of AI/ML/data science to include that are less well-known -- Email me!
 
-some remarks about what these things mean to different people, some links to further reading, narrow focus to supervised learning 
+My goal is not to give you a single definition of any of these terms and then to argue that my definition is more correct than any other definition. The point I want to make is that it's worth being clear about how we define these terms in any given context, whether it be in a textbook, a news article, or perhaps a spirited discussion between friends. To that end, I now want to make clear what it is that we will and will not cover in this class, which is a "foundations"-level course in the College of Engineering's AI minor. 
 
-### Regression
+The focus of this class will be the mathematical and programming foundations of *scientific machine learning*, which I define as *the study of algorithms which use scientific data to define computational tools that perform useful scientific tasks*. The main scientific task that we will focus on in this course is the task of *predictive simulation*, which seeks to predict the behavior or outcomes of scientific or engineering systems. Predictive simulation is a key task in engineering disciplines like design and control, where we seek to predict design outcomes and control responses in order to make decisions about design parameters and control inputs. The class of machine learning methods that we will focus on in this class will therefore be *regression* methods, which use data to define relationships between inputs and outputs that allow us to take a specified input and issue a prediction for the output. 
 
-problem of predicting outputs from inputs 
+## Regression methods: an overview
+
+### Motivation and problem description
+We use the notation $z\in \R^d$ to denote a real-valued vector of $d$ input variables, and the notation $y \in\R$ to denote a real-valued scalar output variable. Our goal is to be able to predict the value of $y$ if we know the value(s) of the input variable $z$. Some examples:
+
+* in aerodynamic modeling, $z$ could contain airfoil geometry parameters like camber and thickness, and $y$ could represent the lift coefficient. Being able to predict $y$ from $z$ enables engineers to choose more aerodynamically efficient designs. 
+* in orbital dynamics, $z$ could represent orbital parameters like altitude and inclination, and $y$ could represent the total time a satellite spends outside the sun's shadow in a given time period. Being able to predict $y$ from $z$ enables engineers to determine if a satellite's solar panels will generate enough power to support the satellite's mission. 
+* in chemical process engineering, $z$ could represent conditions within a reactor like temperature and chemical mixture properties and $y$ could represent the reaction rate. Being able to predict $y$ from $z$ enables engineers to design more efficient reactors. 
+
+
+::: {.callout-note}
+## Exercise
+Propose your own example scenario where it would be useful to predict real-valued outputs from inputs, drawing on your own experience, e.g. in personal projects, previous coursework, work/internship/co-op experiences, or extracurriculars. What would $z$ and $y$ represent? What does predicting $y$ from $z$ enable in your scenario?
+:::
+
+Mathematically, predicting $y$ from $z$ amounts to defining a *function* $f$ that takes in a $d$-dimensional input and outputs a scalar. Mathematical notational shorthand for this is $f:\R^d\to\R$. The question at hand is: how do we choose $f$? There are many ways to do so:
+
+1. At a baseline, you could just make up a model: let's just say $y = f(z) = \|z\|^2$. This is mathematically valid, but it's probably a bad model for the three example scenarios above, because this model probably issues predictions that are very different from the true outputs. 
+
+2. Alternatively, you could develop a model based on physical principles (a "physics-based" model) -- if you have taken classes in (aero/thermo)dynamics, then you would have learned some ways to calculate $y$ from $z$ in the above examples, e.g. based on potential flow theory, rigid body dynamics, or the Arrhenius equation. These models are likely to be more accurate than our made-up model above, although they are often imperfectly accurate because they make simplifying assumptions. One drawback of physics-based models is that they may be computationally expensive (some computational fluid dynamics simulations require many thousands of hours of supercomputing time). Additionally, fully physics-based models may not even exist in some applications (e.g., there are many aspects of plasma physics for which we currently lack a complete theoretical understanding).
+
+3. Finally, our focus will be on using *data* to define a model (a "data-driven" model or a "learned" model). We assume that we have a data set consisting of $N$ pairs of input and output data, $(z_i,y_i)$ for $i = 1,\ldots,N$. To define our model, we want to choose an $f$ so that the predicted output $f(z_i)$ is close to the output data $y_i$ for all the data in our data set. This is sometimes called "fitting" the model to data. The advantages of data-driven models are that they may be significantly cheaper than physics-based models, and they can be fit to experimental data even when we lack scientific theory for developing physics-based models. The disadvantages are that data-driven models require data -- and the amount of data that would be "enough" to ensure that the learned model is accurate or useful is highly dependent on the application. 
+
+Learning how to fit models to data and assess their accuracy and usefulness is the focus of this course. 
+
+### Mathematical setting and problem formulation
 
 formulation as selection from within a parametrized model class 
 
 choosing parameters via optimization 
 
+some implication of the breadth of methods
+
 ### Things that are not regression
+
+I want to emphasize that this class is not and indeed cannot (realistically) be an exhaustive introduction to machine learning, artificial intelligence, or data science. Even the community of professionals who describe themselves as working in "scientific machine learning" is quite broad in scope and would include folks working on topics that I do not intend to cover in this class. There are many topics within AI/ML/data science we will not cover (beyond perhaps at most a very surface level), including generative modeling, decision trees, unsupervised learning methods like clustering, and many more. 
 
 Give one example, list other examples, I cannot possibly hope to cover all these things in this course, so another goal of the course is to teach the language of ML so you are prepared to learn other things in future courses and on your own. 
 

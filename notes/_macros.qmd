@@ -1,0 +1,13 @@
+::: {.hidden}
+
+\newcommand*{\R}{\mathbb{R}}
+<!-- \renewcommand{\P}{\mathrm{P}} -->
+
+<!-- $$
+\DeclarePairedDelimiters{\set}{\{}{\}}
+\DeclareMathOperator*{\argmax}{argmax}
+$$
+
+\definecolor{quarto-callout-note-color}{HTML}{4477AA} -->
+
+:::
