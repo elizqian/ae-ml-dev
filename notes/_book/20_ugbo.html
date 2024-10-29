@@ -65,7 +65,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
 <link href="./21_ugbo2.html" rel="next">
-<link href="./01_ls.html" rel="prev">
+<link href="./11_ls.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -177,13 +177,13 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./00_linalg.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">AE 4803 AIM</span></span></a>
+  <a href="./01_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./01_ls.html" class="sidebar-item-text sidebar-link">
+  <a href="./11_ls.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">ML for AE: Least Squares Regression</span></span></a>
   </div>
 </li>
@@ -199,6 +199,29 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Unconstrained Gradient Based Optimization (UGBO) II - Steepest Descent</span></span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./00_linalg.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Linear algebra review</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
     </ul>
     </div>
 </nav>
@@ -264,7 +287,7 @@ window.Quarto = {
 <p><strong>Definition:</strong> We say that a point <span class="math inline">\(x^\star\)</span> is a <em>local minimizer</em> of <span class="math inline">\(f\)</span> if there exists some open set <span class="math inline">\(\mathcal{B}\)</span>, that contains <span class="math inline">\(x^\star\)</span>, such that: <span class="math display">\[
 f(x^\star)\leq f(x) \text{ for all }x\in\mathcal{B}.
 \]</span> If the inequality becomes strict, then <span class="math inline">\(x^\star\)</span> is referred to as a <em>strict</em> local minimizer. To illustrate the above definitions, let us look at the function <span class="math inline">\(f(x) = 2 + \cos(x) + \frac{1}{2} \cos\left(5x - \frac{1}{2}\right)\)</span> over the domain <span class="math inline">\(\mathcal{D} = [0, 3.7]\)</span>. In this domain, the function has two local minimizers and one global minimizer, as illustrated in the plot below.</p>
-<div id="784fb98e" class="cell" data-execution_count="1">
+<div id="7098f5d1" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -313,7 +336,7 @@ H(x) = \begin{bmatrix}
 f(x_1, x_2) = 0.5x_1^4 + 2x_1^3 + 1.5x_1^2 + x_2^2 - 2x_1x_2
 \]</span></p>
 <p>Let’s plot the contours of <span class="math inline">\(f\)</span>.</p>
-<div id="678376ba" class="cell" data-execution_count="2">
+<div id="10dea564" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -356,7 +379,7 @@ f(x_1, x_2) = 0.5x_1^4 + 2x_1^3 + 1.5x_1^2 + x_2^2 - 2x_1x_2
 \end{bmatrix}
 \]</span></p>
 <p>We can do that by using <code>fsolve()</code> from <code>scipy.optimize</code>.</p>
-<div id="c504b8de" class="cell" data-execution_count="3">
+<div id="23451450" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.optimize <span class="im">import</span> fsolve</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the first partial derivatives</span></span>
@@ -394,7 +417,7 @@ H(x_1, x_2) =
 \end{bmatrix}
 \]</span></p>
 <p>We now need to evaluate the Hessian at each one of the critical points and check whether is it positive semidefinite. There are a number of ways we can check this, but we will be examining the eigenvalues of the Hessian and checking whether they are all positive.</p>
-<div id="f54df813" class="cell" data-execution_count="4">
+<div id="0a388228" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the Hessian</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> Hessian(x1, x2):</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.array([[<span class="dv">6</span> <span class="op">*</span> x1<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> <span class="dv">12</span> <span class="op">*</span> x1 <span class="op">+</span> <span class="dv">3</span>, <span class="op">-</span><span class="dv">2</span>], [<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>]])</span>
@@ -407,7 +430,7 @@ H(x_1, x_2) =
 </div>
 </div>
 <p>Based on these results, we know that the first and third critical points are local minimizers. The second critical point is classifies as a <em>saddle point</em> because the Hessian is not positive semidefinite. To find out which of the local minimizers is the global minimzer, we evaluate the function at each of these points. Let’s go ahead and label the points accordingly.</p>
-<div id="4c4ec04f" class="cell" data-execution_count="5">
+<div id="6f713378" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the contour plot</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">1000</span>)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">1000</span>)</span>
@@ -856,7 +879,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./01_ls.html" class="pagination-link" aria-label="ML for AE: Least Squares Regression">
+      <a href="./11_ls.html" class="pagination-link" aria-label="ML for AE: Least Squares Regression">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">ML for AE: Least Squares Regression</span></span>
       </a>          
   </div>

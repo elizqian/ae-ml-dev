@@ -2,27 +2,26 @@ project:
   type: book
 
 book:
-  title: "AE 4803 AIM"
+  title: "AE 4803 AIM: Course Notes"
   author: "Elizabeth Qian, Atticus Rex, Pavlos Stavrinides"
   date: "Spring 2025"
   chapters:
     - index.qmd
-    - 01_ls.qmd
+    - 01_intro.qmd
+    - 11_ls.qmd
     - 20_ugbo.qmd
     - 21_ugbo2.qmd
-    # - intro.qmd
-    # - summary.qmd
-    # - references.qmd
+    - references.qmd
   appendices:
     - 00_linalg.qmd
 
 bibliography: references.bib
+
+execute:
+  freeze: auto
 
 format:
   html:
     theme: cosmo
   pdf:
     documentclass: scrreprt
-
-
-

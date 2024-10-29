@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>AE 4803 AIM - 4&nbsp; Unconstrained Gradient Based Optimization (UGBO) II - Steepest Descent</title>
+<title>AE 4803 AIM: Course Notes - 1&nbsp; Introduction</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -43,15 +43,15 @@ div.csl-indent {
 }</style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
 <script src="site_libs/quarto-search/autocomplete.umd.js"></script>
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./references.html" rel="next">
-<link href="./20_ugbo.html" rel="prev">
+<link href="./11_ls.html" rel="next">
+<link href="./index.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -88,39 +88,10 @@ div.csl-indent {
     "search-label": "Search"
   }
 }</script>
-<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
-<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
-<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
@@ -133,7 +104,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./21_ugbo2.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Unconstrained Gradient Based Optimization (UGBO) II - Steepest Descent</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01_intro.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -148,7 +119,7 @@ window.Quarto = {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">AE 4803 AIM</a> 
+      <a href="./">AE 4803 AIM: Course Notes</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -166,8 +137,8 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./01_intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">ML for AE: Least Squares Regression</span></span></a>
+  <a href="./01_intro.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -184,7 +155,7 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./21_ugbo2.html" class="sidebar-item-text sidebar-link active">
+  <a href="./21_ugbo2.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Unconstrained Gradient Based Optimization (UGBO) II - Steepest Descent</span></span></a>
   </div>
 </li>
@@ -221,12 +192,14 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#problem-motivation" id="toc-problem-motivation" class="nav-link active" data-scroll-target="#problem-motivation"><span class="header-section-number">5</span> Problem Motivation</a></li>
-  <li><a href="#steepest-descent" id="toc-steepest-descent" class="nav-link" data-scroll-target="#steepest-descent"><span class="header-section-number">6</span> Steepest Descent</a>
+  <li><a href="#whats-in-a-name-artificial-intelligence-machine-learning-and-data-science" id="toc-whats-in-a-name-artificial-intelligence-machine-learning-and-data-science" class="nav-link active" data-scroll-target="#whats-in-a-name-artificial-intelligence-machine-learning-and-data-science"><span class="header-section-number">1.1</span> What’s in a name? Artificial intelligence, machine learning, and data science</a>
   <ul class="collapse">
-  <li><a href="#motivation" id="toc-motivation" class="nav-link" data-scroll-target="#motivation"><span class="header-section-number">6.1</span> Motivation</a></li>
-  <li><a href="#algorithm" id="toc-algorithm" class="nav-link" data-scroll-target="#algorithm"><span class="header-section-number">6.2</span> Algorithm</a></li>
-  <li><a href="#example" id="toc-example" class="nav-link" data-scroll-target="#example"><span class="header-section-number">6.3</span> Example</a></li>
+  <li><a href="#regression" id="toc-regression" class="nav-link" data-scroll-target="#regression"><span class="header-section-number">1.1.1</span> Regression</a></li>
+  <li><a href="#things-that-are-not-regression" id="toc-things-that-are-not-regression" class="nav-link" data-scroll-target="#things-that-are-not-regression"><span class="header-section-number">1.1.2</span> Things that are not regression</a></li>
+  </ul></li>
+  <li><a href="#the-three-pillars-of-ai-mathematics-computation-and-human-intelligence" id="toc-the-three-pillars-of-ai-mathematics-computation-and-human-intelligence" class="nav-link" data-scroll-target="#the-three-pillars-of-ai-mathematics-computation-and-human-intelligence"><span class="header-section-number">1.2</span> The three pillars of AI: mathematics, computation, and human intelligence</a>
+  <ul class="collapse">
+  <li><a href="#course-structure-and-intended-learning-outcomes" id="toc-course-structure-and-intended-learning-outcomes" class="nav-link" data-scroll-target="#course-structure-and-intended-learning-outcomes"><span class="header-section-number">1.2.1</span> Course structure and intended learning outcomes</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -236,7 +209,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Unconstrained Gradient Based Optimization (UGBO) II - Steepest Descent</span></h1>
+<h1 class="title"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></h1>
 </div>
 
 
@@ -253,83 +226,360 @@ window.Quarto = {
 </header>
 
 
-<section id="problem-motivation" class="level1" data-number="5">
-<h1 data-number="5"><span class="header-section-number">5</span> Problem Motivation</h1>
-<p>So far, we have developed analytical tools that allow us to find and classify critical points of functions. However, this analytical approach to finding minima is often infeasible, esecially when the objective function is a result of a numerical model. To combat this, we turn to interative algorithms that prgressively work towards finding a minimum while only relying on function and gradient evaluations. The main idea is that we will start from some initial guess <span class="math inline">\(x_0\)</span> and produce a sequence of points <span class="math inline">\(x_1, x_2, x_3, \ldots, x_j, \ldots\)</span>, eventually converging to some local minimizer <span class="math inline">\(x^\star\)</span>.</p>
-<p>There are two major classes of iterative optimization methods that produce the aforementioned sequence of points: <em>line search</em> methods and <em>trust region</em> methods. In this course, we will focus on the former, but we will provide some resources for those interested in the latter. Line search methods consist of three main steps that occur at each iteration:</p>
-<ol type="1">
-<li>Identify a suitable <em>search direction</em> from the current point</li>
-<li>Determine a <em>step size</em> (by performing a line search)</li>
-<li>Move to the new point and update all function and gradient values</li>
-</ol>
-<p>The whole process is summarized in the diagram below.</p>
-<div class="cell" data-layout-align="default">
-<div class="cell-output-display">
-<div>
-<p></p><figure class="figure"><p></p>
-<div>
-<pre class="mermaid mermaid-js">flowchart LR
-  A(Starting guess) --&gt; B(Search direction)
-  B --&gt; C(Step size)
-  C --&gt; D(Is this a minimum?)
-  D --&gt;|Yes| E(Converged)
-  D --&gt;|No| F(Update values)
-  F --&gt; B
+<p>Welcome to AE 4803 AIM: Foundations of Scientific Machine Learning. This is a new course offered in the Spring 2025 term at Georgia Tech and is intended to be a “foundations” level course in the new College of Engineering AI for Engineering minor.</p>
+<section id="whats-in-a-name-artificial-intelligence-machine-learning-and-data-science" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="whats-in-a-name-artificial-intelligence-machine-learning-and-data-science"><span class="header-section-number">1.1</span> What’s in a name? Artificial intelligence, machine learning, and data science</h2>
+<p>I googled “artificial intelligence” and the first result comes from Google’s new “AI overview” feature<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>: <img src="images/01_intro_AIgoogle.png" class="img-fluid quarto-figure quarto-figure-center" style="width:100.0%" alt="Artificial intelligence (AI) is a field of study that focuses on developing machines that can learn, reason, and act in ways that are usually associated with human intelligence."></p>
+<p>Because I closed the tab with my first search and wanted to go back to the webpage to copy the text for the image alt-text above, I repeated my search, and got a somewhat different answer: <img src="images/01_intro_AIgoogle2.png" class="img-fluid quarto-figure quarto-figure-center" style="width:100.0%" alt="Artificial intelligence (AI) is the ability of a machine to perform tasks that are usually associated with human intelligence."></p>
+<p>These are probably both reasonable definitions for casual conversation, but that’s not what we’re here for. Instead, we’re here to really learn deeply about what AI is, and for that we’re going to need <strong>precision</strong> – that is, of our definitions.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Consider the two different definitions of “AI” above carefully. In what (if any) senses are they (a) exactly the same, (b) similar, (c) somewhat different, (d) very different? What consequences might these differences have (a) developing AI algorithms, (b) evaluating AI impacts, (c) creating AI policies?</p>
+</div>
+</div>
+<p>I’m not going to provide a definition of AI for now and instead I’m going to throw two more terms into the mix that you may have heard. The first is “machine learning”. Rather than get an AI definition for this too, I decided to go to the dictionary Merriam-Webster, which provides the following primary definition <span class="citation" data-cites="merriamML2024">(<a href="references.html#ref-merriamML2024" role="doc-biblioref">Merriam-Webster Dictionary 2024</a>)</span>:</p>
+<blockquote class="blockquote">
+<p>a computational method that is a subfield of artificial intelligence and that enables a computer to learn to perform tasks by analyzing a large dataset without being explicitly programmed</p>
+</blockquote>
+<p>And finally I’ll add the term “data science.” I wanted to give you a Merriam-Webster definition here, but the term isn’t in their dictionary as of writing this on October 28, 2024. So instead I’m going to use Cambridge Dictionary’s definition <span class="citation" data-cites="cambridgeDS2024">(<a href="references.html#ref-cambridgeDS2024" role="doc-biblioref">Cambridge Dictionary 2024</a>)</span>:</p>
+<blockquote class="blockquote">
+<p>the use of scientific methods to obtain useful information from computer data, especially large amounts of data</p>
+</blockquote>
+<!-- That's certainly one view. Another view comes from Yann LeCun, an NYU professor who is widely viewed as one of the "godfathers" of AI research, who negatively compares today's so-called AI capability with the intelligence of domestic cats: "Felines, after all, have a mental model of the physical world, persistent memory, some reasoning ability and a capacity for planning, he says. None of these qualities are present in today’s 'frontier' AIs" [@wsjLeCun2024].  -->
+<p>That’s probably a reasonable definition for casual conversation, although</p>
+<p>some remarks about what these things mean to different people, some links to further reading, narrow focus to supervised learning</p>
+<section id="regression" class="level3" data-number="1.1.1">
+<h3 data-number="1.1.1" class="anchored" data-anchor-id="regression"><span class="header-section-number">1.1.1</span> Regression</h3>
+<p>problem of predicting outputs from inputs</p>
+<p>formulation as selection from within a parametrized model class</p>
+<p>choosing parameters via optimization</p>
+</section>
+<section id="things-that-are-not-regression" class="level3" data-number="1.1.2">
+<h3 data-number="1.1.2" class="anchored" data-anchor-id="things-that-are-not-regression"><span class="header-section-number">1.1.2</span> Things that are not regression</h3>
+<p>Give one example, list other examples, I cannot possibly hope to cover all these things in this course, so another goal of the course is to teach the language of ML so you are prepared to learn other things in future courses and on your own.</p>
+</section>
+</section>
+<section id="the-three-pillars-of-ai-mathematics-computation-and-human-intelligence" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="the-three-pillars-of-ai-mathematics-computation-and-human-intelligence"><span class="header-section-number">1.2</span> The three pillars of AI: mathematics, computation, and human intelligence</h2>
+<p>mathematics is the language that describes what we want to do</p>
+<p>computation/programming is the execution (translation)</p>
+<p>human intelligence is woven throughout, specifies problem, evaluates results, re-specifies problem.</p>
+<section id="course-structure-and-intended-learning-outcomes" class="level3" data-number="1.2.1">
+<h3 data-number="1.2.1" class="anchored" data-anchor-id="course-structure-and-intended-learning-outcomes"><span class="header-section-number">1.2.1</span> Course structure and intended learning outcomes</h3>
+<p>fill in nearer to term</p>
+<!-- ## A Motivating Example -->
+<!-- ![Image Source: Embry-Riddle Aeronautical University](images/AirfoilDrag.png){fig-align="center" width=80%} -->
+<!-- 
+Suppose we wish to efficiently approximate the force of drag ($F_d$), measured in $N$, on a specific airplane wing if we only have access to the following information about the wing and its operating conditions: 
 
-</pre>
-</div>
-<p></p></figure><p></p>
-</div>
-</div>
-</div>
-<p>Steps 1 and 2 can be understood as two separate subproblems in the overall optimization scheme. In this note, we will examine the first of these subproblems by introducing the <em>steepest descent</em> algorithm, and seeing how the subproblem of determining a suitable step size arises as a natural consequence.</p>
-</section>
-<section id="steepest-descent" class="level1" data-number="6">
-<h1 data-number="6"><span class="header-section-number">6</span> Steepest Descent</h1>
-<section id="motivation" class="level2" data-number="6.1">
-<h2 data-number="6.1" class="anchored" data-anchor-id="motivation"><span class="header-section-number">6.1</span> Motivation</h2>
-<p>Given some objective function <span class="math inline">\(f\)</span>, recall that the gradient <span class="math inline">\(\nabla f\)</span> is a vector with each component quantifying the function’s local rate of change with respect to each variable.</p>
-<p><strong>Fact:</strong> The gradient is a vector that points to the direction that yields the greatest function increase from the current point.</p>
-<p><strong>Idea:</strong> From any given point <span class="math inline">\(x\)</span>, we can find the direction of steepest descent by taking <span class="math inline">\(-\nabla f(x)\)</span>. So, we can define our search direction at iteration <span class="math inline">\(k\)</span> as: <span class="math inline">\(p_k = -\nabla f(x_k)\)</span></p>
-<p>One problem with the above idea is that the gradient does not give us any information regarding the step size we should take. Hence, the search direction is often normalized as:</p>
-<p><span class="math display">\[
-p_k = -\frac{\nabla f(x_k)}{\|\nabla f(x_k)\|_2}
-\]</span></p>
-</section>
-<section id="algorithm" class="level2" data-number="6.2">
-<h2 data-number="6.2" class="anchored" data-anchor-id="algorithm"><span class="header-section-number">6.2</span> Algorithm</h2>
-<p>Need to include an algorithm block here.</p>
-</section>
-<section id="example" class="level2" data-number="6.3">
-<h2 data-number="6.3" class="anchored" data-anchor-id="example"><span class="header-section-number">6.3</span> Example</h2>
-<p>Consider the quadratic function: <span class="math display">\[
-f(x_1, x_2) = x_1^2 + \beta x_2^2
-\]</span></p>
-<p>First, let us consider the case where <span class="math inline">\(\beta = 1\)</span> and the starting point is <span class="math inline">\(x_0 = (10,1)\)</span>.</p>
-<div id="eceb38eb" class="cell" data-execution_count="1">
-<div class="cell-output cell-output-stdout">
-<pre><code>0.0002487577548903103</code></pre>
-</div>
-<div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>Text(0, 0.5, '$x_2$')</code></pre>
-</div>
-<div class="cell-output cell-output-display">
+* The angle of attack ($\alpha$), measured in degrees
+* The density of the fluid ($\rho$), measured in $kg/m^3$ 
+* The velocity of the fluid ($v$), measured in $m/s$  -->
+<!-- ## Linear Approximation of an Unknown Function
+
+Let's bundle our inputs into a single vector, defined by: 
+
+$$ \mathbf{x} = \begin{bmatrix} \alpha \\ \rho \\ v\end{bmatrix} $$ 
+
+
+We assume there is some unknown function, $f(\cdot):\mathbb{R}^3 \rightarrow \mathbb{R}$, that gives us an optimal estimate for drag-force based on these "features": 
+
+$$ F_d = f (\mathbf{x}) + \varepsilon $$ 
+
+where $\varepsilon$ is some external noise, disturbances or information entirely independent of the input variables.  -->
 <div>
-<figure class="figure">
-<p><img src="21_ugbo2_files/figure-html/cell-2-output-3.png" width="773" height="427" class="figure-img"></p>
-</figure>
+<!-- Now consider a function $h(\mathbf{x}; \beta):\mathbb{R}^3 \rightarrow \mathbb{R}$ which is a simple linear combination of the inputs: 
+
+$$ h(\mathbf{x}; \beta) = \begin{bmatrix} 1 & \mathbf{x}^\top \end{bmatrix} \begin{bmatrix}  \beta_0 \\ \beta_1 \\ \beta_2 \\ \beta_3  \end{bmatrix} = \beta_0 + \beta_1 \alpha + \beta_2 \rho + \beta_3 v $$
+
+**The Million Dollar Question:**
+
+Given we know the structure of $h(\mathbf{x}; \beta)$, how can we efficiently optimize the parameters of $h(\mathbf{x}; \beta)$ to best approximate $f(\mathbf{x})$? 
+
+## Representing Observed Input-Output Data
+
+Suppose we have taken $N$ real-life samples of the input variables and their corresponding drag-force, $F_d$. Let each sample of the system under various operating conditions form row of a matrix $\mathbf{X} \in \mathbb{R}^{N \times 4}$ for the inputs and a matrix $\mathbf{Y} \in \mathbb{R}^N$ for their corresponding outputs: 
+
+$$ \mathbf{X} = \begin{bmatrix} 1 & \alpha_1 & \rho_1 & v_1 \\ 1 & \alpha_2 & \rho_2 & v_2 \\ & & \vdots & \\ 1 & \alpha_N & \rho_N & v_N \end{bmatrix} , \mathbf{Y} = \begin{bmatrix} F_{d1} \\ F_{d2} \\ \vdots \\ F_{d3} \end{bmatrix} $$ 
+
+ 
+We can efficiently compute the predictions of $h(\mathbf{X}; \beta)$ with a simple matrix-vector multiplication: 
+
+$$ \hat{\mathbf{Y}} = \mathbf{X} \beta = \begin{bmatrix} 1 & \alpha_1 & \rho_1 & v_1 \\ 1 & \alpha_2 & \rho_2 & v_2 \\ & & \vdots & \\ 1 & \alpha_N & \rho_N & v_N \end{bmatrix} \begin{bmatrix} \beta_0 \\ \beta_1 \\ \beta_2 \\ \beta_3 \end{bmatrix} = \begin{bmatrix}  \beta_0 + \beta_1 \alpha_1 + \beta_2 \rho_1 + \beta_3 v_1 \\ \beta_0 + \beta_1 \alpha_2 + \beta_2 \rho_2 + \beta_3 v_2  \\ \vdots \\ \beta_0 + \beta_1 \alpha_N + \beta_2 \rho_N + \beta_3 v_N \end{bmatrix}  \in \mathbb{R}^N $$ 
+
+## The Least-Squares Optimization Problem
+
+Our goal is to adjust the parameters $\beta$ so that our predictions, $\hat{\mathbf{Y}}$, are as close to the true outputs, $\mathbf{Y}$ as possible. One way to measure prediction error is with Mean Squared Error: 
+
+$$ \text{MSE} = \frac{1}{N} \sum_{i=1}^N (\hat{y}_i - y_i)^2 = \frac{1}{N} || \hat{\mathbf{Y}} - \mathbf{Y}||_2^2 = \frac{1}{N} || \mathbf{X} \beta - \mathbf{Y} ||_2^2 $$ 
+
+the $\frac{1}{N}$ is only a scalar, we wish to choose the value of $\beta$ that minimizes the following loss-function: 
+
+$$ L(\beta) = ||\mathbf{X} \beta - \mathbf{Y}||_2^2 $$
+
+## Solving the Least-Squares Problem
+
+Because the squared 2-Norm can be rewritten as an inner product, we can rewrite this loss-function as: 
+
+$$ L(\beta) = ||\mathbf{X} \beta - \mathbf{Y}||_2^2= (\mathbf{X} \beta - \mathbf{Y})^\top (\mathbf{X} \beta - \mathbf{Y}) $$
+$$ = (\beta^\top \mathbf{X}^\top - \mathbf{Y}^\top) (\mathbf{X} \beta - \mathbf{Y}) $$
+
+$$ = \beta^\top \mathbf{X^\top X} \beta - 2 \beta^\top \mathbf{X^\top \mathbf{Y}} + \mathbf{Y^\top Y}$$
+
+As we learned in multivariable calculus, to find a the extrema of a continuous function, we need to identify the critical points of the function. This means setting the gradient of the loss-function equal to the zero-vector:
+
+$$ \nabla L_\beta = 2 \mathbf{X^\top X} \beta - 2 \mathbf{X^\top Y} = \mathbf{0}$$ 
+
+Solving this equation for $\beta$ yields only one critical point: 
+
+$$ \hat{\beta} = (\mathbf{X^\top X})^{-1} \mathbf{X^\top Y} $$ 
+
+To check whether this point is a local minimum, maximum, or neither, we examine the nature of the Hessian: 
+
+$$ \nabla^2 L_\beta = 2 \mathbf{X^\top X} $$ 
+
+Because the Hessian is symmetric positive semidefinite and does not depend on $\beta$, this means that $L(\beta)$ is convex everywhere. Hence, $\hat{\beta}$ must be a global local minimum. 
+
+## Experimental Example
+
+Now suppose we have 100 experimental observations of various angles of attack, air-densities and velocities with the corresponding drag-force in a pandas DataFrame called `df`: 
+
+
+
+::: {#c9e581ff .cell execution_count=2}
+``` {.python .cell-code}
+df.head()
+```
+
+::: {.cell-output .cell-output-display execution_count=20}
+
+```{=html}
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+
+<table class="dataframe" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header" style="text-align: right;">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">alpha</th>
+<th data-quarto-table-cell-role="th">rho</th>
+<th data-quarto-table-cell-role="th">velocity</th>
+<th data-quarto-table-cell-role="th">f_drag</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>16.854305</td>
+<td>1.319114</td>
+<td>79.481130</td>
+<td>9425.204935</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>42.782144</td>
+<td>1.203298</td>
+<td>50.263709</td>
+<td>13722.379248</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>32.939727</td>
+<td>1.320528</td>
+<td>57.690388</td>
+<td>12863.441979</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>26.939632</td>
+<td>0.696729</td>
+<td>49.251769</td>
+<td>3644.076532</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>7.020839</td>
+<td>1.227098</td>
+<td>19.524299</td>
+<td>186.612122</td>
+</tr>
+</tbody>
+</table>
+
 </div>
+```
+
+:::
+:::
+
+
+We can create $\mathbf{X}$ and $\mathbf{Y}$ matrices by extracting the input features and outputs from the dataframe: 
+
+::: {#a211e74f .cell execution_count=3}
+``` {.python .cell-code}
+X = np.hstack((np.ones((N, 1)), df[['alpha', 'rho', 'velocity']].values))
+Y = df['f_drag'].values
+```
+:::
+
+
+We can solve for $\hat{\beta}$ by computing the normal equations: 
+
+::: {#ad457603 .cell execution_count=4}
+``` {.python .cell-code}
+beta_hat = np.linalg.inv(X.T @ X) @ (X.T @ Y)
+```
+:::
+
+
+And then compute the model's predictions at the training inputs: 
+
+::: {#0e1ec900 .cell execution_count=5}
+``` {.python .cell-code}
+Y_hat = X @ beta_hat
+```
+:::
+
+
+Now let's plot the $\hat{\mathbf{Y}}$ and $\mathbf{Y}$ to examine how closely correlated the two are. A straight line with slope-1 would mean the model exactly fitted all of the outputs: 
+
+::: {#40f45498 .cell execution_count=6}
+``` {.python .cell-code}
+plt.figure(figsize=(8,4))
+plt.scatter(Y, Y_hat)
+plt.grid()
+plt.xlabel("True Drag Force")
+plt.ylabel("Model Predicted Drag Force")
+```
+
+::: {.cell-output .cell-output-display execution_count=24}
+```
+Text(0, 0.5, 'Model Predicted Drag Force')
+```
+:::
+
+::: {.cell-output .cell-output-display}
+![](01_intro_files/figure-html/cell-7-output-2.png){width=697 height=350}
+:::
+:::
+
+
+There is clearly a strong, but nonlinear correlation between the true and model-predicted drag-force. This indicates that there is a nonlinear relationship between the features and the output values. Let us quantify the MSE: 
+
+::: {#e9736d06 .cell execution_count=7}
+``` {.python .cell-code}
+linear_mse = np.linalg.norm(Y_hat - Y, 2) / N
+print("Linear Features Mean-Squared Error: %.2f" % (linear_mse))
+```
+
+::: {.cell-output .cell-output-stdout}
+```
+Linear Features Mean-Squared Error: 645.47
+```
+:::
+:::
+
+
+## Using Nonlinear Features to Improve Model Performance
+
+We know the underlying formula for drag-force is: 
+
+$$ F_d = \frac{1}{2} \rho v^2 C_d A  $$ 
+
+While this function doesn't depend on the angle of attack, we do see how the features are polynomially related to one another. Naturally, it is going to be difficult for a linear combination of features to replicate this. However, if we take the log of both sides, something interesting happens: 
+
+$$ \ln(F_d) = \ln(\frac{1}{2} \rho v^2 C_d A) = \ln(\frac{1}{2}) + \ln(\rho) + 2\ln(v) + \ln(C_d) + \ln(A) $$
+
+When our features and outputs are log-scaled, we see a friendly linear-combination of log-scaled versions features emerge! Let's alter our inputs and outputs accordingly, so our problem becomes: 
+
+$$ \mathbf{X} = \begin{bmatrix} 1 & \ln \alpha_1 & \ln \rho_1 & \ln v_1 \\ 1 & \ln \alpha_2 & \ln \rho_2 & \ln v_2 \\ & & \vdots & \\ 1 & \ln \alpha_N & \ln \rho_N & \ln v_N \end{bmatrix} , \mathbf{Y} = \begin{bmatrix} \ln F_{d1} \\ \ln F_{d2} \\ \vdots \\ \ln F_{d3} \end{bmatrix} $$ 
+
+Let's see how this works programmatically: 
+
+::: {#87b10c43 .cell execution_count=8}
+``` {.python .cell-code}
+X_log = np.hstack((np.ones((N, 1)), np.log(df[['alpha', 'rho', 'velocity']].values)))
+Y_log = np.log(df['f_drag'].values - df['f_drag'].min() + 1)
+
+beta_log = np.linalg.inv(X_log.T @ X_log) @ (X_log.T @ Y_log)
+
+Y_hat_log = np.exp(X_log @ beta_log)+ df['f_drag'].min() - 1
+
+plt.figure(figsize=(8,4))
+plt.scatter(Y, Y_hat_log)
+plt.grid()
+plt.xlabel("True Drag Force")
+plt.ylabel("Model Predicted Drag Force")
+```
+
+::: {.cell-output .cell-output-display execution_count=26}
+```
+Text(0, 0.5, 'Model Predicted Drag Force')
+```
+:::
+
+::: {.cell-output .cell-output-display}
+![](01_intro_files/figure-html/cell-9-output-2.png){width=686 height=350}
+:::
+:::
+
+
+Now let's see if our MSE has changed: 
+
+::: {#ab35ca21 .cell execution_count=9}
+``` {.python .cell-code}
+log_mse = np.linalg.norm(Y_hat_log - Y, 2)/N
+print("Logarithmically Scaled Features Mean-Squared Error: %.2f" % (log_mse))
+```
+
+::: {.cell-output .cell-output-stdout}
+```
+Logarithmically Scaled Features Mean-Squared Error: 144.70
+```
+:::
+:::
+
+
+We have nearly a 5x reduction in MSE just by log-scaling our features! If we choose the right features, linear regression can be an extremely powerful method for approximating complex functions.  -->
 </div>
-</div>
-<p>This is a test citation <span class="citation" data-cites="martins2021engineering">(<a href="references.html#ref-martins2021engineering" role="doc-biblioref">Martins and Ning 2021</a>)</span>.</p>
+<hr>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
-<div id="ref-martins2021engineering" class="csl-entry" role="listitem">
-Martins, Joaquim RRA, and Andrew Ning. 2021. <em>Engineering Design Optimization</em>. Cambridge University Press.
+<div id="ref-cambridgeDS2024" class="csl-entry" role="listitem">
+Cambridge Dictionary. 2024. <span>“<span>Data Science</span>.”</span> 2024. <a href="https://dictionary.cambridge.org/dictionary/english/data-science">https://dictionary.cambridge.org/dictionary/english/data-science</a>.
+</div>
+<div id="ref-merriamML2024" class="csl-entry" role="listitem">
+Merriam-Webster Dictionary. 2024. <span>“<span>Machine Learning</span>.”</span> 2024. <a href="https://www.merriam-webster.com/dictionary/machine%20learning">https://www.merriam-webster.com/dictionary/machine%20learning</a>.
 </div>
 </div>
 </section>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>It seems apt to use AI to define AI, and I’m quoting it for illustrative purposes here, but I do want to point out that Google’s AI Overview is not at all transparent about how these responses are generated and thus does not meet the standards for being cited as a source in most publishing venues.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
 </section>
 
 </main> <!-- /main -->
@@ -744,13 +994,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./20_ugbo.html" class="pagination-link" aria-label="Unconstrained Gradient Based Optimization (UGBO)">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Unconstrained Gradient Based Optimization (UGBO)</span></span>
+      <a href="./index.html" class="pagination-link" aria-label="Preface">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Preface</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./references.html" class="pagination-link" aria-label="References">
-        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./11_ls.html" class="pagination-link" aria-label="ML for AE: Least Squares Regression">
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">ML for AE: Least Squares Regression</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

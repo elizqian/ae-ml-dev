@@ -2,7 +2,7 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "AE 4803 AIM",
+    "title": "AE 4803 AIM: Course Notes",
     "section": "",
     "text": "Preface\nThis is a Quarto book.\nTo learn more about Quarto books visit https://quarto.org/docs/books.",
     "crumbs": [
@@ -34,7 +34,7 @@
     "href": "references.html",
     "title": "References",
     "section": "",
-    "text": "Knuth, Donald E. 1984. “Literate Programming.” Comput.\nJ. 27 (2): 97–111. https://doi.org/10.1093/comjnl/27.2.97.",
+    "text": "Martins, Joaquim RRA, and Andrew Ning. 2021. Engineering Design\nOptimization. Cambridge University Press.",
     "crumbs": [
       "References"
     ]
@@ -285,7 +285,7 @@
     "href": "21_ugbo2.html#example",
     "title": "4  Unconstrained Gradient Based Optimization (UGBO) II - Steepest Descent",
     "section": "6.3 Example",
-    "text": "6.3 Example\nConsider the quadratic function: \\[\nf(x_1, x_2) = x_1^2 + \\beta x_2^2\n\\]\nFirst, let us consider the case where \\(\\beta = 1\\) and the starting point is \\(x_0 = (10,1)\\).\n\n\n0.0002487577548903103\n\n\nText(0, 0.5, '$x_2$')",
+    "text": "6.3 Example\nConsider the quadratic function: \\[\nf(x_1, x_2) = x_1^2 + \\beta x_2^2\n\\]\nFirst, let us consider the case where \\(\\beta = 1\\) and the starting point is \\(x_0 = (10,1)\\).\n\n\n0.0002487577548903103\n\n\nText(0, 0.5, '$x_2$')\n\n\n\n\n\n\n\n\n\nThis is a test citation (Martins and Ning 2021).\n\n\n\n\nMartins, Joaquim RRA, and Andrew Ning. 2021. Engineering Design Optimization. Cambridge University Press.",
     "crumbs": [
       "<span class='chapter-number'>4</span>  <span class='chapter-title'>Unconstrained Gradient Based Optimization (UGBO) II - Steepest Descent</span>"
     ]
@@ -299,6 +299,196 @@
     "crumbs": [
       "Appendices",
       "<span class='chapter-number'>A</span>  <span class='chapter-title'>Linear algebra review</span>"
+    ]
+  },
+  {
+    "objectID": "01_intro.html",
+    "href": "01_intro.html",
+    "title": "1  Introduction",
+    "section": "",
+    "text": "1.1 What’s in a name? Artificial intelligence, machine learning, and data science\nI googled “artificial intelligence” and the first result comes from Google’s new “AI overview” feature1:\nBecause I closed the tab with my first search and wanted to go back to the webpage to copy the text for the image alt-text above, I repeated my search, and got a somewhat different answer:\nThese are probably both reasonable definitions for casual conversation, but that’s not what we’re here for. Instead, we’re here to really learn deeply about what AI is, and for that we’re going to need precision – that is, of our definitions.\nI’m not going to provide a definition of AI for now and instead I’m going to throw two more terms into the mix that you may have heard. The first is “machine learning”. Rather than get an AI definition for this too, I decided to go to the dictionary Merriam-Webster, which provides the following primary definition (Merriam-Webster Dictionary 2024):\nAnd finally I’ll add the term “data science.” I wanted to give you a Merriam-Webster definition here, but the term isn’t in their dictionary as of writing this on October 28, 2024. So instead I’m going to use Cambridge Dictionary’s definition (Cambridge Dictionary 2024):\nThat’s probably a reasonable definition for casual conversation, although\nsome remarks about what these things mean to different people, some links to further reading, narrow focus to supervised learning",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction</span>"
+    ]
+  },
+  {
+    "objectID": "01_intro.html#a-motivating-example",
+    "href": "01_intro.html#a-motivating-example",
+    "title": "1  Introduction",
+    "section": "",
+    "text": "The angle of attack (\\(\\alpha\\)), measured in degrees\nThe density of the fluid (\\(\\rho\\)), measured in \\(kg/m^3\\)\nThe velocity of the fluid (\\(v\\)), measured in \\(m/s\\)",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction</span>"
+    ]
+  },
+  {
+    "objectID": "01_intro.html#linear-approximation-of-an-unknown-function",
+    "href": "01_intro.html#linear-approximation-of-an-unknown-function",
+    "title": "1  Introduction",
+    "section": "1.2 Linear Approximation of an Unknown Function",
+    "text": "1.2 Linear Approximation of an Unknown Function\nLet’s bundle our inputs into a single vector, defined by:\n\\[ \\mathbf{x} = \\begin{bmatrix} \\alpha \\\\ \\rho \\\\ v\\end{bmatrix} \\]\nWe assume there is some unknown function, \\(f(\\cdot):\\mathbb{R}^3 \\rightarrow \\mathbb{R}\\), that gives us an optimal estimate for drag-force based on these “features”:\n\\[ F_d = f (\\mathbf{x}) + \\varepsilon \\]\nwhere \\(\\varepsilon\\) is some external noise, disturbances or information entirely independent of the input variables.\nNow consider a function \\(h(\\mathbf{x}; \\beta):\\mathbb{R}^3 \\rightarrow \\mathbb{R}\\) which is a simple linear combination of the inputs:\n\\[ h(\\mathbf{x}; \\beta) = \\begin{bmatrix} 1 & \\mathbf{x}^\\top \\end{bmatrix} \\begin{bmatrix}  \\beta_0 \\\\ \\beta_1 \\\\ \\beta_2 \\\\ \\beta_3  \\end{bmatrix} = \\beta_0 + \\beta_1 \\alpha + \\beta_2 \\rho + \\beta_3 v \\]\nThe Million Dollar Question:\nGiven we know the structure of \\(h(\\mathbf{x}; \\beta)\\), how can we efficiently optimize the parameters of \\(h(\\mathbf{x}; \\beta)\\) to best approximate \\(f(\\mathbf{x})\\)?",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction</span>"
+    ]
+  },
+  {
+    "objectID": "01_intro.html#representing-observed-input-output-data",
+    "href": "01_intro.html#representing-observed-input-output-data",
+    "title": "1  Introduction",
+    "section": "1.2 Representing Observed Input-Output Data",
+    "text": "1.2 Representing Observed Input-Output Data\nSuppose we have taken \\(N\\) real-life samples of the input variables and their corresponding drag-force, \\(F_d\\). Let each sample of the system under various operating conditions form row of a matrix \\(\\mathbf{X} \\in \\mathbb{R}^{N \\times 4}\\) for the inputs and a matrix \\(\\mathbf{Y} \\in \\mathbb{R}^N\\) for their corresponding outputs:\n\\[ \\mathbf{X} = \\begin{bmatrix} 1 & \\alpha_1 & \\rho_1 & v_1 \\\\ 1 & \\alpha_2 & \\rho_2 & v_2 \\\\ & & \\vdots & \\\\ 1 & \\alpha_N & \\rho_N & v_N \\end{bmatrix} , \\mathbf{Y} = \\begin{bmatrix} F_{d1} \\\\ F_{d2} \\\\ \\vdots \\\\ F_{d3} \\end{bmatrix} \\]\nWe can efficiently compute the predictions of \\(h(\\mathbf{X}; \\beta)\\) with a simple matrix-vector multiplication:\n\\[ \\hat{\\mathbf{Y}} = \\mathbf{X} \\beta = \\begin{bmatrix} 1 & \\alpha_1 & \\rho_1 & v_1 \\\\ 1 & \\alpha_2 & \\rho_2 & v_2 \\\\ & & \\vdots & \\\\ 1 & \\alpha_N & \\rho_N & v_N \\end{bmatrix} \\begin{bmatrix} \\beta_0 \\\\ \\beta_1 \\\\ \\beta_2 \\\\ \\beta_3 \\end{bmatrix} = \\begin{bmatrix}  \\beta_0 + \\beta_1 \\alpha_1 + \\beta_2 \\rho_1 + \\beta_3 v_1 \\\\ \\beta_0 + \\beta_1 \\alpha_2 + \\beta_2 \\rho_2 + \\beta_3 v_2  \\\\ \\vdots \\\\ \\beta_0 + \\beta_1 \\alpha_N + \\beta_2 \\rho_N + \\beta_3 v_N \\end{bmatrix}  \\in \\mathbb{R}^N \\]",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction</span>"
+    ]
+  },
+  {
+    "objectID": "01_intro.html#the-least-squares-optimization-problem",
+    "href": "01_intro.html#the-least-squares-optimization-problem",
+    "title": "1  Introduction",
+    "section": "1.3 The Least-Squares Optimization Problem",
+    "text": "1.3 The Least-Squares Optimization Problem\nOur goal is to adjust the parameters \\(\\beta\\) so that our predictions, \\(\\hat{\\mathbf{Y}}\\), are as close to the true outputs, \\(\\mathbf{Y}\\) as possible. One way to measure prediction error is with Mean Squared Error:\n\\[ \\text{MSE} = \\frac{1}{N} \\sum_{i=1}^N (\\hat{y}_i - y_i)^2 = \\frac{1}{N} || \\hat{\\mathbf{Y}} - \\mathbf{Y}||_2^2 = \\frac{1}{N} || \\mathbf{X} \\beta - \\mathbf{Y} ||_2^2 \\]\nthe \\(\\frac{1}{N}\\) is only a scalar, we wish to choose the value of \\(\\beta\\) that minimizes the following loss-function:\n\\[ L(\\beta) = ||\\mathbf{X} \\beta - \\mathbf{Y}||_2^2 \\]",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction</span>"
+    ]
+  },
+  {
+    "objectID": "01_intro.html#solving-the-least-squares-problem",
+    "href": "01_intro.html#solving-the-least-squares-problem",
+    "title": "1  Introduction",
+    "section": "1.4 Solving the Least-Squares Problem",
+    "text": "1.4 Solving the Least-Squares Problem\nBecause the squared 2-Norm can be rewritten as an inner product, we can rewrite this loss-function as:\n\\[ L(\\beta) = ||\\mathbf{X} \\beta - \\mathbf{Y}||_2^2= (\\mathbf{X} \\beta - \\mathbf{Y})^\\top (\\mathbf{X} \\beta - \\mathbf{Y}) \\] \\[ = (\\beta^\\top \\mathbf{X}^\\top - \\mathbf{Y}^\\top) (\\mathbf{X} \\beta - \\mathbf{Y}) \\]\n\\[ = \\beta^\\top \\mathbf{X^\\top X} \\beta - 2 \\beta^\\top \\mathbf{X^\\top \\mathbf{Y}} + \\mathbf{Y^\\top Y}\\]\nAs we learned in multivariable calculus, to find a the extrema of a continuous function, we need to identify the critical points of the function. This means setting the gradient of the loss-function equal to the zero-vector:\n\\[ \\nabla L_\\beta = 2 \\mathbf{X^\\top X} \\beta - 2 \\mathbf{X^\\top Y} = \\mathbf{0}\\]\nSolving this equation for \\(\\beta\\) yields only one critical point:\n\\[ \\hat{\\beta} = (\\mathbf{X^\\top X})^{-1} \\mathbf{X^\\top Y} \\]\nTo check whether this point is a local minimum, maximum, or neither, we examine the nature of the Hessian:\n\\[ \\nabla^2 L_\\beta = 2 \\mathbf{X^\\top X} \\]\nBecause the Hessian is symmetric positive semidefinite and does not depend on \\(\\beta\\), this means that \\(L(\\beta)\\) is convex everywhere. Hence, \\(\\hat{\\beta}\\) must be a global local minimum.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction</span>"
+    ]
+  },
+  {
+    "objectID": "01_intro.html#experimental-example",
+    "href": "01_intro.html#experimental-example",
+    "title": "1  Introduction",
+    "section": "1.5 Experimental Example",
+    "text": "1.5 Experimental Example\nNow suppose we have 100 experimental observations of various angles of attack, air-densities and velocities with the corresponding drag-force in a pandas DataFrame called df:\n\ndf.head()\n\n\n\n\n\n\n\n\n\nalpha\nrho\nvelocity\nf_drag\n\n\n\n\n0\n16.854305\n1.319114\n79.481130\n9425.204935\n\n\n1\n42.782144\n1.203298\n50.263709\n13722.379248\n\n\n2\n32.939727\n1.320528\n57.690388\n12863.441979\n\n\n3\n26.939632\n0.696729\n49.251769\n3644.076532\n\n\n4\n7.020839\n1.227098\n19.524299\n186.612122\n\n\n\n\n\n\n\n\nWe can create \\(\\mathbf{X}\\) and \\(\\mathbf{Y}\\) matrices by extracting the input features and outputs from the dataframe:\n\nX = np.hstack((np.ones((N, 1)), df[['alpha', 'rho', 'velocity']].values))\nY = df['f_drag'].values\n\nWe can solve for \\(\\hat{\\beta}\\) by computing the normal equations:\n\nbeta_hat = np.linalg.inv(X.T @ X) @ (X.T @ Y)\n\nAnd then compute the model’s predictions at the training inputs:\n\nY_hat = X @ beta_hat\n\nNow let’s plot the \\(\\hat{\\mathbf{Y}}\\) and \\(\\mathbf{Y}\\) to examine how closely correlated the two are. A straight line with slope-1 would mean the model exactly fitted all of the outputs:\n\nplt.figure(figsize=(8,4))\nplt.scatter(Y, Y_hat)\nplt.grid()\nplt.xlabel(\"True Drag Force\")\nplt.ylabel(\"Model Predicted Drag Force\")\n\nText(0, 0.5, 'Model Predicted Drag Force')\n\n\n\n\n\n\n\n\n\nThere is clearly a strong, but nonlinear correlation between the true and model-predicted drag-force. This indicates that there is a nonlinear relationship between the features and the output values. Let us quantify the MSE:\n\nlinear_mse = np.linalg.norm(Y_hat - Y, 2) / N\nprint(\"Linear Features Mean-Squared Error: %.2f\" % (linear_mse))\n\nLinear Features Mean-Squared Error: 645.47",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction</span>"
+    ]
+  },
+  {
+    "objectID": "01_intro.html#using-nonlinear-features-to-improve-model-performance",
+    "href": "01_intro.html#using-nonlinear-features-to-improve-model-performance",
+    "title": "1  Introduction",
+    "section": "1.6 Using Nonlinear Features to Improve Model Performance",
+    "text": "1.6 Using Nonlinear Features to Improve Model Performance\nWe know the underlying formula for drag-force is:\n\\[ F_d = \\frac{1}{2} \\rho v^2 C_d A  \\]\nWhile this function doesn’t depend on the angle of attack, we do see how the features are polynomially related to one another. Naturally, it is going to be difficult for a linear combination of features to replicate this. However, if we take the log of both sides, something interesting happens:\n\\[ \\ln(F_d) = \\ln(\\frac{1}{2} \\rho v^2 C_d A) = \\ln(\\frac{1}{2}) + \\ln(\\rho) + 2\\ln(v) + \\ln(C_d) + \\ln(A) \\]\nWhen our features and outputs are log-scaled, we see a friendly linear-combination of log-scaled versions features emerge! Let’s alter our inputs and outputs accordingly, so our problem becomes:\n\\[ \\mathbf{X} = \\begin{bmatrix} 1 & \\ln \\alpha_1 & \\ln \\rho_1 & \\ln v_1 \\\\ 1 & \\ln \\alpha_2 & \\ln \\rho_2 & \\ln v_2 \\\\ & & \\vdots & \\\\ 1 & \\ln \\alpha_N & \\ln \\rho_N & \\ln v_N \\end{bmatrix} , \\mathbf{Y} = \\begin{bmatrix} \\ln F_{d1} \\\\ \\ln F_{d2} \\\\ \\vdots \\\\ \\ln F_{d3} \\end{bmatrix} \\]\nLet’s see how this works programmatically:\n\nX_log = np.hstack((np.ones((N, 1)), np.log(df[['alpha', 'rho', 'velocity']].values)))\nY_log = np.log(df['f_drag'].values - df['f_drag'].min() + 1)\n\nbeta_log = np.linalg.inv(X_log.T @ X_log) @ (X_log.T @ Y_log)\n\nY_hat_log = np.exp(X_log @ beta_log)+ df['f_drag'].min() - 1\n\nplt.figure(figsize=(8,4))\nplt.scatter(Y, Y_hat_log)\nplt.grid()\nplt.xlabel(\"True Drag Force\")\nplt.ylabel(\"Model Predicted Drag Force\")\n\nText(0, 0.5, 'Model Predicted Drag Force')\n\n\n\n\n\n\n\n\n\nNow let’s see if our MSE has changed:\n\nlog_mse = np.linalg.norm(Y_hat_log - Y, 2)/N\nprint(\"Logarithmically Scaled Features Mean-Squared Error: %.2f\" % (log_mse))\n\nLogarithmically Scaled Features Mean-Squared Error: 144.70\n\n\nWe have nearly a 5x reduction in MSE just by log-scaling our features! If we choose the right features, linear regression can be an extremely powerful method for approximating complex functions.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction</span>"
+    ]
+  },
+  {
+    "objectID": "11_ls.html",
+    "href": "11_ls.html",
+    "title": "ML for AE: Least Squares Regression",
+    "section": "",
+    "text": "A Motivating Example\nSuppose we wish to efficiently approximate the force of drag (\\(F_d\\)), measured in \\(N\\), on a specific airplane wing if we only have access to the following information about the wing and its operating conditions:",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>ML for AE: Least Squares Regression</span>"
+    ]
+  },
+  {
+    "objectID": "11_ls.html#a-motivating-example",
+    "href": "11_ls.html#a-motivating-example",
+    "title": "ML for AE: Least Squares Regression",
+    "section": "",
+    "text": "Image Source: Embry-Riddle Aeronautical University\n\n\n\n\nThe angle of attack (\\(\\alpha\\)), measured in degrees\nThe density of the fluid (\\(\\rho\\)), measured in \\(kg/m^3\\)\nThe velocity of the fluid (\\(v\\)), measured in \\(m/s\\)",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>ML for AE: Least Squares Regression</span>"
+    ]
+  },
+  {
+    "objectID": "11_ls.html#linear-approximation-of-an-unknown-function",
+    "href": "11_ls.html#linear-approximation-of-an-unknown-function",
+    "title": "ML for AE: Least Squares Regression",
+    "section": "Linear Approximation of an Unknown Function",
+    "text": "Linear Approximation of an Unknown Function\nLet’s bundle our inputs into a single vector, defined by:\n\\[ \\mathbf{x} = \\begin{bmatrix} \\alpha \\\\ \\rho \\\\ v\\end{bmatrix} \\]\nWe assume there is some unknown function, \\(f(\\cdot):\\mathbb{R}^3 \\rightarrow \\mathbb{R}\\), that gives us an optimal estimate for drag-force based on these “features”:\n\\[ F_d = f (\\mathbf{x}) + \\varepsilon \\]\nwhere \\(\\varepsilon\\) is some external noise, disturbances or information entirely independent of the input variables.\nNow consider a function \\(h(\\mathbf{x}; \\beta):\\mathbb{R}^3 \\rightarrow \\mathbb{R}\\) which is a simple linear combination of the inputs:\n\\[ h(\\mathbf{x}; \\beta) = \\begin{bmatrix} 1 & \\mathbf{x}^\\top \\end{bmatrix} \\begin{bmatrix}  \\beta_0 \\\\ \\beta_1 \\\\ \\beta_2 \\\\ \\beta_3  \\end{bmatrix} = \\beta_0 + \\beta_1 \\alpha + \\beta_2 \\rho + \\beta_3 v \\]\nThe Million Dollar Question:\nGiven we know the structure of \\(h(\\mathbf{x}; \\beta)\\), how can we efficiently optimize the parameters of \\(h(\\mathbf{x}; \\beta)\\) to best approximate \\(f(\\mathbf{x})\\)?",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>ML for AE: Least Squares Regression</span>"
+    ]
+  },
+  {
+    "objectID": "11_ls.html#representing-observed-input-output-data",
+    "href": "11_ls.html#representing-observed-input-output-data",
+    "title": "ML for AE: Least Squares Regression",
+    "section": "Representing Observed Input-Output Data",
+    "text": "Representing Observed Input-Output Data\nSuppose we have taken \\(N\\) real-life samples of the input variables and their corresponding drag-force, \\(F_d\\). Let each sample of the system under various operating conditions form row of a matrix \\(\\mathbf{X} \\in \\mathbb{R}^{N \\times 4}\\) for the inputs and a matrix \\(\\mathbf{Y} \\in \\mathbb{R}^N\\) for their corresponding outputs:\n\\[ \\mathbf{X} = \\begin{bmatrix} 1 & \\alpha_1 & \\rho_1 & v_1 \\\\ 1 & \\alpha_2 & \\rho_2 & v_2 \\\\ & & \\vdots & \\\\ 1 & \\alpha_N & \\rho_N & v_N \\end{bmatrix} , \\mathbf{Y} = \\begin{bmatrix} F_{d1} \\\\ F_{d2} \\\\ \\vdots \\\\ F_{d3} \\end{bmatrix} \\]\nWe can efficiently compute the predictions of \\(h(\\mathbf{X}; \\beta)\\) with a simple matrix-vector multiplication:\n\\[ \\hat{\\mathbf{Y}} = \\mathbf{X} \\beta = \\begin{bmatrix} 1 & \\alpha_1 & \\rho_1 & v_1 \\\\ 1 & \\alpha_2 & \\rho_2 & v_2 \\\\ & & \\vdots & \\\\ 1 & \\alpha_N & \\rho_N & v_N \\end{bmatrix} \\begin{bmatrix} \\beta_0 \\\\ \\beta_1 \\\\ \\beta_2 \\\\ \\beta_3 \\end{bmatrix} = \\begin{bmatrix}  \\beta_0 + \\beta_1 \\alpha_1 + \\beta_2 \\rho_1 + \\beta_3 v_1 \\\\ \\beta_0 + \\beta_1 \\alpha_2 + \\beta_2 \\rho_2 + \\beta_3 v_2  \\\\ \\vdots \\\\ \\beta_0 + \\beta_1 \\alpha_N + \\beta_2 \\rho_N + \\beta_3 v_N \\end{bmatrix}  \\in \\mathbb{R}^N \\]",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>ML for AE: Least Squares Regression</span>"
+    ]
+  },
+  {
+    "objectID": "11_ls.html#the-least-squares-optimization-problem",
+    "href": "11_ls.html#the-least-squares-optimization-problem",
+    "title": "ML for AE: Least Squares Regression",
+    "section": "The Least-Squares Optimization Problem",
+    "text": "The Least-Squares Optimization Problem\nOur goal is to adjust the parameters \\(\\beta\\) so that our predictions, \\(\\hat{\\mathbf{Y}}\\), are as close to the true outputs, \\(\\mathbf{Y}\\) as possible. One way to measure prediction error is with Mean Squared Error:\n\\[ \\text{MSE} = \\frac{1}{N} \\sum_{i=1}^N (\\hat{y}_i - y_i)^2 = \\frac{1}{N} || \\hat{\\mathbf{Y}} - \\mathbf{Y}||_2^2 = \\frac{1}{N} || \\mathbf{X} \\beta - \\mathbf{Y} ||_2^2 \\]\nthe \\(\\frac{1}{N}\\) is only a scalar, we wish to choose the value of \\(\\beta\\) that minimizes the following loss-function:\n\\[ L(\\beta) = ||\\mathbf{X} \\beta - \\mathbf{Y}||_2^2 \\]",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>ML for AE: Least Squares Regression</span>"
+    ]
+  },
+  {
+    "objectID": "11_ls.html#solving-the-least-squares-problem",
+    "href": "11_ls.html#solving-the-least-squares-problem",
+    "title": "ML for AE: Least Squares Regression",
+    "section": "Solving the Least-Squares Problem",
+    "text": "Solving the Least-Squares Problem\nBecause the squared 2-Norm can be rewritten as an inner product, we can rewrite this loss-function as:\n\\[ L(\\beta) = ||\\mathbf{X} \\beta - \\mathbf{Y}||_2^2= (\\mathbf{X} \\beta - \\mathbf{Y})^\\top (\\mathbf{X} \\beta - \\mathbf{Y}) \\] \\[ = (\\beta^\\top \\mathbf{X}^\\top - \\mathbf{Y}^\\top) (\\mathbf{X} \\beta - \\mathbf{Y}) \\]\n\\[ = \\beta^\\top \\mathbf{X^\\top X} \\beta - 2 \\beta^\\top \\mathbf{X^\\top \\mathbf{Y}} + \\mathbf{Y^\\top Y}\\]\nAs we learned in multivariable calculus, to find a the extrema of a continuous function, we need to identify the critical points of the function. This means setting the gradient of the loss-function equal to the zero-vector:\n\\[ \\nabla L_\\beta = 2 \\mathbf{X^\\top X} \\beta - 2 \\mathbf{X^\\top Y} = \\mathbf{0}\\]\nSolving this equation for \\(\\beta\\) yields only one critical point:\n\\[ \\hat{\\beta} = (\\mathbf{X^\\top X})^{-1} \\mathbf{X^\\top Y} \\]\nTo check whether this point is a local minimum, maximum, or neither, we examine the nature of the Hessian:\n\\[ \\nabla^2 L_\\beta = 2 \\mathbf{X^\\top X} \\]\nBecause the Hessian is symmetric positive semidefinite and does not depend on \\(\\beta\\), this means that \\(L(\\beta)\\) is convex everywhere. Hence, \\(\\hat{\\beta}\\) must be a global local minimum.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>ML for AE: Least Squares Regression</span>"
+    ]
+  },
+  {
+    "objectID": "11_ls.html#experimental-example",
+    "href": "11_ls.html#experimental-example",
+    "title": "ML for AE: Least Squares Regression",
+    "section": "Experimental Example",
+    "text": "Experimental Example\nNow suppose we have 100 experimental observations of various angles of attack, air-densities and velocities with the corresponding drag-force in a pandas DataFrame called df:\n\ndf.head()\n\n\n\n\n\n\n\n\n\nalpha\nrho\nvelocity\nf_drag\n\n\n\n\n0\n16.854305\n1.319114\n79.481130\n9425.204935\n\n\n1\n42.782144\n1.203298\n50.263709\n13722.379248\n\n\n2\n32.939727\n1.320528\n57.690388\n12863.441979\n\n\n3\n26.939632\n0.696729\n49.251769\n3644.076532\n\n\n4\n7.020839\n1.227098\n19.524299\n186.612122\n\n\n\n\n\n\n\n\nWe can create \\(\\mathbf{X}\\) and \\(\\mathbf{Y}\\) matrices by extracting the input features and outputs from the dataframe:\n\nX = np.hstack((np.ones((N, 1)), df[['alpha', 'rho', 'velocity']].values))\nY = df['f_drag'].values\n\nWe can solve for \\(\\hat{\\beta}\\) by computing the normal equations:\n\nbeta_hat = np.linalg.inv(X.T @ X) @ (X.T @ Y)\n\nAnd then compute the model’s predictions at the training inputs:\n\nY_hat = X @ beta_hat\n\nNow let’s plot the \\(\\hat{\\mathbf{Y}}\\) and \\(\\mathbf{Y}\\) to examine how closely correlated the two are. A straight line with slope-1 would mean the model exactly fitted all of the outputs:\n\nplt.figure(figsize=(8,4))\nplt.scatter(Y, Y_hat)\nplt.grid()\nplt.xlabel(\"True Drag Force\")\nplt.ylabel(\"Model Predicted Drag Force\")\n\nText(0, 0.5, 'Model Predicted Drag Force')\n\n\n\n\n\n\n\n\n\nThere is clearly a strong, but nonlinear correlation between the true and model-predicted drag-force. This indicates that there is a nonlinear relationship between the features and the output values. Let us quantify the MSE:\n\nlinear_mse = np.linalg.norm(Y_hat - Y, 2) / N\nprint(\"Linear Features Mean-Squared Error: %.2f\" % (linear_mse))\n\nLinear Features Mean-Squared Error: 645.47",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>ML for AE: Least Squares Regression</span>"
+    ]
+  },
+  {
+    "objectID": "11_ls.html#using-nonlinear-features-to-improve-model-performance",
+    "href": "11_ls.html#using-nonlinear-features-to-improve-model-performance",
+    "title": "ML for AE: Least Squares Regression",
+    "section": "Using Nonlinear Features to Improve Model Performance",
+    "text": "Using Nonlinear Features to Improve Model Performance\nWe know the underlying formula for drag-force is:\n\\[ F_d = \\frac{1}{2} \\rho v^2 C_d A  \\]\nWhile this function doesn’t depend on the angle of attack, we do see how the features are polynomially related to one another. Naturally, it is going to be difficult for a linear combination of features to replicate this. However, if we take the log of both sides, something interesting happens:\n\\[ \\ln(F_d) = \\ln(\\frac{1}{2} \\rho v^2 C_d A) = \\ln(\\frac{1}{2}) + \\ln(\\rho) + 2\\ln(v) + \\ln(C_d) + \\ln(A) \\]\nWhen our features and outputs are log-scaled, we see a friendly linear-combination of log-scaled versions features emerge! Let’s alter our inputs and outputs accordingly, so our problem becomes:\n\\[ \\mathbf{X} = \\begin{bmatrix} 1 & \\ln \\alpha_1 & \\ln \\rho_1 & \\ln v_1 \\\\ 1 & \\ln \\alpha_2 & \\ln \\rho_2 & \\ln v_2 \\\\ & & \\vdots & \\\\ 1 & \\ln \\alpha_N & \\ln \\rho_N & \\ln v_N \\end{bmatrix} , \\mathbf{Y} = \\begin{bmatrix} \\ln F_{d1} \\\\ \\ln F_{d2} \\\\ \\vdots \\\\ \\ln F_{d3} \\end{bmatrix} \\]\nLet’s see how this works programmatically:\n\nX_log = np.hstack((np.ones((N, 1)), np.log(df[['alpha', 'rho', 'velocity']].values)))\nY_log = np.log(df['f_drag'].values - df['f_drag'].min() + 1)\n\nbeta_log = np.linalg.inv(X_log.T @ X_log) @ (X_log.T @ Y_log)\n\nY_hat_log = np.exp(X_log @ beta_log)+ df['f_drag'].min() - 1\n\nplt.figure(figsize=(8,4))\nplt.scatter(Y, Y_hat_log)\nplt.grid()\nplt.xlabel(\"True Drag Force\")\nplt.ylabel(\"Model Predicted Drag Force\")\n\nText(0, 0.5, 'Model Predicted Drag Force')\n\n\n\n\n\n\n\n\n\nNow let’s see if our MSE has changed:\n\nlog_mse = np.linalg.norm(Y_hat_log - Y, 2)/N\nprint(\"Logarithmically Scaled Features Mean-Squared Error: %.2f\" % (log_mse))\n\nLogarithmically Scaled Features Mean-Squared Error: 144.70\n\n\nWe have nearly a 5x reduction in MSE just by log-scaling our features! If we choose the right features, linear regression can be an extremely powerful method for approximating complex functions.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>ML for AE: Least Squares Regression</span>"
+    ]
+  },
+  {
+    "objectID": "01_intro.html#whats-in-a-name-artificial-intelligence-machine-learning-and-data-science",
+    "href": "01_intro.html#whats-in-a-name-artificial-intelligence-machine-learning-and-data-science",
+    "title": "1  Introduction",
+    "section": "",
+    "text": "Exercise\n\n\n\nConsider the two different definitions of “AI” above carefully. In what (if any) senses are they (a) exactly the same, (b) similar, (c) somewhat different, (d) very different? What consequences might these differences have (a) developing AI algorithms, (b) evaluating AI impacts, (c) creating AI policies?\n\n\n\n\na computational method that is a subfield of artificial intelligence and that enables a computer to learn to perform tasks by analyzing a large dataset without being explicitly programmed\n\n\n\nthe use of scientific methods to obtain useful information from computer data, especially large amounts of data\n\n\n\n\n\n1.1.1 Regression\nproblem of predicting outputs from inputs\nformulation as selection from within a parametrized model class\nchoosing parameters via optimization\n\n\n1.1.2 Things that are not regression\nGive one example, list other examples, I cannot possibly hope to cover all these things in this course, so another goal of the course is to teach the language of ML so you are prepared to learn other things in future courses and on your own.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction</span>"
+    ]
+  },
+  {
+    "objectID": "01_intro.html#the-three-pillars-of-ai-mathematics-computation-and-human-intelligence",
+    "href": "01_intro.html#the-three-pillars-of-ai-mathematics-computation-and-human-intelligence",
+    "title": "1  Introduction",
+    "section": "1.2 The three pillars of AI: mathematics, computation, and human intelligence",
+    "text": "1.2 The three pillars of AI: mathematics, computation, and human intelligence\nmathematics is the language that describes what we want to do\ncomputation/programming is the execution (translation)\nhuman intelligence is woven throughout, specifies problem, evaluates results, re-specifies problem.\n\n1.2.1 Course structure and intended learning outcomes\nfill in nearer to term\n\n\n\n\n\n\n\n\n\n\n\n\nCambridge Dictionary. 2024. “Data Science.” 2024. https://dictionary.cambridge.org/dictionary/english/data-science.\n\n\nMerriam-Webster Dictionary. 2024. “Machine Learning.” 2024. https://www.merriam-webster.com/dictionary/machine%20learning.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction</span>"
+    ]
+  },
+  {
+    "objectID": "01_intro.html#footnotes",
+    "href": "01_intro.html#footnotes",
+    "title": "1  Introduction",
+    "section": "",
+    "text": "It seems apt to use AI to define AI, and I’m quoting it for illustrative purposes here, but I do want to point out that Google’s AI Overview is not at all transparent about how these responses are generated and thus does not meet the standards for being cited as a source in most publishing venues.↩︎",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction</span>"
     ]
   }
 ]

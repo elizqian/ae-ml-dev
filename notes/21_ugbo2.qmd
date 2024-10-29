@@ -8,6 +8,7 @@ format:
     html: default
 execute:
     echo: true
+    freeze: auto
 ---
 
 # Problem Motivation
@@ -115,3 +116,5 @@ plt.annotate(f"Total Iterations: {iters}", xy=(0.05, 0.95), xycoords='axes fract
 plt.xlabel(r'$x_1$')
 plt.ylabel(r'$x_2$') 
 ```
+
+This is a test citation [@martins2021engineering].

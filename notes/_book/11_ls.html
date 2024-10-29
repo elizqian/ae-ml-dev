@@ -65,7 +65,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
 <link href="./20_ugbo.html" rel="next">
-<link href="./index.html" rel="prev">
+<link href="./01_intro.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -147,7 +147,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01_ls.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">ML for AE: Least Squares Regression</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./11_ls.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">ML for AE: Least Squares Regression</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -180,20 +180,26 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./01_ls.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">ML for AE: Least Squares Regression</span></span></a>
+  <a href="./01_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11_ls.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">ML for AE: Least Squares Regression</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./20_ugbo.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Unconstrained Gradient Based Optimization (UGBO)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Unconstrained Gradient Based Optimization (UGBO)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./21_ugbo2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Unconstrained Gradient Based Optimization (UGBO) II - Steepest Descent</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Unconstrained Gradient Based Optimization (UGBO) II - Steepest Descent</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -318,7 +324,7 @@ window.Quarto = {
 <section id="experimental-example" class="level2">
 <h2 class="anchored" data-anchor-id="experimental-example">Experimental Example</h2>
 <p>Now suppose we have 100 experimental observations of various angles of attack, air-densities and velocities with the corresponding drag-force in a pandas DataFrame called <code>df</code>:</p>
-<div id="95b64193" class="cell" data-execution_count="2">
+<div id="72ab6a9a" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
@@ -379,20 +385,20 @@ window.Quarto = {
 </div>
 </div>
 <p>We can create <span class="math inline">\(\mathbf{X}\)</span> and <span class="math inline">\(\mathbf{Y}\)</span> matrices by extracting the input features and outputs from the dataframe:</p>
-<div id="e8ccf3a9" class="cell" data-execution_count="3">
+<div id="de8839f9" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.hstack((np.ones((N, <span class="dv">1</span>)), df[[<span class="st">'alpha'</span>, <span class="st">'rho'</span>, <span class="st">'velocity'</span>]].values))</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>Y <span class="op">=</span> df[<span class="st">'f_drag'</span>].values</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can solve for <span class="math inline">\(\hat{\beta}\)</span> by computing the normal equations:</p>
-<div id="246961e7" class="cell" data-execution_count="4">
+<div id="53db4ee9" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>beta_hat <span class="op">=</span> np.linalg.inv(X.T <span class="op">@</span> X) <span class="op">@</span> (X.T <span class="op">@</span> Y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>And then compute the model’s predictions at the training inputs:</p>
-<div id="69885acb" class="cell" data-execution_count="5">
+<div id="a9770991" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>Y_hat <span class="op">=</span> X <span class="op">@</span> beta_hat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now let’s plot the <span class="math inline">\(\hat{\mathbf{Y}}\)</span> and <span class="math inline">\(\mathbf{Y}\)</span> to examine how closely correlated the two are. A straight line with slope-1 would mean the model exactly fitted all of the outputs:</p>
-<div id="e045feb3" class="cell" data-execution_count="6">
+<div id="7e4aa331" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="dv">4</span>))</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>plt.scatter(Y, Y_hat)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>plt.grid()</span>
@@ -404,13 +410,13 @@ window.Quarto = {
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="01_ls_files/figure-html/cell-7-output-2.png" width="697" height="350" class="figure-img"></p>
+<p><img src="11_ls_files/figure-html/cell-7-output-2.png" width="697" height="350" class="figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>There is clearly a strong, but nonlinear correlation between the true and model-predicted drag-force. This indicates that there is a nonlinear relationship between the features and the output values. Let us quantify the MSE:</p>
-<div id="5e2439a9" class="cell" data-execution_count="7">
+<div id="41ef2bb0" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>linear_mse <span class="op">=</span> np.linalg.norm(Y_hat <span class="op">-</span> Y, <span class="dv">2</span>) <span class="op">/</span> N</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Linear Features Mean-Squared Error: </span><span class="sc">%.2f</span><span class="st">"</span> <span class="op">%</span> (linear_mse))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -427,7 +433,7 @@ window.Quarto = {
 <p>When our features and outputs are log-scaled, we see a friendly linear-combination of log-scaled versions features emerge! Let’s alter our inputs and outputs accordingly, so our problem becomes:</p>
 <p><span class="math display">\[ \mathbf{X} = \begin{bmatrix} 1 &amp; \ln \alpha_1 &amp; \ln \rho_1 &amp; \ln v_1 \\ 1 &amp; \ln \alpha_2 &amp; \ln \rho_2 &amp; \ln v_2 \\ &amp; &amp; \vdots &amp; \\ 1 &amp; \ln \alpha_N &amp; \ln \rho_N &amp; \ln v_N \end{bmatrix} , \mathbf{Y} = \begin{bmatrix} \ln F_{d1} \\ \ln F_{d2} \\ \vdots \\ \ln F_{d3} \end{bmatrix} \]</span></p>
 <p>Let’s see how this works programmatically:</p>
-<div id="5e471151" class="cell" data-execution_count="8">
+<div id="29f5b0bd" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>X_log <span class="op">=</span> np.hstack((np.ones((N, <span class="dv">1</span>)), np.log(df[[<span class="st">'alpha'</span>, <span class="st">'rho'</span>, <span class="st">'velocity'</span>]].values)))</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>Y_log <span class="op">=</span> np.log(df[<span class="st">'f_drag'</span>].values <span class="op">-</span> df[<span class="st">'f_drag'</span>].<span class="bu">min</span>() <span class="op">+</span> <span class="dv">1</span>)</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -446,13 +452,13 @@ window.Quarto = {
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="01_ls_files/figure-html/cell-9-output-2.png" width="686" height="350" class="figure-img"></p>
+<p><img src="11_ls_files/figure-html/cell-9-output-2.png" width="686" height="350" class="figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Now let’s see if our MSE has changed:</p>
-<div id="2fc309ed" class="cell" data-execution_count="9">
+<div id="9ed977f2" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>log_mse <span class="op">=</span> np.linalg.norm(Y_hat_log <span class="op">-</span> Y, <span class="dv">2</span>)<span class="op">/</span>N</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Logarithmically Scaled Features Mean-Squared Error: </span><span class="sc">%.2f</span><span class="st">"</span> <span class="op">%</span> (log_mse))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -877,13 +883,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./index.html" class="pagination-link" aria-label="Preface">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Preface</span>
+      <a href="./01_intro.html" class="pagination-link" aria-label="Introduction">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="./20_ugbo.html" class="pagination-link" aria-label="Unconstrained Gradient Based Optimization (UGBO)">
-        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Unconstrained Gradient Based Optimization (UGBO)</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Unconstrained Gradient Based Optimization (UGBO)</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

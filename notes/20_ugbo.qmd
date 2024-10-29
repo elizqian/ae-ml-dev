@@ -8,6 +8,7 @@ format:
     html: default
 execute:
     echo: true
+    freeze: auto
 ---
 
 # Problem Motivation 
