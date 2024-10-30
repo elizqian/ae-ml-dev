@@ -1,6 +1,8 @@
 ::: {.hidden}
 
 \newcommand*{\R}{\mathbb{R}}
+\newcommand*{\N}{\mathbb{N}}
+\newcommand*{\cF}{\mathcal{F}}
 <!-- \renewcommand{\P}{\mathrm{P}} -->
 
 <!-- $$

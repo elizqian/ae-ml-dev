@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.554">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -24,6 +24,7 @@ ul.task-list li input[type="checkbox"] {
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
+  margin-bottom: 0em;
 }
 .hanging-indent div.csl-entry {
   margin-left:2em;
@@ -66,7 +67,13 @@ div.csl-indent {
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -75,17 +82,42 @@ div.csl-indent {
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
 }</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
-<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -95,12 +127,12 @@ div.csl-indent {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01_intro.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01_intro.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
@@ -110,7 +142,7 @@ div.csl-indent {
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">AE 4803 AIM: Course Notes</a> 
@@ -179,7 +211,7 @@ div.csl-indent {
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -189,14 +221,11 @@ div.csl-indent {
   <li><a href="#whats-in-a-name-artificial-intelligence-machine-learning-data-science-and-the-scope-of-this-course." id="toc-whats-in-a-name-artificial-intelligence-machine-learning-data-science-and-the-scope-of-this-course." class="nav-link active" data-scroll-target="#whats-in-a-name-artificial-intelligence-machine-learning-data-science-and-the-scope-of-this-course."><span class="header-section-number">1.1</span> What’s in a name? Artificial intelligence, machine learning, data science, and the scope of this course.</a></li>
   <li><a href="#regression-methods-an-overview" id="toc-regression-methods-an-overview" class="nav-link" data-scroll-target="#regression-methods-an-overview"><span class="header-section-number">1.2</span> Regression methods: an overview</a>
   <ul class="collapse">
-  <li><a href="#predicting-inputs-from-outputs" id="toc-predicting-inputs-from-outputs" class="nav-link" data-scroll-target="#predicting-inputs-from-outputs"><span class="header-section-number">1.2.1</span> Predicting inputs from outputs</a></li>
+  <li><a href="#motivation-and-problem-description" id="toc-motivation-and-problem-description" class="nav-link" data-scroll-target="#motivation-and-problem-description"><span class="header-section-number">1.2.1</span> Motivation and problem description</a></li>
   <li><a href="#mathematical-setting-and-problem-formulation" id="toc-mathematical-setting-and-problem-formulation" class="nav-link" data-scroll-target="#mathematical-setting-and-problem-formulation"><span class="header-section-number">1.2.2</span> Mathematical setting and problem formulation</a></li>
-  <li><a href="#things-that-are-not-regression" id="toc-things-that-are-not-regression" class="nav-link" data-scroll-target="#things-that-are-not-regression"><span class="header-section-number">1.2.3</span> Things that are not regression</a></li>
   </ul></li>
-  <li><a href="#the-three-pillars-of-ai-mathematics-computation-and-human-intelligence" id="toc-the-three-pillars-of-ai-mathematics-computation-and-human-intelligence" class="nav-link" data-scroll-target="#the-three-pillars-of-ai-mathematics-computation-and-human-intelligence"><span class="header-section-number">1.3</span> The three pillars of AI: mathematics, computation, and human intelligence</a>
-  <ul class="collapse">
-  <li><a href="#course-structure-and-intended-learning-outcomes" id="toc-course-structure-and-intended-learning-outcomes" class="nav-link" data-scroll-target="#course-structure-and-intended-learning-outcomes"><span class="header-section-number">1.3.1</span> Course structure and intended learning outcomes</a></li>
-  </ul></li>
+  <li><a href="#things-that-are-not-regression" id="toc-things-that-are-not-regression" class="nav-link" data-scroll-target="#things-that-are-not-regression"><span class="header-section-number">1.3</span> Things that are not regression</a></li>
+  <li><a href="#course-principles-structure-and-intended-learning-outcomes" id="toc-course-principles-structure-and-intended-learning-outcomes" class="nav-link" data-scroll-target="#course-principles-structure-and-intended-learning-outcomes"><span class="header-section-number">1.4</span> Course principles, structure, and intended learning outcomes</a></li>
   </ul>
 </nav>
     </div>
@@ -218,7 +247,9 @@ div.csl-indent {
   </div>
   
 
+
 </header>
+
 
 <div class="hidden">
 <!-- \renewcommand{\P}{\mathrm{P}} -->
@@ -232,8 +263,8 @@ $$
 <p>Welcome to AE 4803 AIM: Foundations of Scientific Machine Learning. This is a new course offered in the Spring 2025 term at Georgia Tech and is intended to be a “foundations” level course in the new College of Engineering AI for Engineering minor.</p>
 <section id="whats-in-a-name-artificial-intelligence-machine-learning-data-science-and-the-scope-of-this-course." class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="whats-in-a-name-artificial-intelligence-machine-learning-data-science-and-the-scope-of-this-course."><span class="header-section-number">1.1</span> What’s in a name? Artificial intelligence, machine learning, data science, and the scope of this course.</h2>
-<p>I googled “artificial intelligence” (often abbreviated AI) and the first result comes from Google’s new “AI overview” feature<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>: <img src="images/01_intro_AIgoogle.png" class="img-fluid" style="width:100.0%" data-fig-align="center" alt="Artificial intelligence (AI) is a field of study that focuses on developing machines that can learn, reason, and act in ways that are usually associated with human intelligence."></p>
-<p>Because I closed the tab with my first search and wanted to go back to the webpage to copy the text for the image alt-text above, I repeated my search, and got a somewhat different answer: <img src="images/01_intro_AIgoogle2.png" class="img-fluid" style="width:100.0%" data-fig-align="center" alt="Artificial intelligence (AI) is the ability of a machine to perform tasks that are usually associated with human intelligence."></p>
+<p>I googled “artificial intelligence” (often abbreviated AI) and the first result comes from Google’s new “AI overview” feature<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>: <img src="images/01_intro_AIgoogle.png" class="img-fluid quarto-figure quarto-figure-center" style="width:100.0%" alt="Artificial intelligence (AI) is a field of study that focuses on developing machines that can learn, reason, and act in ways that are usually associated with human intelligence."></p>
+<p>Because I closed the tab with my first search and wanted to go back to the webpage to copy the text for the image alt-text above, I repeated my search, and got a somewhat different answer: <img src="images/01_intro_AIgoogle2.png" class="img-fluid quarto-figure quarto-figure-center" style="width:100.0%" alt="Artificial intelligence (AI) is the ability of a machine to perform tasks that are usually associated with human intelligence."></p>
 <p>These are probably both reasonable definitions for casual conversation, but that’s not what we’re here for. Instead, we’re here to really learn deeply about what AI is, and for that we’re going to need <strong>precision</strong> – that is, of our definitions.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -275,8 +306,8 @@ Exercise
 </section>
 <section id="regression-methods-an-overview" class="level2" data-number="1.2">
 <h2 data-number="1.2" class="anchored" data-anchor-id="regression-methods-an-overview"><span class="header-section-number">1.2</span> Regression methods: an overview</h2>
-<section id="predicting-inputs-from-outputs" class="level3" data-number="1.2.1">
-<h3 data-number="1.2.1" class="anchored" data-anchor-id="predicting-inputs-from-outputs"><span class="header-section-number">1.2.1</span> Predicting inputs from outputs</h3>
+<section id="motivation-and-problem-description" class="level3" data-number="1.2.1">
+<h3 data-number="1.2.1" class="anchored" data-anchor-id="motivation-and-problem-description"><span class="header-section-number">1.2.1</span> Motivation and problem description</h3>
 <p>We use the notation <span class="math inline">\(z\in \mathbb{R}^d\)</span> to denote a real-valued vector of <span class="math inline">\(d\)</span> input variables, and the notation <span class="math inline">\(y \in\mathbb{R}\)</span> to denote a real-valued scalar output variable. Our goal is to be able to predict the value of <span class="math inline">\(y\)</span> if we know the value(s) of the input variable <span class="math inline">\(z\)</span>. Some examples:</p>
 <ul>
 <li>in aerodynamic modeling, <span class="math inline">\(z\)</span> could contain airfoil geometry parameters like camber and thickness, and <span class="math inline">\(y\)</span> could represent the lift coefficient. Being able to predict <span class="math inline">\(y\)</span> from <span class="math inline">\(z\)</span> enables engineers to choose more aerodynamically efficient designs.</li>
@@ -296,7 +327,7 @@ Exercise
 <p>Propose your own example scenario where it would be useful to predict real-valued outputs from inputs, drawing on your own experience, e.g.&nbsp;in personal projects, previous coursework, work/internship/co-op experiences, or extracurriculars. What would <span class="math inline">\(z\)</span> and <span class="math inline">\(y\)</span> represent? What does predicting <span class="math inline">\(y\)</span> from <span class="math inline">\(z\)</span> enable in your scenario?</p>
 </div>
 </div>
-<p>Mathematically, predicting <span class="math inline">\(y\)</span> from <span class="math inline">\(z\)</span> amounts to defining a <em>function</em> <span class="math inline">\(f\)</span> that takes in a <span class="math inline">\(d\)</span>-dimensional input and outputs a scalar. Mathematical notational shorthand for this is <span class="math inline">\(f:\mathbb{R}^d\to\mathbb{R}\)</span>. The question at hand is: how do we choose <span class="math inline">\(f\)</span>? There are many ways to do so:</p>
+<p>Mathematically, predicting <span class="math inline">\(y\)</span> from <span class="math inline">\(z\)</span> amounts to defining a <em>function</em> <span class="math inline">\(f\)</span> that takes in a <span class="math inline">\(d\)</span>-dimensional input and outputs a scalar. Mathematical notational shorthand for this is <span class="math inline">\(f:\mathbb{R}^d\to\mathbb{R}\)</span>. This function <span class="math inline">\(f\)</span> is often called a <strong>model</strong>. The question at hand is: how do we choose <span class="math inline">\(f\)</span>? There are many ways to do so:</p>
 <ol type="1">
 <li><p>At a baseline, you could just make up a model: let’s just say <span class="math inline">\(y = f(z) = \|z\|^2\)</span>. This is mathematically valid, but it’s probably a bad model for the three example scenarios above, because this model probably issues predictions that are very different from the true outputs.</p></li>
 <li><p>Alternatively, you could develop a model based on physical principles (a “physics-based” model) – if you have taken classes in (aero/thermo)dynamics, then you would have learned some ways to calculate <span class="math inline">\(y\)</span> from <span class="math inline">\(z\)</span> in the above examples, e.g.&nbsp;based on potential flow theory, rigid body dynamics, or the Arrhenius equation. These models are likely to be more accurate than our made-up model above, although they are often imperfectly accurate because they make simplifying assumptions. One drawback of physics-based models is that they may be computationally expensive (some computational fluid dynamics simulations require many thousands of hours of supercomputing time). Additionally, fully physics-based models may not even exist in some applications (e.g., there are many aspects of plasma physics for which we currently lack a complete theoretical understanding).</p></li>
@@ -306,313 +337,74 @@ Exercise
 </section>
 <section id="mathematical-setting-and-problem-formulation" class="level3" data-number="1.2.2">
 <h3 data-number="1.2.2" class="anchored" data-anchor-id="mathematical-setting-and-problem-formulation"><span class="header-section-number">1.2.2</span> Mathematical setting and problem formulation</h3>
-<p>formulation as selection from within a parametrized model class</p>
-<p>choosing parameters via optimization</p>
-<p>some implication of the breadth of methods</p>
+<p>Hot take: Machine learning methods, at their core, are simply very complicated calculators.</p>
+<p>Our goal is to understand the calculations that these methods are carrying out, which is going to enable us to understand and assess both the successes and failures of the methods. This means we want to be precise about the mathematical <em>problem formulation</em>, that is, the characterization of the math problem that is being solved by the methods.</p>
+<p>Formulating a regression problem requires three ingredients:</p>
+<ol type="1">
+<li><p>Paired input and output data: let <span class="math inline">\(N\)</span> be the number of pairs, and let <span class="math inline">\(z_1,\ldots,z_N\)</span> denote the <span class="math inline">\(N\)</span> input data and <span class="math inline">\(y_1,\ldots,y_N\)</span> denote the <span class="math inline">\(N\)</span> corresponding outputs. It is common to notate the set of all these data pairs as <span class="math inline">\(\{(z_i,y_i)\}_{i=1}^N\)</span>.</p></li>
+<li><p>The definition of a parametrized <em>model class</em> – more details on this in a moment, but you should think of this as a set of possible functions that map <span class="math inline">\(z\)</span> to <span class="math inline">\(y\)</span>.</p></li>
+<li><p>A method for choosing a model from within the chosen model class – in regression problems this is most frequently done by solving an appropriate optimization problem to pick the “best” possible model from within the class.</p></li>
+</ol>
+<p>Let’s focus on the second ingredient, the parametrized model class. We use the mathematical term “class” in a similar way to the mathematical term “set”. For example, perhaps you will have heard before that the numbers <span class="math inline">\(1,2,3,\ldots\)</span> all the way to infinity form the “set of natural numbers” (often denoted <span class="math inline">\(\mathbb{N}\)</span>). As another example, <span class="math inline">\(\{H,T\}\)</span> can denote the set of possible outcomes of flipping a two-sided coin (H for heads, T for tails). Note that it is common to use curly braces <span class="math inline">\(\{\cdot\}\)</span> to enclose a set (notice where it appears in our shorthand notation for the data set!). Similarly, we can define a set of possible functions that map <span class="math inline">\(z\)</span> to <span class="math inline">\(y\)</span>, for example (assuming <span class="math inline">\(d=1\)</span> so that <span class="math inline">\(z\)</span> is a scalar for the moment):</p>
+<p><span class="math display">\[
+\mathcal{F}:= \{z^2, \sin(z), \exp(z)\}
+\]</span></p>
+<p>In the above expression, the notation <span class="math inline">\(:=\)</span> indicates that <span class="math inline">\(\mathcal{F}\)</span> is being <em>defined</em> as the expression that follows <span class="math inline">\(:=\)</span>, that is, <span class="math inline">\(\mathcal{F}\)</span> is the set of three possible functions: <span class="math inline">\(f(z)=z^2\)</span>, <span class="math inline">\(f(z)=\sin(z)\)</span>, and <span class="math inline">\(f(z)=\exp(z)\)</span>. You see that it might be cumbersome to write the “<span class="math inline">\(f(z)=\)</span>” part of every function, so that part often gets dropped.</p>
+<p>But so far I have still only been saying “set” — what distinguishes a “class” of potential models from a “set” of potential models? Usually we use the term “class” to denote a set of functions that share certain properties or functional forms, for example (still assuming <span class="math inline">\(z\)</span> is scalar for the moment) the class of all quadratic functions:</p>
+<p><span class="math display">\[
+\{c_0 + c_1 z + c_2 z^2 : c_0,c_1,c_2\in\mathbb{R}\}
+\]</span></p>
+<p>The way to read this notation above is as the set of all functions of the form <span class="math inline">\(f(z) = c_0 + c_1 z + c_2 z^2\)</span> that can be obtained when <span class="math inline">\(c_0,c_1,c_2\)</span> are allowed to take on any real values.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> We call this the <em>class</em> of all quadratic functions because by varying <span class="math inline">\(c_0,c_1,c_2\)</span> we always get a quadratic function (noting that with our mathematics hats on, linear functions are just special cases of quadratic functions where the second-order coefficient is zero). Thus, functions within the class share a functional form, unlike the set <span class="math inline">\(\mathcal{F}\)</span> we defined above. However, we could use the functions in the set <span class="math inline">\(\mathcal{F}\)</span> to construct an alternative <em>model class</em>:</p>
+<p><span class="math display">\[
+\{a z^2 + b\sin(z) + c\exp(z) : a,b,c\in\mathbb{R}\}
+\]</span></p>
+<p>or, allowing <span class="math inline">\(z\)</span> to be a <span class="math inline">\(d\)</span>-dimensional vector again, we could consider the following model class:</p>
+<p><span class="math display">\[
+\{\max(0,a^\top (Wz + b)): W\in\mathbb{R}^{d\times d}, \,a,b\in\mathbb{R}^d\}
+\]</span></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>How would you read and understand the two classes of functions notated above?</p>
+</div>
+</div>
+<p>Notice that the notation we have been using to define function classes follows a pattern: within the brackets, before the colon comes the form of the function, followed by a list of some variables that appear in the function definition, together with a specification of what values those variables are allowed to take on. We call the post-colon variables <em>parameters</em>, and the set of all values that the parameters are allowed to be chosen from is called the <em>parameter space</em>. Any of the classes of functions we have defined above can be described as a <em>parametrized model class</em>, because they define sets of functions with a shared form, where the individual functions within the set arise from varying the values of the parameters.</p>
+<p>Let me describe some common notational conventions that I want you to be familiar with.<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a><a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> It is common to use a single lowercase letter (usually a Greek one) to denote the set of all parameters – e.g., <span class="math inline">\(\beta = \{c_0,c_1,c_2\}\)</span> or <span class="math inline">\(\theta = \{a,b,W\}\)</span>, and the corresponding capital letter to denote the corresponding parameter space, i.e., <span class="math inline">\(B = \mathbb{R}^3\)</span> and <span class="math inline">\(\Theta = \mathbb{R}\times \mathbb{R}\times \mathbb{R}^{d\times d}\)</span>. Where we might write <span class="math inline">\(y = f(z)\)</span> for a general abstract model <span class="math inline">\(f\)</span>, we will typically write <span class="math inline">\(y = f(z;\beta)\)</span> or <span class="math inline">\(y = f(z;\theta)\)</span> to indicate a model parametrized by <span class="math inline">\(\beta\)</span> or <span class="math inline">\(\theta\)</span> (note that we separate inputs from parameters using a semicolon).</p>
+<!-- Recall that we previously used $f:z\mapsto y$ to denote a function that maps an input variable $z$ to an output variable $y$. For parametrized functions, you might see $f_\theta:z\mapsto y$ to denote a function parametrized by $\theta$ that maps $z$ to $y$, or you might see $f: z\times\theta\mapsto y$ -->
+<p>If you’ve heard the term “model architecture” used to describe a machine learning model, what this means is the specification of the parametrized model class. As the term “architecture” suggests, choosing the model class is a design choice, and different model classes have varying advantages and disadvantages in terms of best possible performance, difficulty to train (more on that shortly), computational cost, and more. We’ll cover many possible choices of model class, and explore their pros and cons, throughout the course.</p>
+<p>Now we will turn our attention to the third ingredient, the method of selecting a model from within the chosen class. Because parametrized models are defined by their parameters, the choice of model amounts to choosing the parameter values. Again, you could just make up the parameter values (choose your favorite numbers), but this is unlikely to match the data well and unlikely to yield accurate predictions. In some cases you could also derive the parameter values based on physical principles (this is possible when models in the chosen class have some physical interpretation). But our focus will be on choosing parameters that define a model that “best matches” the available data. A basic and standard version of this parameter selection task is to solve the following minimization problem:</p>
+<p><span class="math display">\[
+\theta^* = \arg\min_{\theta\in\Theta}\frac 1N \sum_{i=1}^N (f(z_i;\theta)-y_i)^2
+\]</span></p>
+<p>Note that for the above expression to be well-defined, we need our first two ingredients – that is, we need our data set, and we need to have already chosen the parametrized model class, which gives us an expression for the parametrized function <span class="math inline">\(f(z;\theta)\)</span>. Once we have those ingredients, this expression defines <span class="math inline">\(\theta^*\)</span> as the parameter that minimizes the average square error of the learned model over the available data. In this sense, this parameter <span class="math inline">\(\theta^*\)</span> defines a learned model <span class="math inline">\(f(z;\theta^*)\)</span> that “best fits” the data (it is better than all other models in its class).</p>
+<p>As we progress through this course, we will learn more about how we can solve the above optimization (it is different for different model architectures), and about alternative ways to select the parameter based on alternative minimization problems.</p>
 </section>
-<section id="things-that-are-not-regression" class="level3" data-number="1.2.3">
-<h3 data-number="1.2.3" class="anchored" data-anchor-id="things-that-are-not-regression"><span class="header-section-number">1.2.3</span> Things that are not regression</h3>
+</section>
+<section id="things-that-are-not-regression" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="things-that-are-not-regression"><span class="header-section-number">1.3</span> Things that are not regression</h2>
 <p>I want to emphasize that this class is not and indeed cannot (realistically) be an exhaustive introduction to machine learning, artificial intelligence, or data science. Even the community of professionals who describe themselves as working in “scientific machine learning” is quite broad in scope and would include folks working on topics that I do not intend to cover in this class. There are many topics within AI/ML/data science we will not cover (beyond perhaps at most a very surface level), including generative modeling, decision trees, unsupervised learning methods like clustering, and many more.</p>
 <p>Give one example, list other examples, I cannot possibly hope to cover all these things in this course, so another goal of the course is to teach the language of ML so you are prepared to learn other things in future courses and on your own.</p>
 </section>
-</section>
-<section id="the-three-pillars-of-ai-mathematics-computation-and-human-intelligence" class="level2" data-number="1.3">
-<h2 data-number="1.3" class="anchored" data-anchor-id="the-three-pillars-of-ai-mathematics-computation-and-human-intelligence"><span class="header-section-number">1.3</span> The three pillars of AI: mathematics, computation, and human intelligence</h2>
+<section id="course-principles-structure-and-intended-learning-outcomes" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="course-principles-structure-and-intended-learning-outcomes"><span class="header-section-number">1.4</span> Course principles, structure, and intended learning outcomes</h2>
+<p>The three pillars of AI: mathematics, computation, and human intelligence</p>
 <p>mathematics is the language that describes what we want to do</p>
 <p>computation/programming is the execution (translation)</p>
 <p>human intelligence is woven throughout, specifies problem, evaluates results, re-specifies problem.</p>
-<section id="course-structure-and-intended-learning-outcomes" class="level3" data-number="1.3.1">
-<h3 data-number="1.3.1" class="anchored" data-anchor-id="course-structure-and-intended-learning-outcomes"><span class="header-section-number">1.3.1</span> Course structure and intended learning outcomes</h3>
-<p>fill in nearer to term</p>
-<!-- ## A Motivating Example -->
-<!-- ![Image Source: Embry-Riddle Aeronautical University](images/AirfoilDrag.png){fig-align="center" width=80%} -->
-<!-- 
-Suppose we wish to efficiently approximate the force of drag ($F_d$), measured in $N$, on a specific airplane wing if we only have access to the following information about the wing and its operating conditions: 
-
-* The angle of attack ($\alpha$), measured in degrees
-* The density of the fluid ($\rho$), measured in $kg/m^3$ 
-* The velocity of the fluid ($v$), measured in $m/s$  -->
-<!-- ## Linear Approximation of an Unknown Function
-
-Let's bundle our inputs into a single vector, defined by: 
-
-$$ \mathbf{x} = \begin{bmatrix} \alpha \\ \rho \\ v\end{bmatrix} $$ 
-
-
-We assume there is some unknown function, $f(\cdot):\mathbb{R}^3 \rightarrow \mathbb{R}$, that gives us an optimal estimate for drag-force based on these "features": 
-
-$$ F_d = f (\mathbf{x}) + \varepsilon $$ 
-
-where $\varepsilon$ is some external noise, disturbances or information entirely independent of the input variables.  -->
-<!-- Now consider a function $h(\mathbf{x}; \beta):\mathbb{R}^3 \rightarrow \mathbb{R}$ which is a simple linear combination of the inputs: 
-
-$$ h(\mathbf{x}; \beta) = \begin{bmatrix} 1 & \mathbf{x}^\top \end{bmatrix} \begin{bmatrix}  \beta_0 \\ \beta_1 \\ \beta_2 \\ \beta_3  \end{bmatrix} = \beta_0 + \beta_1 \alpha + \beta_2 \rho + \beta_3 v $$
-
-**The Million Dollar Question:**
-
-Given we know the structure of $h(\mathbf{x}; \beta)$, how can we efficiently optimize the parameters of $h(\mathbf{x}; \beta)$ to best approximate $f(\mathbf{x})$? 
-
-## Representing Observed Input-Output Data
-
-Suppose we have taken $N$ real-life samples of the input variables and their corresponding drag-force, $F_d$. Let each sample of the system under various operating conditions form row of a matrix $\mathbf{X} \in \mathbb{R}^{N \times 4}$ for the inputs and a matrix $\mathbf{Y} \in \mathbb{R}^N$ for their corresponding outputs: 
-
-$$ \mathbf{X} = \begin{bmatrix} 1 & \alpha_1 & \rho_1 & v_1 \\ 1 & \alpha_2 & \rho_2 & v_2 \\ & & \vdots & \\ 1 & \alpha_N & \rho_N & v_N \end{bmatrix} , \mathbf{Y} = \begin{bmatrix} F_{d1} \\ F_{d2} \\ \vdots \\ F_{d3} \end{bmatrix} $$ 
-
- 
-We can efficiently compute the predictions of $h(\mathbf{X}; \beta)$ with a simple matrix-vector multiplication: 
-
-$$ \hat{\mathbf{Y}} = \mathbf{X} \beta = \begin{bmatrix} 1 & \alpha_1 & \rho_1 & v_1 \\ 1 & \alpha_2 & \rho_2 & v_2 \\ & & \vdots & \\ 1 & \alpha_N & \rho_N & v_N \end{bmatrix} \begin{bmatrix} \beta_0 \\ \beta_1 \\ \beta_2 \\ \beta_3 \end{bmatrix} = \begin{bmatrix}  \beta_0 + \beta_1 \alpha_1 + \beta_2 \rho_1 + \beta_3 v_1 \\ \beta_0 + \beta_1 \alpha_2 + \beta_2 \rho_2 + \beta_3 v_2  \\ \vdots \\ \beta_0 + \beta_1 \alpha_N + \beta_2 \rho_N + \beta_3 v_N \end{bmatrix}  \in \mathbb{R}^N $$ 
-
-## The Least-Squares Optimization Problem
-
-Our goal is to adjust the parameters $\beta$ so that our predictions, $\hat{\mathbf{Y}}$, are as close to the true outputs, $\mathbf{Y}$ as possible. One way to measure prediction error is with Mean Squared Error: 
-
-$$ \text{MSE} = \frac{1}{N} \sum_{i=1}^N (\hat{y}_i - y_i)^2 = \frac{1}{N} || \hat{\mathbf{Y}} - \mathbf{Y}||_2^2 = \frac{1}{N} || \mathbf{X} \beta - \mathbf{Y} ||_2^2 $$ 
-
-the $\frac{1}{N}$ is only a scalar, we wish to choose the value of $\beta$ that minimizes the following loss-function: 
-
-$$ L(\beta) = ||\mathbf{X} \beta - \mathbf{Y}||_2^2 $$
-
-## Solving the Least-Squares Problem
-
-Because the squared 2-Norm can be rewritten as an inner product, we can rewrite this loss-function as: 
-
-$$ L(\beta) = ||\mathbf{X} \beta - \mathbf{Y}||_2^2= (\mathbf{X} \beta - \mathbf{Y})^\top (\mathbf{X} \beta - \mathbf{Y}) $$
-$$ = (\beta^\top \mathbf{X}^\top - \mathbf{Y}^\top) (\mathbf{X} \beta - \mathbf{Y}) $$
-
-$$ = \beta^\top \mathbf{X^\top X} \beta - 2 \beta^\top \mathbf{X^\top \mathbf{Y}} + \mathbf{Y^\top Y}$$
-
-As we learned in multivariable calculus, to find a the extrema of a continuous function, we need to identify the critical points of the function. This means setting the gradient of the loss-function equal to the zero-vector:
-
-$$ \nabla L_\beta = 2 \mathbf{X^\top X} \beta - 2 \mathbf{X^\top Y} = \mathbf{0}$$ 
-
-Solving this equation for $\beta$ yields only one critical point: 
-
-$$ \hat{\beta} = (\mathbf{X^\top X})^{-1} \mathbf{X^\top Y} $$ 
-
-To check whether this point is a local minimum, maximum, or neither, we examine the nature of the Hessian: 
-
-$$ \nabla^2 L_\beta = 2 \mathbf{X^\top X} $$ 
-
-Because the Hessian is symmetric positive semidefinite and does not depend on $\beta$, this means that $L(\beta)$ is convex everywhere. Hence, $\hat{\beta}$ must be a global local minimum. 
-
-## Experimental Example
-
-Now suppose we have 100 experimental observations of various angles of attack, air-densities and velocities with the corresponding drag-force in a pandas DataFrame called `df`: 
-
-
-
-::: {.cell execution_count=2}
-``` {.python .cell-code}
-df.head()
-```
-
-::: {.cell-output .cell-output-display execution_count=20}
-
-```{=html}
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-
-<table class="dataframe" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header" style="text-align: right;">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">alpha</th>
-<th data-quarto-table-cell-role="th">rho</th>
-<th data-quarto-table-cell-role="th">velocity</th>
-<th data-quarto-table-cell-role="th">f_drag</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>16.854305</td>
-<td>1.319114</td>
-<td>79.481130</td>
-<td>9425.204935</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>42.782144</td>
-<td>1.203298</td>
-<td>50.263709</td>
-<td>13722.379248</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>32.939727</td>
-<td>1.320528</td>
-<td>57.690388</td>
-<td>12863.441979</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
-<td>26.939632</td>
-<td>0.696729</td>
-<td>49.251769</td>
-<td>3644.076532</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">4</td>
-<td>7.020839</td>
-<td>1.227098</td>
-<td>19.524299</td>
-<td>186.612122</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-```
-
-:::
-:::
-
-
-We can create $\mathbf{X}$ and $\mathbf{Y}$ matrices by extracting the input features and outputs from the dataframe: 
-
-::: {.cell execution_count=3}
-``` {.python .cell-code}
-X = np.hstack((np.ones((N, 1)), df[['alpha', 'rho', 'velocity']].values))
-Y = df['f_drag'].values
-```
-:::
-
-
-We can solve for $\hat{\beta}$ by computing the normal equations: 
-
-::: {.cell execution_count=4}
-``` {.python .cell-code}
-beta_hat = np.linalg.inv(X.T @ X) @ (X.T @ Y)
-```
-:::
-
-
-And then compute the model's predictions at the training inputs: 
-
-::: {.cell execution_count=5}
-``` {.python .cell-code}
-Y_hat = X @ beta_hat
-```
-:::
-
-
-Now let's plot the $\hat{\mathbf{Y}}$ and $\mathbf{Y}$ to examine how closely correlated the two are. A straight line with slope-1 would mean the model exactly fitted all of the outputs: 
-
-::: {.cell execution_count=6}
-``` {.python .cell-code}
-plt.figure(figsize=(8,4))
-plt.scatter(Y, Y_hat)
-plt.grid()
-plt.xlabel("True Drag Force")
-plt.ylabel("Model Predicted Drag Force")
-```
-
-::: {.cell-output .cell-output-display execution_count=24}
-```
-Text(0, 0.5, 'Model Predicted Drag Force')
-```
-:::
-
-::: {.cell-output .cell-output-display}
-![](01_intro_files/figure-html/cell-7-output-2.png){width=697 height=356}
-:::
-:::
-
-
-There is clearly a strong, but nonlinear correlation between the true and model-predicted drag-force. This indicates that there is a nonlinear relationship between the features and the output values. Let us quantify the MSE: 
-
-::: {.cell execution_count=7}
-``` {.python .cell-code}
-linear_mse = np.linalg.norm(Y_hat - Y, 2) / N
-print("Linear Features Mean-Squared Error: %.2f" % (linear_mse))
-```
-
-::: {.cell-output .cell-output-stdout}
-```
-Linear Features Mean-Squared Error: 645.47
-```
-:::
-:::
-
-
-## Using Nonlinear Features to Improve Model Performance
-
-We know the underlying formula for drag-force is: 
-
-$$ F_d = \frac{1}{2} \rho v^2 C_d A  $$ 
-
-While this function doesn't depend on the angle of attack, we do see how the features are polynomially related to one another. Naturally, it is going to be difficult for a linear combination of features to replicate this. However, if we take the log of both sides, something interesting happens: 
-
-$$ \ln(F_d) = \ln(\frac{1}{2} \rho v^2 C_d A) = \ln(\frac{1}{2}) + \ln(\rho) + 2\ln(v) + \ln(C_d) + \ln(A) $$
-
-When our features and outputs are log-scaled, we see a friendly linear-combination of log-scaled versions features emerge! Let's alter our inputs and outputs accordingly, so our problem becomes: 
-
-$$ \mathbf{X} = \begin{bmatrix} 1 & \ln \alpha_1 & \ln \rho_1 & \ln v_1 \\ 1 & \ln \alpha_2 & \ln \rho_2 & \ln v_2 \\ & & \vdots & \\ 1 & \ln \alpha_N & \ln \rho_N & \ln v_N \end{bmatrix} , \mathbf{Y} = \begin{bmatrix} \ln F_{d1} \\ \ln F_{d2} \\ \vdots \\ \ln F_{d3} \end{bmatrix} $$ 
-
-Let's see how this works programmatically: 
-
-::: {.cell execution_count=8}
-``` {.python .cell-code}
-X_log = np.hstack((np.ones((N, 1)), np.log(df[['alpha', 'rho', 'velocity']].values)))
-Y_log = np.log(df['f_drag'].values - df['f_drag'].min() + 1)
-
-beta_log = np.linalg.inv(X_log.T @ X_log) @ (X_log.T @ Y_log)
-
-Y_hat_log = np.exp(X_log @ beta_log)+ df['f_drag'].min() - 1
-
-plt.figure(figsize=(8,4))
-plt.scatter(Y, Y_hat_log)
-plt.grid()
-plt.xlabel("True Drag Force")
-plt.ylabel("Model Predicted Drag Force")
-```
-
-::: {.cell-output .cell-output-display execution_count=26}
-```
-Text(0, 0.5, 'Model Predicted Drag Force')
-```
-:::
-
-::: {.cell-output .cell-output-display}
-![](01_intro_files/figure-html/cell-9-output-2.png){width=686 height=356}
-:::
-:::
-
-
-Now let's see if our MSE has changed: 
-
-::: {.cell execution_count=9}
-``` {.python .cell-code}
-log_mse = np.linalg.norm(Y_hat_log - Y, 2)/N
-print("Logarithmically Scaled Features Mean-Squared Error: %.2f" % (log_mse))
-```
-
-::: {.cell-output .cell-output-stdout}
-```
-Logarithmically Scaled Features Mean-Squared Error: 144.70
-```
-:::
-:::
-
-
-We have nearly a 5x reduction in MSE just by log-scaling our features! If we choose the right features, linear regression can be an extremely powerful method for approximating complex functions.  -->
+<p>at a high level we want to teach you how to work with all three of these, and that motivates the structure of the course assignments and learning outcomes</p>
+<p>learning outcomes</p>
+<p>problem solving review - meant to develop your skills in demonstrating human intelligence</p>
 <hr>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
 <div id="ref-cambridgeDS2024" class="csl-entry" role="listitem">
 Cambridge Dictionary. 2024. <span>“<span>Data Science</span>.”</span> 2024. <a href="https://dictionary.cambridge.org/dictionary/english/data-science">https://dictionary.cambridge.org/dictionary/english/data-science</a>.
 </div>
@@ -621,12 +413,14 @@ Merriam-Webster Dictionary. 2024. <span>“<span>Machine Learning</span>.”</sp
 </div>
 </div>
 </section>
-</section>
 <section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr>
 <ol>
 <li id="fn1"><p>It seems apt to use AI to define AI, and I’m quoting it for illustrative purposes here, but I do want to point out that Google’s AI Overview is not at all transparent about how these responses are generated and thus does not meet the standards for being cited as a source in most publishing venues.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>this paragraph lists examples that came to me most quickly and thus reflects to some extent my own cognitive biases based on the media I’ve consumed. I welcome suggestions of other examples of AI/ML/data science to include that are less well-known – Email me!<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Following the same notational convention, we could write the data set as <span class="math inline">\(\{(z_i,y_i) : i =1,\ldots,N\}\)</span>, which we would read as the set of all pairs <span class="math inline">\((z_i,y_i)\)</span> for <span class="math inline">\(i = 1,\ldots,N\)</span>, but the notation <span class="math inline">\(\{(z_i,y_i)\}_{i=1}^N\)</span> is more compact and more common. I don’t make the rules. 🤷‍♀️<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>These are common conventions, but the ML community is comprised of a diverse group of scientists and engineers across disciplines, and it’s very common to read things that use entirely different notation. This is unfortunately the reality of things, and one of the reasons I am going to push you in this class to be comfortable describing the underlying concepts precisely using different notations - that is, you are going to develop flexibility in re-assigning meaning to different symbols as we go along (I hope).<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>I’m making an effort to explicitly define notation when I introduce it, and to give examples of how to read and understand it, but it’s easy for me to miss things, so please speak up or write us a message if you have a question.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 
@@ -710,10 +504,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -723,8 +534,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -736,7 +556,130 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -780,6 +723,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -805,6 +749,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -866,17 +836,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./index.html" class="pagination-link">
+      <a href="./index.html" class="pagination-link" aria-label="Preface">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Preface</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./11_ls.html" class="pagination-link">
+      <a href="./11_ls.html" class="pagination-link" aria-label="ML for AE: Least Squares Regression">
         <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">ML for AE: Least Squares Regression</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
+
 
 
 

@@ -18,7 +18,7 @@ book:
 bibliography: references.bib
 
 execute:
-  freeze: auto
+  freeze: true
 
 format:
   html:
