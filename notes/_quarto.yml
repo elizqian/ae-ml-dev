@@ -9,6 +9,8 @@ book:
     - index.qmd
     - 01_intro.qmd
     - 11_ls.qmd
+    - 12_lslinalg.qmd
+    - 13_lsstat.qmd
     - 20_ugbo.qmd
     - 21_ugbo2.qmd
     - references.qmd
@@ -17,8 +19,10 @@ book:
 
 bibliography: references.bib
 
+number-sections: true
+
 execute:
-  freeze: true
+  freeze: auto
 
 format:
   html:

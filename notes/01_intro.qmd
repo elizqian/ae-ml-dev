@@ -3,9 +3,6 @@ title: "Introduction"
 html-math-method:
   method: mathjax
   url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
-number-sections: true
-execute:
-    freeze: auto
 ---
 
 {{< include _macros.qmd >}}
@@ -76,7 +73,7 @@ Mathematical notational shorthand for this is $f:\R^d\to\R$. This function $f$ i
 
 Learning how to fit models to data and assess their accuracy and usefulness is the focus of this course. 
 
-### Mathematical setting and problem formulation
+### Mathematical setting and problem formulation {#sec-intro-prob-form}
 
 Hot take: Machine learning methods, at their core, are simply very complicated calculators. 
 
@@ -102,19 +99,19 @@ But so far I have still only been saying "set" --- what distinguishes a "class" 
 
 $$
 \{c_0 + c_1 z + c_2 z^2 : c_0,c_1,c_2\in\R\}
-$$
+$$ {#eq-quad-models}
 
 The way to read this notation above is as the set of all functions of the form $f(z) = c_0 + c_1 z + c_2 z^2$ that can be obtained when $c_0,c_1,c_2$ are allowed to take on any real values.[^3] We call this the *class* of all quadratic functions because by varying $c_0,c_1,c_2$ we always get a quadratic function (noting that with our mathematics hats on, linear functions are just special cases of quadratic functions where the second-order coefficient is zero). Thus, functions within the class share a functional form, unlike the set $\cF$ we defined above. However, we could use the functions in the set $\cF$ to construct an alternative *model class*:
 
 $$
 \{a z^2 + b\sin(z) + c\exp(z) : a,b,c\in\R\}
-$$
+$$ {#eq-sin-exp-models}
 
 or, allowing $z$ to be a $d$-dimensional vector again, we could consider the following model class:
 
 $$
 \{\max(0,a^\top (Wz + b)): W\in\R^{d\times d}, \,a,b\in\R^d\}
-$$
+$$ {#eq-perceptron}
 
 ::: {.callout-note}
 ## Exercise
@@ -146,23 +143,21 @@ Note that for the above expression to be well-defined, we need our first two ing
 
 As we progress through this course, we will learn more about how we can solve the above optimization (it is different for different model architectures), and about alternative ways to select the parameter based on alternative minimization problems. 
 
-## Things that are not regression
+## A foundation for learning about ML beyond parametrized regression
 
-I want to emphasize that this class is not and indeed cannot (realistically) be an exhaustive introduction to machine learning, artificial intelligence, or data science. Even the community of professionals who describe themselves as working in "scientific machine learning" is quite broad in scope and would include folks working on topics that I do not intend to cover in this class. There are many topics within AI/ML/data science we will not cover (beyond perhaps at most a very surface level), including generative modeling, decision trees, unsupervised learning methods like clustering, and many more. 
+I want to emphasize that this class is not and indeed cannot (realistically) be an exhaustive introduction to machine learning, artificial intelligence, or data science. Even the community of professionals who describe themselves as working in "scientific machine learning" is quite broad in scope and would include folks working on topics that I do not intend to cover in this class. There are many topics within AI/ML/data science we will not cover (beyond perhaps at most a very surface level), including generative modeling, decision trees, unsupervised learning methods like clustering, and many more. The philosophy of this course is to empower you to learn about these other methods through future coursework or independent study, by providing a foundation in what I term the `three pillars of artificial intelligence':
 
-Give one example, list other examples, I cannot possibly hope to cover all these things in this course, so another goal of the course is to teach the language of ML so you are prepared to learn other things in future courses and on your own. 
+1. Mathematics: all machine learning methods are fundamentally solving mathematical problems at their core. The first pillar of AI is to be able to mathematically define the problem one seeks to solve. 
 
-## Course principles, structure, and intended learning outcomes
+2. Computation: once a mathematical problem is defined, an ML method must define an algorithm that carries out the calculations to solve the problem. The second pillar of AI is to define an algorithm that (approximately) solves the mathematical problem.
 
-The three pillars of AI: mathematics, computation, and human intelligence 
+3. Human intelligence: this is the crucial third pillar of AI. Human intelligence is vital for defining mathematical problem formulations, designing algorithms, and *assessing* the results and *iteratively* updating the mathematical problem formulation and computational algorithm to achieve desired outcomes.
 
-mathematics is the language that describes what we want to do
+We will seek to develop a firm foundation in these three pillars of AI throughout the course. 
 
-computation/programming is the execution (translation)
+## Course structure and intended learning outcomes
 
-human intelligence is woven throughout, specifies problem, evaluates results, re-specifies problem. 
-
-at a high level we want to teach you how to work with all three of these, and that motivates the structure of the course assignments and learning outcomes
+<!-- at a high level we want to teach you how to work with all three of these, and that motivates the structure of the course assignments and learning outcomes -->
 
 learning outcomes
 

@@ -1,46 +1,113 @@
 ---
-title: "ML for AE: Least Squares Regression"
+title: "Linear Least Squares Problems"
 html-math-method:
   method: mathjax
   url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
-number-sections: false
-# format: pptx
-execute:
-    freeze: auto
+
 ---
 
-## A Motivating Example
+{{< include _macros.qmd >}}
+
+We begin our exploration of scientific machine learning methods in the fundamental setting of *linear regression problems*. The intended learning outcomes of these notes are that students should be able to:
+
+1. Classify a regression problem as linear or nonlinear
+
+2. Understand the abstract form of linear least squares problems
+
+    a. Define the abstract form of linear least squares problems and be able to explain what its key ingredients are
+
+    b. Translate a description of a model learning problem in words into a specific instance of the abstract form
+
+    c. Construct examples of linear least squares problems, cast them in the abstract form, and explain their context
+
+## Classifying regression problems as linear vs nonlinear
+
+We have previously introduced regression problems in a general way: recall that the three ingredients of (parametrized) regression problems are (1) paired input and output data, (2) the choice of a parametrized model class, and (3) a method for choosing a model from within that class. The classification of a regression problem as *linear* or *nonlinear* depends solely on ingredient (2), the parametrized model class: if the models in that class depend linearly on the model parameters, the regression problem is a linear regression problem.
+
+::: {.callout-caution collapse="true"}
+## Check your knowledge: Do you remember what it means for a function to depend linearly on a variable?
+
+The function $f(z;\theta): \R^d\times\Theta\to\R$ is said to be *linear* in the parameters $\theta$ if, for all $a,b\in\R$ and all $\theta_1,\theta_2\in\Theta$, the following holds:  $f(z; a\theta_1 + b\theta_2) = af(z;\theta_1) + bf(z;\theta_2)$. 
+
+Note that when we say a function is "linear", we have to specify in *what*. That is, we can also say $f(z;\theta)$ is linear in the *inputs* if, for all $a,b\in\R$ and all $z_1,z_2\in\R^d$, the following holds: $f(az_1 + bz_2;\theta) = af(z_1;\theta)+bf(z_2;\theta)$.
+:::
+
+The classification of regression problems as linear or nonlinear depends **solely** on the dependence of the functions in the parametrized model class on the **parameters**. That is, we can define functions that are *linear* in $\theta$ while being *nonlinear* in $z$. 
+
+::: {.callout-note}
+## Exercise
+Consider the model classes (@eq-quad-models)-(@eq-perceptron) introduced previously. Are these model classes linear or nonlinear in the parameters? In the inputs?
+:::
+
+## Mathematical problem formulation
+We are now going to introduce an *abstract* mathematical problem formulation that can be used to describe many *specific instances* of linear regression problems. This is a theme of the course and throughout computational mathematics and engineering: abstraction using the language of mathematics lets us isolate the core essence of the problem we're solving and develop powerful algorithms that can solve specific applications of those problems across a wide range of disciplines. I'll introduce the abstract formulation first, and follow it up with some specific examples. 
+
+Ingredient 1 (the data set): let $\{(z_i,y_i)\}_{i=1}^N$ be a given data set of paired inputs $z_i\in\R^d$ and outputs $y_i\in\R$. 
+
+Ingredient 2 (the parametrized model class): let $x:\R^d\to\R^n$ be a function that maps the $d$-dimensional input to an $n$-dimensional *feature vector*. For a fixed $x$, we will consider the following parametrized model class:
+
+$$
+\mathcal{F}_\beta := \{ x(z)^\top \beta : \beta\in\R^n\}
+$$ {#eq-linreg-model-class}
+
+Recall that @eq-linreg-model-class is read as "$\mathcal{F}_\beta$ is defined to be the set of all functions $f(z;\beta) = x(z)^\top\beta$ for all $\beta\in\R^n$." This is an abstract way to define the model class for *any* linear regression problem, as we will describe in more detail shortly. 
+
+Ingredient 3 (the method of choosing the parameters): let $\beta^*$ be given by 
+
+$$
+\begin{aligned}
+\beta^* &= \arg\min_{\beta\in\R^n} \frac1N \sum_{i=1}^N (f(z_i;\beta) - y_i)^2 \\
+&= \arg\min_{\beta\in\R^N} \frac1N \sum_{i=1}^N (x(z_i)^\top\beta - y_i)^2.
+\end{aligned}
+$$ {#eq-linreg-minimization}
+Then, we define the *learned model* to be $f(z;\beta^*) = x(z)^\top\beta^*$. We call $\beta^*$ defined this way the "optimal regression parameters" or just the "optimal parameters", because they are the result of solving an optimization problem. Note that the objective of this optimization function is *defined by the data*, and represents the average squared error of the model over the data set. 
+
+Taken together, the three ingredients I have defined above define a *linear least squares problem*, which is a subclass of linear regression problems. We'll now give several examples of specific instances of linear least squares problems to illustrate how broadly applicable this abstract framework is.
+
+## Examples 
+
+### Example 1: Aerodynamic drag prediction
 
 ![Image Source: Embry-Riddle Aeronautical University](images/AirfoilDrag.png){fig-align="center" width=80%}
 
-Suppose we wish to efficiently approximate the force of drag ($F_d$), measured in $N$, on a specific airplane wing if we only have access to the following information about the wing and its operating conditions: 
+An important task in aerodynamic design is predicting lift and drag forces on a body moving through air. Let's consider a simplified problem where we are given an fixed airfoil design and our goal is to predict the drag force $F_d$ on the airfoil as a function of three parameters which describe its flight conditions:
 
-* The angle of attack ($\alpha$), measured in degrees
-* The density of the fluid ($\rho$), measured in $kg/m^3$ 
-* The velocity of the fluid ($v$), measured in $m/s$ 
+* The angle of attack $\alpha$ 
+* The density of the fluid $\rho$
+* The freestream velocity of the air $v$
 
-## Linear Approximation of an Unknown Function
+To put this problem in our abstract framework, we define $z = (\alpha,\rho,v)^\top$ to be a three-dimensional input, and take the output to be the drag force $y= F_d$. In order to define a regression problem, we require the existence of a data set $\{(z_i,y_i)\}_{i=1}^N$. Note that in this case $z_i = (\alpha_i,\rho_i,v_i)$. We assume that this data set is given.
 
-Let's bundle our inputs into a single vector, defined by: 
+In linear regression problems, defining the model class amounts to choosing a set of regression *features* by defining $x$. A simple choice takes the inputs themselves to be features: $x^{(1)}(z) = z = (\alpha,\rho,v)^\top$. This leads to a class of parametrized models with a three-dimensional unknown parameter vector $\beta\in\R^3$. The models in this class have the following form:
 
-$$ \mathbf{x} = \begin{bmatrix} \alpha \\ \rho \\ v\end{bmatrix} $$ 
+$$
+f^{(1)}(z;\beta) = x^{(1)}(z)^\top\beta = (\alpha,\rho,v) \beta = \beta_1\alpha + \beta_2\rho + \beta_3 v.
+$$
+
+There are many other possible choices. For example, consider $x^{(2)}(z) = (\alpha,\rho, v, \alpha^2, \rho^2, v^2, \alpha\rho, \alpha v, \rho v)^\top$. This leads to a parametrized model class with a *nine*-dimensional unknown parameter vector $\beta\in\R^9$:
+
+$$
+\begin{aligned}
+f^{(2)}(z;\beta) &= x^{(2)}(z)^\top\beta = (\alpha,\rho, v, \alpha^2, \rho^2, v^2, \alpha\rho, \alpha v, \rho v)\beta \\
+&= \beta_1\alpha + \beta_2\rho + \beta_3 v + \beta_4\alpha^2 + \beta_5\rho^2 + \beta_6 v^2 + \beta_7\alpha\rho + \beta_8\alpha v + \beta_9 \rho v
+\end{aligned}
+$$
+
+For either the above choices of features $x^{(1)}(z)$ or $x^{(2)}(z)$, we could then define and solve the minimization @eq-linreg-minimization to find the optimal regression parameters and define our learned model $f^{(1)}(z;\beta^*)$ or $f^{(2)}(z;\beta^*)$. 
+
+::: {.callout-note}
+## Understanding notation
+Note that we use $\beta$ to denote the unknown parameters in both $f^{(1)}$ and $f^{(2)}$ above despite $\beta$ referring to different quantities in the definition of the different functions. This is a common notational shortcut --- while we could use the notation $\beta^{(1)}\in\R^3$ and $\beta^{(2)}\in\R^9$ to specify the different $\beta$ for the different functions, this can be cumbersome if we are considering many different options for the choice of features $x(z)$, and it's standard to just use $\beta$, where the definition of $\beta$ is implied by the context. One of the challenges in learning about machine learning and computational mathematics more generally is getting used to similar notation meaning different things in different contexts. That's one of the things that we'll practice in this course.
+:::
 
 
-We assume there is some unknown function, $f(\cdot):\mathbb{R}^3 \rightarrow \mathbb{R}$, that gives us an optimal estimate for drag-force based on these "features": 
 
-$$ F_d = f (\mathbf{x}) + \varepsilon $$ 
+### Example 2: something else
 
-where $\varepsilon$ is some external noise, disturbances or information entirely independent of the input variables. 
+### Example 3: something else
 
-Now consider a function $h(\mathbf{x}; \beta):\mathbb{R}^3 \rightarrow \mathbb{R}$ which is a simple linear combination of the inputs: 
+## Solution via normal equations
 
-$$ h(\mathbf{x}; \beta) = \begin{bmatrix} 1 & \mathbf{x}^\top \end{bmatrix} \begin{bmatrix}  \beta_0 \\ \beta_1 \\ \beta_2 \\ \beta_3  \end{bmatrix} = \beta_0 + \beta_1 \alpha + \beta_2 \rho + \beta_3 v $$
-
-**The Million Dollar Question:**
-
-Given we know the structure of $h(\mathbf{x}; \beta)$, how can we efficiently optimize the parameters of $h(\mathbf{x}; \beta)$ to best approximate $f(\mathbf{x})$? 
-
-## Representing Observed Input-Output Data
 
 Suppose we have taken $N$ real-life samples of the input variables and their corresponding drag-force, $F_d$. Let each sample of the system under various operating conditions form row of a matrix $\mathbf{X} \in \mathbb{R}^{N \times 4}$ for the inputs and a matrix $\mathbf{Y} \in \mathbb{R}^N$ for their corresponding outputs: 
 
@@ -51,9 +118,8 @@ We can efficiently compute the predictions of $h(\mathbf{X}; \beta)$ with a simp
 
 $$ \hat{\mathbf{Y}} = \mathbf{X} \beta = \begin{bmatrix} 1 & \alpha_1 & \rho_1 & v_1 \\ 1 & \alpha_2 & \rho_2 & v_2 \\ & & \vdots & \\ 1 & \alpha_N & \rho_N & v_N \end{bmatrix} \begin{bmatrix} \beta_0 \\ \beta_1 \\ \beta_2 \\ \beta_3 \end{bmatrix} = \begin{bmatrix}  \beta_0 + \beta_1 \alpha_1 + \beta_2 \rho_1 + \beta_3 v_1 \\ \beta_0 + \beta_1 \alpha_2 + \beta_2 \rho_2 + \beta_3 v_2  \\ \vdots \\ \beta_0 + \beta_1 \alpha_N + \beta_2 \rho_N + \beta_3 v_N \end{bmatrix}  \in \mathbb{R}^N $$ 
 
-## The Least-Squares Optimization Problem
 
-Our goal is to adjust the parameters $\beta$ so that our predictions, $\hat{\mathbf{Y}}$, are as close to the true outputs, $\mathbf{Y}$ as possible. One way to measure prediction error is with Mean Squared Error: 
+<!-- Our goal is to adjust the parameters $\beta$ so that our predictions, $\hat{\mathbf{Y}}$, are as close to the true outputs, $\mathbf{Y}$ as possible. One way to measure prediction error is with Mean Squared Error: 
 
 $$ \text{MSE} = \frac{1}{N} \sum_{i=1}^N (\hat{y}_i - y_i)^2 = \frac{1}{N} || \hat{\mathbf{Y}} - \mathbf{Y}||_2^2 = \frac{1}{N} || \mathbf{X} \beta - \mathbf{Y} ||_2^2 $$ 
 
@@ -61,7 +127,7 @@ the $\frac{1}{N}$ is only a scalar, we wish to choose the value of $\beta$ that 
 
 $$ L(\beta) = ||\mathbf{X} \beta - \mathbf{Y}||_2^2 $$
 
-## Solving the Least-Squares Problem
+## Solving the Least-Squares Problem -->
 
 Because the squared 2-Norm can be rewritten as an inner product, we can rewrite this loss-function as: 
 
@@ -84,121 +150,16 @@ $$ \nabla^2 L_\beta = 2 \mathbf{X^\top X} $$
 
 Because the Hessian is symmetric positive semidefinite and does not depend on $\beta$, this means that $L(\beta)$ is convex everywhere. Hence, $\hat{\beta}$ must be a global local minimum. 
 
-## Experimental Example
 
-Now suppose we have 100 experimental observations of various angles of attack, air-densities and velocities with the corresponding drag-force in a pandas DataFrame called `df`: 
+## Assessing the learned models
 
-```{python}
-#| echo: false
-import numpy as np 
-import matplotlib.pyplot as plt 
-import pandas as pd
-import math
+various metrics, notion of a test data set. k-fold cross-validation for class?
 
-np.random.seed(42)
+## Exercises
 
-def Cd(alpha):
-    return 0.1 * np.exp(math.pi / 180.0 * alpha)
+a few relatively short questions that test the learning outcomes. 
 
-def Fd(alpha, rho, v):
-    C_d = Cd(alpha)
-    A = 1.2 # m^2 
-    return 0.5*rho*alpha*v**2*C_d +1
+## Further reading
 
-N = 100
-alpha = np.random.rand(N)*45
-rho = np.random.randn(N)*0.3 + 1.293 
-v = np.random.rand(N)*100
-F_d = Fd(alpha, rho, v) + 0*np.random.randn(N)
-
-df_dict = {
-    "alpha":alpha,
-    "rho":rho,
-    "velocity":v, 
-    "f_drag":F_d
-}
-
-df = pd.DataFrame(df_dict)
-```
-
-```{python}
-df.head()
-```
-
-We can create $\mathbf{X}$ and $\mathbf{Y}$ matrices by extracting the input features and outputs from the dataframe: 
-
-```{python}
-X = np.hstack((np.ones((N, 1)), df[['alpha', 'rho', 'velocity']].values))
-Y = df['f_drag'].values
-```
-
-We can solve for $\hat{\beta}$ by computing the normal equations: 
-
-```{python}
-beta_hat = np.linalg.inv(X.T @ X) @ (X.T @ Y)
-```
-
-And then compute the model's predictions at the training inputs: 
-
-```{python}
-Y_hat = X @ beta_hat
-```
-
-Now let's plot the $\hat{\mathbf{Y}}$ and $\mathbf{Y}$ to examine how closely correlated the two are. A straight line with slope-1 would mean the model exactly fitted all of the outputs: 
-
-```{python}
-plt.figure(figsize=(8,4))
-plt.scatter(Y, Y_hat)
-plt.grid()
-plt.xlabel("True Drag Force")
-plt.ylabel("Model Predicted Drag Force")
-```
-
-There is clearly a strong, but nonlinear correlation between the true and model-predicted drag-force. This indicates that there is a nonlinear relationship between the features and the output values. Let us quantify the MSE: 
-
-```{python}
-linear_mse = np.linalg.norm(Y_hat - Y, 2) / N
-print("Linear Features Mean-Squared Error: %.2f" % (linear_mse))
-```
-
-## Using Nonlinear Features to Improve Model Performance
-
-We know the underlying formula for drag-force is: 
-
-$$ F_d = \frac{1}{2} \rho v^2 C_d A  $$ 
-
-While this function doesn't depend on the angle of attack, we do see how the features are polynomially related to one another. Naturally, it is going to be difficult for a linear combination of features to replicate this. However, if we take the log of both sides, something interesting happens: 
-
-$$ \ln(F_d) = \ln(\frac{1}{2} \rho v^2 C_d A) = \ln(\frac{1}{2}) + \ln(\rho) + 2\ln(v) + \ln(C_d) + \ln(A) $$
-
-When our features and outputs are log-scaled, we see a friendly linear-combination of log-scaled versions features emerge! Let's alter our inputs and outputs accordingly, so our problem becomes: 
-
-$$ \mathbf{X} = \begin{bmatrix} 1 & \ln \alpha_1 & \ln \rho_1 & \ln v_1 \\ 1 & \ln \alpha_2 & \ln \rho_2 & \ln v_2 \\ & & \vdots & \\ 1 & \ln \alpha_N & \ln \rho_N & \ln v_N \end{bmatrix} , \mathbf{Y} = \begin{bmatrix} \ln F_{d1} \\ \ln F_{d2} \\ \vdots \\ \ln F_{d3} \end{bmatrix} $$ 
-
-Let's see how this works programmatically: 
-
-```{python}
-X_log = np.hstack((np.ones((N, 1)), np.log(df[['alpha', 'rho', 'velocity']].values)))
-Y_log = np.log(df['f_drag'].values - df['f_drag'].min() + 1)
-
-beta_log = np.linalg.inv(X_log.T @ X_log) @ (X_log.T @ Y_log)
-
-Y_hat_log = np.exp(X_log @ beta_log)+ df['f_drag'].min() - 1
-
-plt.figure(figsize=(8,4))
-plt.scatter(Y, Y_hat_log)
-plt.grid()
-plt.xlabel("True Drag Force")
-plt.ylabel("Model Predicted Drag Force")
-```
-
-Now let's see if our MSE has changed: 
-
-```{python}
-log_mse = np.linalg.norm(Y_hat_log - Y, 2)/N
-print("Logarithmically Scaled Features Mean-Squared Error: %.2f" % (log_mse))
-```
-
-We have nearly a 5x reduction in MSE just by log-scaling our features! If we choose the right features, linear regression can be an extremely powerful method for approximating complex functions. 
-
+any appropriate links
 ---
