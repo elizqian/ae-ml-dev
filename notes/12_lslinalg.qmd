@@ -1,0 +1,147 @@
+---
+title: "LLS: Linear Algebra Perspective"
+html-math-method:
+  method: mathjax
+  url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+
+---
+
+{{< include _macros.qmd >}}
+
+The intended learning outcomes of these notes are that students should be able to:
+
+
+## range, kernel and expressivity, well-posedness
+
+feature selection 
+
+multiple solutions 
+
+low-rank or near-low-rank-ness
+
+## QR decomposition
+
+algorithm, cost 
+
+## SVD 
+
+for data reduction, and for regularization
+
+## Experimental Example
+
+Now suppose we have 100 experimental observations of various angles of attack, air-densities and velocities with the corresponding drag-force in a pandas DataFrame called `df`: 
+
+```{python}
+#| echo: false
+import numpy as np 
+import matplotlib.pyplot as plt 
+import pandas as pd
+import math
+
+np.random.seed(42)
+
+def Cd(alpha):
+    return 0.1 * np.exp(math.pi / 180.0 * alpha)
+
+def Fd(alpha, rho, v):
+    C_d = Cd(alpha)
+    A = 1.2 # m^2 
+    return 0.5*rho*alpha*v**2*C_d +1
+
+N = 100
+alpha = np.random.rand(N)*45
+rho = np.random.randn(N)*0.3 + 1.293 
+v = np.random.rand(N)*100
+F_d = Fd(alpha, rho, v) + 0*np.random.randn(N)
+
+df_dict = {
+    "alpha":alpha,
+    "rho":rho,
+    "velocity":v, 
+    "f_drag":F_d
+}
+
+df = pd.DataFrame(df_dict)
+```
+
+```{python}
+df.head()
+```
+
+We can create $\mathbf{X}$ and $\mathbf{Y}$ matrices by extracting the input features and outputs from the dataframe: 
+
+```{python}
+X = np.hstack((np.ones((N, 1)), df[['alpha', 'rho', 'velocity']].values))
+Y = df['f_drag'].values
+```
+
+We can solve for $\hat{\beta}$ by computing the normal equations: 
+
+```{python}
+beta_hat = np.linalg.inv(X.T @ X) @ (X.T @ Y)
+```
+
+And then compute the model's predictions at the training inputs: 
+
+```{python}
+Y_hat = X @ beta_hat
+```
+
+Now let's plot the $\hat{\mathbf{Y}}$ and $\mathbf{Y}$ to examine how closely correlated the two are. A straight line with slope-1 would mean the model exactly fitted all of the outputs: 
+
+```{python}
+plt.figure(figsize=(8,4))
+plt.scatter(Y, Y_hat)
+plt.grid()
+plt.xlabel("True Drag Force")
+plt.ylabel("Model Predicted Drag Force")
+```
+
+There is clearly a strong, but nonlinear correlation between the true and model-predicted drag-force. This indicates that there is a nonlinear relationship between the features and the output values. Let us quantify the MSE: 
+
+```{python}
+linear_mse = np.linalg.norm(Y_hat - Y, 2) / N
+print("Linear Features Mean-Squared Error: %.2f" % (linear_mse))
+```
+
+## Using Nonlinear Features to Improve Model Performance
+
+We know the underlying formula for drag-force is: 
+
+$$ F_d = \frac{1}{2} \rho v^2 C_d A  $$ 
+
+While this function doesn't depend on the angle of attack, we do see how the features are polynomially related to one another. Naturally, it is going to be difficult for a linear combination of features to replicate this. However, if we take the log of both sides, something interesting happens: 
+
+$$ \ln(F_d) = \ln(\frac{1}{2} \rho v^2 C_d A) = \ln(\frac{1}{2}) + \ln(\rho) + 2\ln(v) + \ln(C_d) + \ln(A) $$
+
+When our features and outputs are log-scaled, we see a friendly linear-combination of log-scaled versions features emerge! Let's alter our inputs and outputs accordingly, so our problem becomes: 
+
+$$ \mathbf{X} = \begin{bmatrix} 1 & \ln \alpha_1 & \ln \rho_1 & \ln v_1 \\ 1 & \ln \alpha_2 & \ln \rho_2 & \ln v_2 \\ & & \vdots & \\ 1 & \ln \alpha_N & \ln \rho_N & \ln v_N \end{bmatrix} , \mathbf{Y} = \begin{bmatrix} \ln F_{d1} \\ \ln F_{d2} \\ \vdots \\ \ln F_{d3} \end{bmatrix} $$ 
+
+Let's see how this works programmatically: 
+
+```{python}
+X_log = np.hstack((np.ones((N, 1)), np.log(df[['alpha', 'rho', 'velocity']].values)))
+Y_log = np.log(df['f_drag'].values - df['f_drag'].min() + 1)
+
+beta_log = np.linalg.inv(X_log.T @ X_log) @ (X_log.T @ Y_log)
+
+Y_hat_log = np.exp(X_log @ beta_log)+ df['f_drag'].min() - 1
+
+plt.figure(figsize=(8,4))
+plt.scatter(Y, Y_hat_log)
+plt.grid()
+plt.xlabel("True Drag Force")
+plt.ylabel("Model Predicted Drag Force")
+```
+
+Now let's see if our MSE has changed: 
+
+```{python}
+log_mse = np.linalg.norm(Y_hat_log - Y, 2)/N
+print("Logarithmically Scaled Features Mean-Squared Error: %.2f" % (log_mse))
+```
+
+We have nearly a 5x reduction in MSE just by log-scaling our features! If we choose the right features, linear regression can be an extremely powerful method for approximating complex functions. 
+
+---
