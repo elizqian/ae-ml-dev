@@ -72,7 +72,7 @@ Taken together, the three ingredients I have defined above define a *linear leas
 
 ### Example 1: Aerodynamic drag prediction
 
-![Image Source: Embry-Riddle Aeronautical University](images/AirfoilDrag.png){fig-align="center" width=80%}
+<!-- ![Image Source: [@erauAirfoil2024]](images/AirfoilDrag.png){fig-align="center" width=80%} -->
 
 An important task in aerodynamic design is predicting lift and drag forces on a body moving through air. Let's consider a simplified problem where we are given an fixed airfoil design and our goal is to predict the drag force $F_d$ on the airfoil as a function of three parameters which describe its flight conditions:
 
