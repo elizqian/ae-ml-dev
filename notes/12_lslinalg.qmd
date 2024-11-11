@@ -12,6 +12,8 @@ The intended learning outcomes of these notes are that students should be able t
 
 
 ## range, kernel and expressivity, well-posedness
+start with "if invertible" and go from there...
+
 
 feature selection 
 

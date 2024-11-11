@@ -20,6 +20,10 @@ We begin our exploration of scientific machine learning methods in the fundament
 
     c. Construct examples of linear least squares problems, cast them in the abstract form, and explain their context
 
+3. Solve linear least-squares problems by deriving and solving the normal equations. 
+
+4. Evaluate linear regression models by computing and interpreting mean error, mean relative error, and R^2 values on both training and test data sets.
+
 ## Classifying regression problems as linear vs nonlinear
 
 We have previously introduced regression problems in a general way: recall that the three ingredients of (parametrized) regression problems are (1) paired input and output data, (2) the choice of a parametrized model class, and (3) a method for choosing a model from within that class. The classification of a regression problem as *linear* or *nonlinear* depends solely on ingredient (2), the parametrized model class: if the models in that class depend linearly on the model parameters, the regression problem is a linear regression problem.
@@ -101,22 +105,66 @@ Note that we use $\beta$ to denote the unknown parameters in both $f^{(1)}$ and 
 :::
 
 
-
 ### Example 2: something else
 
 ### Example 3: something else
 
-## Solution via normal equations
+## Solving linear least squares problems
+
+Linear least squares problems are special because they have closed form solutions: that is, we can write an analytical expression for the optimum parameters $\beta^*$ in terms of the data. To do so, we are going to define a feature data matrix $X\in\R^{N\times n}$ and an output data vector $Y\in\R^N$ as follows:
+
+$$
+X = \begin{pmatrix}
+- &x(z_1) & - \\
+ & \vdots & \\
+- & x(z_N) & -
+\end{pmatrix}, 
+\qquad 
+Y = \begin{pmatrix}
+y_1 \\ \vdots \\ y_N
+\end{pmatrix},
+$$
+where the *rows* of $X$ and the *elements* of $Y$ correspond to input-output pairs in the data set. Note that each *column* of $X$ corresponds to a different *feature* defined by an element of the vector-valued function 
+$x$.
+
+Using this notation, @eq-linreg-minimization can be rewritten as
+
+$$
+\beta^* = \arg\min_{\beta\in\R^n} \frac1N\|X \beta - Y\|^2 
+$$ {#eq-linreg-matrix-min}
+
+This is the minimization of a multivariate function (because $\beta$ is a vector). Recall from calculus that to find minimizers of multivariate functions we first seek *critical points* that satisfy the *first-order necessary conditions* for optimality: that is, we look for points where the derivative of the objective function is 0. Let $\mathcal{L}(\beta) = \frac1N\|X\beta-Y\|^2 = \frac1N(X\beta - Y)^\top (X\beta-Y)$. Then,
+
+$$
+\frac{\partial\mathcal{L}}{\partial \beta} = \frac2N(X^\top X\beta - X^\top Y)
+$$
+
+Setting the derivative equal to 0 yields the standard *normal equations*[^1]:
+
+[^1]: note that the constant factor $\frac2N$ drops out. It's common to play fast and loose with multiplicative constants in minimizations -- other sources define the minimization objective with a $\frac12$ multiplier, which leads to the derivative not having the factor of 2 in front and leads to the same critical point. Or you may see the objective function defined without the $1/N$ in front, which still leads to the same critical point.
+
+$$
+X^\top X\beta^* = X^\top Y
+$$
+
+If $(X^\top X)$ is invertible, then the unique solution to the normal equations is given by
+
+$$ 
+\beta^* = (X^\top X)^{-1} X^\top Y
+$$
+
+and this choice of $\beta$ defines our final learned model: $f(z;\beta^*) = x(z)^\top\beta^*$.
 
 
+<!-- 
 Suppose we have taken $N$ real-life samples of the input variables and their corresponding drag-force, $F_d$. Let each sample of the system under various operating conditions form row of a matrix $\mathbf{X} \in \mathbb{R}^{N \times 4}$ for the inputs and a matrix $\mathbf{Y} \in \mathbb{R}^N$ for their corresponding outputs: 
 
 $$ \mathbf{X} = \begin{bmatrix} 1 & \alpha_1 & \rho_1 & v_1 \\ 1 & \alpha_2 & \rho_2 & v_2 \\ & & \vdots & \\ 1 & \alpha_N & \rho_N & v_N \end{bmatrix} , \mathbf{Y} = \begin{bmatrix} F_{d1} \\ F_{d2} \\ \vdots \\ F_{d3} \end{bmatrix} $$ 
 
  
-We can efficiently compute the predictions of $h(\mathbf{X}; \beta)$ with a simple matrix-vector multiplication: 
+We can efficiently compute the predictions of $h(\mathbf{X}; \beta)$ with a simple matrix-vector multiplication:  -->
 
-$$ \hat{\mathbf{Y}} = \mathbf{X} \beta = \begin{bmatrix} 1 & \alpha_1 & \rho_1 & v_1 \\ 1 & \alpha_2 & \rho_2 & v_2 \\ & & \vdots & \\ 1 & \alpha_N & \rho_N & v_N \end{bmatrix} \begin{bmatrix} \beta_0 \\ \beta_1 \\ \beta_2 \\ \beta_3 \end{bmatrix} = \begin{bmatrix}  \beta_0 + \beta_1 \alpha_1 + \beta_2 \rho_1 + \beta_3 v_1 \\ \beta_0 + \beta_1 \alpha_2 + \beta_2 \rho_2 + \beta_3 v_2  \\ \vdots \\ \beta_0 + \beta_1 \alpha_N + \beta_2 \rho_N + \beta_3 v_N \end{bmatrix}  \in \mathbb{R}^N $$ 
+<!-- $$ \hat{\mathbf{Y}} = \mathbf{X} \beta = \begin{bmatrix} 1 & \alpha_1 & \rho_1 & v_1 \\ 1 & \alpha_2 & \rho_2 & v_2 \\ & & \vdots & \\ 1 & \alpha_N & \rho_N & v_N \end{bmatrix} \begin{bmatrix} \beta_0 \\ \beta_1 \\ \beta_2 \\ \beta_3 \end{bmatrix} = \begin{bmatrix}  \beta_0 + \beta_1 \alpha_1 + \beta_2 \rho_1 + \beta_3 v_1 \\ \beta_0 + \beta_1 \alpha_2 + \beta_2 \rho_2 + \beta_3 v_2  \\ \vdots \\ \beta_0 + \beta_1 \alpha_N + \beta_2 \rho_N + \beta_3 v_N \end{bmatrix}  \in \mathbb{R}^N $$  -->
 
 
 <!-- Our goal is to adjust the parameters $\beta$ so that our predictions, $\hat{\mathbf{Y}}$, are as close to the true outputs, $\mathbf{Y}$ as possible. One way to measure prediction error is with Mean Squared Error: 
@@ -129,14 +177,14 @@ $$ L(\beta) = ||\mathbf{X} \beta - \mathbf{Y}||_2^2 $$
 
 ## Solving the Least-Squares Problem -->
 
-Because the squared 2-Norm can be rewritten as an inner product, we can rewrite this loss-function as: 
+<!-- Because the squared 2-Norm can be rewritten as an inner product, we can rewrite this loss-function as: 
 
 $$ L(\beta) = ||\mathbf{X} \beta - \mathbf{Y}||_2^2= (\mathbf{X} \beta - \mathbf{Y})^\top (\mathbf{X} \beta - \mathbf{Y}) $$
 $$ = (\beta^\top \mathbf{X}^\top - \mathbf{Y}^\top) (\mathbf{X} \beta - \mathbf{Y}) $$
 
-$$ = \beta^\top \mathbf{X^\top X} \beta - 2 \beta^\top \mathbf{X^\top \mathbf{Y}} + \mathbf{Y^\top Y}$$
+$$ = \beta^\top \mathbf{X^\top X} \beta - 2 \beta^\top \mathbf{X^\top \mathbf{Y}} + \mathbf{Y^\top Y}$$ -->
 
-As we learned in multivariable calculus, to find a the extrema of a continuous function, we need to identify the critical points of the function. This means setting the gradient of the loss-function equal to the zero-vector:
+<!-- As we learned in multivariable calculus, to find a the extrema of a continuous function, we need to identify the critical points of the function. This means setting the gradient of the loss-function equal to the zero-vector:
 
 $$ \nabla L_\beta = 2 \mathbf{X^\top X} \beta - 2 \mathbf{X^\top Y} = \mathbf{0}$$ 
 
@@ -148,16 +196,24 @@ To check whether this point is a local minimum, maximum, or neither, we examine 
 
 $$ \nabla^2 L_\beta = 2 \mathbf{X^\top X} $$ 
 
-Because the Hessian is symmetric positive semidefinite and does not depend on $\beta$, this means that $L(\beta)$ is convex everywhere. Hence, $\hat{\beta}$ must be a global local minimum. 
+Because the Hessian is symmetric positive semidefinite and does not depend on $\beta$, this means that $L(\beta)$ is convex everywhere. Hence, $\hat{\beta}$ must be a global local minimum.  -->
 
 
 ## Assessing the learned models
 
-various metrics, notion of a test data set. k-fold cross-validation for class?
+various metrics, validation? definitely test data sets.
 
 ## Exercises
 
 a few relatively short questions that test the learning outcomes. 
+
+- math training: derive the derivative of the loss function by expanding, and then applying identities from [@petersen2012matrix]. Hard mode: prove the identities by calculation.
+
+- math training/review: what does it mean for a matrix $A$ to be invertible (inverse exists, square and full rank, linearly independent rows/columns)
+
+- math training: prove that $X^\top X$ is invertible iff $X$ has full column rank.
+
+- math training: explain why the minimizer is unique iff $X^\top X$ is invertible... what happens if it's not invertible?
 
 ## Further reading
 

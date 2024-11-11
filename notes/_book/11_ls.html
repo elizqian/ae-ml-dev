@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.554">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -20,7 +20,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -47,7 +67,13 @@ ul.task-list li input[type="checkbox"] {
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -56,6 +82,7 @@ ul.task-list li input[type="checkbox"] {
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -65,6 +92,33 @@ ul.task-list li input[type="checkbox"] {
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript"></script>
 
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
 </head>
 
 <body class="nav-sidebar floating">
@@ -73,12 +127,12 @@ ul.task-list li input[type="checkbox"] {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./11_ls.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Linear Least Squares Problems</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./11_ls.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Linear Least Squares Problems</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
@@ -88,7 +142,7 @@ ul.task-list li input[type="checkbox"] {
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">AE 4803 AIM: Course Notes</a> 
@@ -127,14 +181,20 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./13_lsstat.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">LLS: Statistical Perspective</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./20_ugbo.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Unconstrained Gradient Based Optimization (UGBO)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Unconstrained Gradient Based Optimization (UGBO)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./21_ugbo2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Unconstrained Gradient Based Optimization (UGBO) II - Steepest Descent</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Unconstrained Gradient Based Optimization (UGBO) II - Steepest Descent</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -163,7 +223,7 @@ ul.task-list li input[type="checkbox"] {
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -178,7 +238,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#example-2-something-else" id="toc-example-2-something-else" class="nav-link" data-scroll-target="#example-2-something-else"><span class="header-section-number">2.3.2</span> Example 2: something else</a></li>
   <li><a href="#example-3-something-else" id="toc-example-3-something-else" class="nav-link" data-scroll-target="#example-3-something-else"><span class="header-section-number">2.3.3</span> Example 3: something else</a></li>
   </ul></li>
-  <li><a href="#solution-via-normal-equations" id="toc-solution-via-normal-equations" class="nav-link" data-scroll-target="#solution-via-normal-equations"><span class="header-section-number">2.4</span> Solution via normal equations</a></li>
+  <li><a href="#solving-linear-least-squares-problems" id="toc-solving-linear-least-squares-problems" class="nav-link" data-scroll-target="#solving-linear-least-squares-problems"><span class="header-section-number">2.4</span> Solving linear least squares problems</a></li>
   <li><a href="#assessing-the-learned-models" id="toc-assessing-the-learned-models" class="nav-link" data-scroll-target="#assessing-the-learned-models"><span class="header-section-number">2.5</span> Assessing the learned models</a></li>
   <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">2.6</span> Exercises</a></li>
   <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading"><span class="header-section-number">2.7</span> Further reading</a></li>
@@ -203,7 +263,9 @@ ul.task-list li input[type="checkbox"] {
   </div>
   
 
+
 </header>
+
 
 <div class="hidden">
 <!-- \renewcommand{\P}{\mathrm{P}} -->
@@ -223,6 +285,8 @@ $$
 <li><p>Translate a description of a model learning problem in words into a specific instance of the abstract form</p></li>
 <li><p>Construct examples of linear least squares problems, cast them in the abstract form, and explain their context</p></li>
 </ol></li>
+<li><p>Solve linear least-squares problems by deriving and solving the normal equations.</p></li>
+<li><p>Evaluate linear regression models by computing and interpreting mean error, mean relative error, and R^2 values on both training and test data sets.</p></li>
 </ol>
 <section id="classifying-regression-problems-as-linear-vs-nonlinear" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="classifying-regression-problems-as-linear-vs-nonlinear"><span class="header-section-number">2.1</span> Classifying regression problems as linear vs nonlinear</h2>
@@ -255,7 +319,7 @@ Exercise
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Consider the model classes (<a href="01_intro.html#eq-quad-models">Equation&nbsp;<span>1.1</span></a>)-(<a href="01_intro.html#eq-perceptron">Equation&nbsp;<span>1.3</span></a>) introduced previously. Are these model classes linear or nonlinear in the parameters? In the inputs?</p>
+<p>Consider the model classes (<span class="quarto-unresolved-ref">?eq-quad-models</span>)-(<span class="quarto-unresolved-ref">?eq-perceptron</span>) introduced previously. Are these model classes linear or nonlinear in the parameters? In the inputs?</p>
 </div>
 </div>
 </section>
@@ -267,7 +331,7 @@ Exercise
 <p><span id="eq-linreg-model-class"><span class="math display">\[
 \mathcal{F}_\beta := \{ x(z)^\top \beta : \beta\in\mathbb{R}^n\}
 \qquad(2.1)\]</span></span></p>
-<p>Recall that <a href="#eq-linreg-model-class">Equation&nbsp;<span>2.1</span></a> is read as “<span class="math inline">\(\mathcal{F}_\beta\)</span> is defined to be the set of all functions <span class="math inline">\(f(z;\beta) = x(z)^\top\beta\)</span> for all <span class="math inline">\(\beta\in\mathbb{R}^n\)</span>.” This is an abstract way to define the model class for <em>any</em> linear regression problem, as we will describe in more detail shortly.</p>
+<p>Recall that <a href="#eq-linreg-model-class" class="quarto-xref">Equation&nbsp;<span>2.1</span></a> is read as “<span class="math inline">\(\mathcal{F}_\beta\)</span> is defined to be the set of all functions <span class="math inline">\(f(z;\beta) = x(z)^\top\beta\)</span> for all <span class="math inline">\(\beta\in\mathbb{R}^n\)</span>.” This is an abstract way to define the model class for <em>any</em> linear regression problem, as we will describe in more detail shortly.</p>
 <p>Ingredient 3 (the method of choosing the parameters): let <span class="math inline">\(\beta^*\)</span> be given by</p>
 <p><span id="eq-linreg-minimization"><span class="math display">\[
 \begin{aligned}
@@ -284,7 +348,7 @@ Exercise
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/AirfoilDrag.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<figcaption class="figure-caption">Image Source: Embry-Riddle Aeronautical University</figcaption>
+<figcaption>Image Source: Embry-Riddle Aeronautical University</figcaption>
 </figure>
 </div>
 <p>An important task in aerodynamic design is predicting lift and drag forces on a body moving through air. Let’s consider a simplified problem where we are given an fixed airfoil design and our goal is to predict the drag force <span class="math inline">\(F_d\)</span> on the airfoil as a function of three parameters which describe its flight conditions:</p>
@@ -305,7 +369,7 @@ f^{(2)}(z;\beta) &amp;= x^{(2)}(z)^\top\beta = (\alpha,\rho, v, \alpha^2, \rho^2
 &amp;= \beta_1\alpha + \beta_2\rho + \beta_3 v + \beta_4\alpha^2 + \beta_5\rho^2 + \beta_6 v^2 + \beta_7\alpha\rho + \beta_8\alpha v + \beta_9 \rho v
 \end{aligned}
 \]</span></p>
-<p>For either the above choices of features <span class="math inline">\(x^{(1)}(z)\)</span> or <span class="math inline">\(x^{(2)}(z)\)</span>, we could then define and solve the minimization <a href="#eq-linreg-minimization">Equation&nbsp;<span>2.2</span></a> to find the optimal regression parameters and define our learned model <span class="math inline">\(f^{(1)}(z;\beta^*)\)</span> or <span class="math inline">\(f^{(2)}(z;\beta^*)\)</span>.</p>
+<p>For either the above choices of features <span class="math inline">\(x^{(1)}(z)\)</span> or <span class="math inline">\(x^{(2)}(z)\)</span>, we could then define and solve the minimization <a href="#eq-linreg-minimization" class="quarto-xref">Equation&nbsp;<span>2.2</span></a> to find the optimal regression parameters and define our learned model <span class="math inline">\(f^{(1)}(z;\beta^*)\)</span> or <span class="math inline">\(f^{(2)}(z;\beta^*)\)</span>.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -327,12 +391,45 @@ Understanding notation
 <h3 data-number="2.3.3" class="anchored" data-anchor-id="example-3-something-else"><span class="header-section-number">2.3.3</span> Example 3: something else</h3>
 </section>
 </section>
-<section id="solution-via-normal-equations" class="level2" data-number="2.4">
-<h2 data-number="2.4" class="anchored" data-anchor-id="solution-via-normal-equations"><span class="header-section-number">2.4</span> Solution via normal equations</h2>
-<p>Suppose we have taken <span class="math inline">\(N\)</span> real-life samples of the input variables and their corresponding drag-force, <span class="math inline">\(F_d\)</span>. Let each sample of the system under various operating conditions form row of a matrix <span class="math inline">\(\mathbf{X} \in \mathbb{R}^{N \times 4}\)</span> for the inputs and a matrix <span class="math inline">\(\mathbf{Y} \in \mathbb{R}^N\)</span> for their corresponding outputs:</p>
-<p><span class="math display">\[ \mathbf{X} = \begin{bmatrix} 1 &amp; \alpha_1 &amp; \rho_1 &amp; v_1 \\ 1 &amp; \alpha_2 &amp; \rho_2 &amp; v_2 \\ &amp; &amp; \vdots &amp; \\ 1 &amp; \alpha_N &amp; \rho_N &amp; v_N \end{bmatrix} , \mathbf{Y} = \begin{bmatrix} F_{d1} \\ F_{d2} \\ \vdots \\ F_{d3} \end{bmatrix} \]</span></p>
-<p>We can efficiently compute the predictions of <span class="math inline">\(h(\mathbf{X}; \beta)\)</span> with a simple matrix-vector multiplication:</p>
-<p><span class="math display">\[ \hat{\mathbf{Y}} = \mathbf{X} \beta = \begin{bmatrix} 1 &amp; \alpha_1 &amp; \rho_1 &amp; v_1 \\ 1 &amp; \alpha_2 &amp; \rho_2 &amp; v_2 \\ &amp; &amp; \vdots &amp; \\ 1 &amp; \alpha_N &amp; \rho_N &amp; v_N \end{bmatrix} \begin{bmatrix} \beta_0 \\ \beta_1 \\ \beta_2 \\ \beta_3 \end{bmatrix} = \begin{bmatrix}  \beta_0 + \beta_1 \alpha_1 + \beta_2 \rho_1 + \beta_3 v_1 \\ \beta_0 + \beta_1 \alpha_2 + \beta_2 \rho_2 + \beta_3 v_2  \\ \vdots \\ \beta_0 + \beta_1 \alpha_N + \beta_2 \rho_N + \beta_3 v_N \end{bmatrix}  \in \mathbb{R}^N \]</span></p>
+<section id="solving-linear-least-squares-problems" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="solving-linear-least-squares-problems"><span class="header-section-number">2.4</span> Solving linear least squares problems</h2>
+<p>Linear least squares problems are special because they have closed form solutions: that is, we can write an analytical expression for the optimum parameters <span class="math inline">\(\beta^*\)</span> in terms of the data. To do so, we are going to define a feature data matrix <span class="math inline">\(X\in\mathbb{R}^{N\times n}\)</span> and an output data vector <span class="math inline">\(Y\in\mathbb{R}^N\)</span> as follows:</p>
+<p><span class="math display">\[
+X = \begin{pmatrix}
+- &amp;x(z_1) &amp; - \\
+&amp; \vdots &amp; \\
+- &amp; x(z_N) &amp; -
+\end{pmatrix},
+\qquad
+Y = \begin{pmatrix}
+y_1 \\ \vdots \\ y_N
+\end{pmatrix},
+\]</span> where the <em>rows</em> of <span class="math inline">\(X\)</span> and the <em>elements</em> of <span class="math inline">\(Y\)</span> correspond to input-output pairs in the data set. Note that each <em>column</em> of <span class="math inline">\(X\)</span> corresponds to a different <em>feature</em> defined by an element of the vector-valued function <span class="math inline">\(x\)</span>.</p>
+<p>Using this notation, <a href="#eq-linreg-minimization" class="quarto-xref">Equation&nbsp;<span>2.2</span></a> can be rewritten as</p>
+<p><span id="eq-linreg-matrix-min"><span class="math display">\[
+\beta^* = \arg\min_{\beta\in\mathbb{R}^n} \frac1N\|X \beta - Y\|^2
+\qquad(2.3)\]</span></span></p>
+<p>This is the minimization of a multivariate function (because <span class="math inline">\(\beta\)</span> is a vector). Recall from calculus that to find minimizers of multivariate functions we first seek <em>critical points</em> that satisfy the <em>first-order necessary conditions</em> for optimality: that is, we look for points where the derivative of the objective function is 0. Let <span class="math inline">\(\mathcal{L}(\beta) = \frac1N\|X\beta-Y\|^2 = \frac1N(X\beta - Y)^\top (X\beta-Y)\)</span>. Then,</p>
+<p><span class="math display">\[
+\frac{\partial\mathcal{L}}{\partial \beta} = \frac2N(X^\top X\beta - X^\top Y)
+\]</span></p>
+<p>Setting the derivative equal to 0 yields the standard <em>normal equations</em><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>:</p>
+<p><span class="math display">\[
+X^\top X\beta^* = X^\top Y
+\]</span></p>
+<p>If <span class="math inline">\((X^\top X)\)</span> is invertible, then the unique solution to the normal equations is given by</p>
+<p><span class="math display">\[
+\beta^* = (X^\top X)^{-1} X^\top Y
+\]</span></p>
+<p>and this choice of <span class="math inline">\(\beta\)</span> defines our final learned model: <span class="math inline">\(f(z;\beta^*) = x(z)^\top\beta^*\)</span>.</p>
+<!-- 
+Suppose we have taken $N$ real-life samples of the input variables and their corresponding drag-force, $F_d$. Let each sample of the system under various operating conditions form row of a matrix $\mathbf{X} \in \mathbb{R}^{N \times 4}$ for the inputs and a matrix $\mathbf{Y} \in \mathbb{R}^N$ for their corresponding outputs: 
+
+$$ \mathbf{X} = \begin{bmatrix} 1 & \alpha_1 & \rho_1 & v_1 \\ 1 & \alpha_2 & \rho_2 & v_2 \\ & & \vdots & \\ 1 & \alpha_N & \rho_N & v_N \end{bmatrix} , \mathbf{Y} = \begin{bmatrix} F_{d1} \\ F_{d2} \\ \vdots \\ F_{d3} \end{bmatrix} $$ 
+
+ 
+We can efficiently compute the predictions of $h(\mathbf{X}; \beta)$ with a simple matrix-vector multiplication:  -->
+<!-- $$ \hat{\mathbf{Y}} = \mathbf{X} \beta = \begin{bmatrix} 1 & \alpha_1 & \rho_1 & v_1 \\ 1 & \alpha_2 & \rho_2 & v_2 \\ & & \vdots & \\ 1 & \alpha_N & \rho_N & v_N \end{bmatrix} \begin{bmatrix} \beta_0 \\ \beta_1 \\ \beta_2 \\ \beta_3 \end{bmatrix} = \begin{bmatrix}  \beta_0 + \beta_1 \alpha_1 + \beta_2 \rho_1 + \beta_3 v_1 \\ \beta_0 + \beta_1 \alpha_2 + \beta_2 \rho_2 + \beta_3 v_2  \\ \vdots \\ \beta_0 + \beta_1 \alpha_N + \beta_2 \rho_N + \beta_3 v_N \end{bmatrix}  \in \mathbb{R}^N $$  -->
 <!-- Our goal is to adjust the parameters $\beta$ so that our predictions, $\hat{\mathbf{Y}}$, are as close to the true outputs, $\mathbf{Y}$ as possible. One way to measure prediction error is with Mean Squared Error: 
 
 $$ \text{MSE} = \frac{1}{N} \sum_{i=1}^N (\hat{y}_i - y_i)^2 = \frac{1}{N} || \hat{\mathbf{Y}} - \mathbf{Y}||_2^2 = \frac{1}{N} || \mathbf{X} \beta - \mathbf{Y} ||_2^2 $$ 
@@ -342,24 +439,39 @@ the $\frac{1}{N}$ is only a scalar, we wish to choose the value of $\beta$ that 
 $$ L(\beta) = ||\mathbf{X} \beta - \mathbf{Y}||_2^2 $$
 
 ## Solving the Least-Squares Problem -->
-<p>Because the squared 2-Norm can be rewritten as an inner product, we can rewrite this loss-function as:</p>
-<p><span class="math display">\[ L(\beta) = ||\mathbf{X} \beta - \mathbf{Y}||_2^2= (\mathbf{X} \beta - \mathbf{Y})^\top (\mathbf{X} \beta - \mathbf{Y}) \]</span> <span class="math display">\[ = (\beta^\top \mathbf{X}^\top - \mathbf{Y}^\top) (\mathbf{X} \beta - \mathbf{Y}) \]</span></p>
-<p><span class="math display">\[ = \beta^\top \mathbf{X^\top X} \beta - 2 \beta^\top \mathbf{X^\top \mathbf{Y}} + \mathbf{Y^\top Y}\]</span></p>
-<p>As we learned in multivariable calculus, to find a the extrema of a continuous function, we need to identify the critical points of the function. This means setting the gradient of the loss-function equal to the zero-vector:</p>
-<p><span class="math display">\[ \nabla L_\beta = 2 \mathbf{X^\top X} \beta - 2 \mathbf{X^\top Y} = \mathbf{0}\]</span></p>
-<p>Solving this equation for <span class="math inline">\(\beta\)</span> yields only one critical point:</p>
-<p><span class="math display">\[ \hat{\beta} = (\mathbf{X^\top X})^{-1} \mathbf{X^\top Y} \]</span></p>
-<p>To check whether this point is a local minimum, maximum, or neither, we examine the nature of the Hessian:</p>
-<p><span class="math display">\[ \nabla^2 L_\beta = 2 \mathbf{X^\top X} \]</span></p>
-<p>Because the Hessian is symmetric positive semidefinite and does not depend on <span class="math inline">\(\beta\)</span>, this means that <span class="math inline">\(L(\beta)\)</span> is convex everywhere. Hence, <span class="math inline">\(\hat{\beta}\)</span> must be a global local minimum.</p>
+<!-- Because the squared 2-Norm can be rewritten as an inner product, we can rewrite this loss-function as: 
+
+$$ L(\beta) = ||\mathbf{X} \beta - \mathbf{Y}||_2^2= (\mathbf{X} \beta - \mathbf{Y})^\top (\mathbf{X} \beta - \mathbf{Y}) $$
+$$ = (\beta^\top \mathbf{X}^\top - \mathbf{Y}^\top) (\mathbf{X} \beta - \mathbf{Y}) $$
+
+$$ = \beta^\top \mathbf{X^\top X} \beta - 2 \beta^\top \mathbf{X^\top \mathbf{Y}} + \mathbf{Y^\top Y}$$ -->
+<!-- As we learned in multivariable calculus, to find a the extrema of a continuous function, we need to identify the critical points of the function. This means setting the gradient of the loss-function equal to the zero-vector:
+
+$$ \nabla L_\beta = 2 \mathbf{X^\top X} \beta - 2 \mathbf{X^\top Y} = \mathbf{0}$$ 
+
+Solving this equation for $\beta$ yields only one critical point: 
+
+$$ \hat{\beta} = (\mathbf{X^\top X})^{-1} \mathbf{X^\top Y} $$ 
+
+To check whether this point is a local minimum, maximum, or neither, we examine the nature of the Hessian: 
+
+$$ \nabla^2 L_\beta = 2 \mathbf{X^\top X} $$ 
+
+Because the Hessian is symmetric positive semidefinite and does not depend on $\beta$, this means that $L(\beta)$ is convex everywhere. Hence, $\hat{\beta}$ must be a global local minimum.  -->
 </section>
 <section id="assessing-the-learned-models" class="level2" data-number="2.5">
 <h2 data-number="2.5" class="anchored" data-anchor-id="assessing-the-learned-models"><span class="header-section-number">2.5</span> Assessing the learned models</h2>
-<p>various metrics, notion of a test data set. k-fold cross-validation for class?</p>
+<p>various metrics, validation? definitely test data sets.</p>
 </section>
 <section id="exercises" class="level2" data-number="2.6">
 <h2 data-number="2.6" class="anchored" data-anchor-id="exercises"><span class="header-section-number">2.6</span> Exercises</h2>
 <p>a few relatively short questions that test the learning outcomes.</p>
+<ul>
+<li><p>math training: derive the derivative of the loss function by expanding, and then applying identities from <span class="citation" data-cites="petersen2012matrix">(<a href="references.html#ref-petersen2012matrix" role="doc-biblioref">Petersen and Pedersen 2012</a>)</span>. Hard mode: prove the identities by calculation.</p></li>
+<li><p>math training/review: what does it mean for a matrix <span class="math inline">\(A\)</span> to be invertible (inverse exists, square and full rank, linearly independent rows/columns)</p></li>
+<li><p>math training: prove that <span class="math inline">\(X^\top X\)</span> is invertible iff <span class="math inline">\(X\)</span> has full column rank.</p></li>
+<li><p>math training: explain why the minimizer is unique iff <span class="math inline">\(X^\top X\)</span> is invertible… what happens if it’s not invertible?</p></li>
+</ul>
 </section>
 <section id="further-reading" class="level2" data-number="2.7">
 <h2 data-number="2.7" class="anchored" data-anchor-id="further-reading"><span class="header-section-number">2.7</span> Further reading</h2>
@@ -367,6 +479,17 @@ $$ L(\beta) = ||\mathbf{X} \beta - \mathbf{Y}||_2^2 $$
 <hr>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-petersen2012matrix" class="csl-entry" role="listitem">
+Petersen, Kaare Brandt, and Michael Syskind Pedersen. 2012. <span>“The Matrix Cookbook.”</span> <a href="https://www.math.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf">https://www.math.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf</a>.
+</div>
+</div>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>note that the constant factor <span class="math inline">\(\frac2N\)</span> drops out. It’s common to play fast and loose with multiplicative constants in minimizations – other sources define the minimization objective with a <span class="math inline">\(\frac12\)</span> multiplier, which leads to the derivative not having the factor of 2 in front and leads to the same critical point. Or you may see the objective function defined without the <span class="math inline">\(1/N\)</span> in front, which still leads to the same critical point.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
 </section>
 
 </main> <!-- /main -->
@@ -449,10 +572,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -462,8 +602,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -475,7 +624,130 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -519,6 +791,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -544,6 +817,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -605,17 +904,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./01_intro.html" class="pagination-link">
+      <a href="./01_intro.html" class="pagination-link" aria-label="Introduction">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./12_lslinalg.html" class="pagination-link">
+      <a href="./12_lslinalg.html" class="pagination-link" aria-label="LLS: Linear Algebra Perspective">
         <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">LLS: Linear Algebra Perspective</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
+
 
 
 
