@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>References – AE 4803 AIM: Course Notes</title>
+<title>4&nbsp; LLS: Statistical Perspective – AE 4803 AIM: Course Notes</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,26 +20,7 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -49,8 +30,8 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./00_linalg.html" rel="next">
-<link href="./21_ugbo2.html" rel="prev">
+<link href="./20_ugbo.html" rel="next">
+<link href="./12_lslinalg.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -100,7 +81,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./references.html">References</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./13_lsstat.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">LLS: Statistical Perspective</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -151,7 +132,7 @@ div.csl-indent {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./13_lsstat.html" class="sidebar-item-text sidebar-link">
+  <a href="./13_lsstat.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">LLS: Statistical Perspective</span></span></a>
   </div>
 </li>
@@ -169,7 +150,7 @@ div.csl-indent {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./references.html" class="sidebar-item-text sidebar-link active">
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
 </li>
@@ -203,7 +184,7 @@ div.csl-indent {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">References</h1>
+<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">LLS: Statistical Perspective</span></h1>
 </div>
 
 
@@ -220,23 +201,14 @@ div.csl-indent {
 </header>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
-<div id="ref-cambridgeDS2024" class="csl-entry" role="listitem">
-Cambridge Dictionary. 2024. <span>“<span>Data Science</span>.”</span>
-2024. <a href="https://dictionary.cambridge.org/dictionary/english/data-science">https://dictionary.cambridge.org/dictionary/english/data-science</a>.
-</div>
-<div id="ref-martins2021engineering" class="csl-entry" role="listitem">
-Martins, Joaquim RRA, and Andrew Ning. 2021. <em>Engineering Design
-Optimization</em>. Cambridge University Press.
-</div>
-<div id="ref-merriamML2024" class="csl-entry" role="listitem">
-Merriam-Webster Dictionary. 2024. <span>“<span>Machine
-Learning</span>.”</span> 2024. <a href="https://www.merriam-webster.com/dictionary/machine%20learning">https://www.merriam-webster.com/dictionary/machine%20learning</a>.
-</div>
-<div id="ref-petersen2012matrix" class="csl-entry" role="listitem">
-Petersen, Kaare Brandt, and Michael Syskind Pedersen. 2012. <span>“The
-Matrix Cookbook.”</span> <a href="https://www.math.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf">https://www.math.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf</a>.
-</div>
+<div class="hidden">
+<!-- \renewcommand{\P}{\mathrm{P}} -->
+<!-- $$
+\DeclarePairedDelimiters{\set}{\{}{\}}
+\DeclareMathOperator*{\argmax}{argmax}
+$$
+
+\definecolor{quarto-callout-note-color}{HTML}{4477AA} -->
 </div>
 
 
@@ -664,13 +636,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./21_ugbo2.html" class="pagination-link" aria-label="Unconstrained Gradient Based Optimization (UGBO) II - Steepest Descent">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Unconstrained Gradient Based Optimization (UGBO) II - Steepest Descent</span></span>
+      <a href="./12_lslinalg.html" class="pagination-link" aria-label="LLS: Linear Algebra Perspective">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">LLS: Linear Algebra Perspective</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./00_linalg.html" class="pagination-link" aria-label="Linear algebra review">
-        <span class="nav-page-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Linear algebra review</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./20_ugbo.html" class="pagination-link" aria-label="Unconstrained Gradient Based Optimization (UGBO)">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Unconstrained Gradient Based Optimization (UGBO)</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
