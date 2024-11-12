@@ -279,7 +279,11 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#using-python-for-least-squares-regression" id="toc-using-python-for-least-squares-regression" class="nav-link" data-scroll-target="#using-python-for-least-squares-regression"><span class="header-section-number">2.4.1</span> Using Python for Least-Squares Regression</a></li>
   </ul></li>
-  <li><a href="#assessing-the-learned-models" id="toc-assessing-the-learned-models" class="nav-link" data-scroll-target="#assessing-the-learned-models"><span class="header-section-number">2.5</span> Assessing the learned models</a></li>
+  <li><a href="#assessing-the-learned-models" id="toc-assessing-the-learned-models" class="nav-link" data-scroll-target="#assessing-the-learned-models"><span class="header-section-number">2.5</span> Assessing the learned models</a>
+  <ul class="collapse">
+  <li><a href="#common-performance-metrics" id="toc-common-performance-metrics" class="nav-link" data-scroll-target="#common-performance-metrics"><span class="header-section-number">2.5.1</span> Common Performance Metrics</a></li>
+  <li><a href="#cross-validation" id="toc-cross-validation" class="nav-link" data-scroll-target="#cross-validation"><span class="header-section-number">2.5.2</span> Cross-Validation</a></li>
+  </ul></li>
   <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">2.6</span> Exercises</a></li>
   <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading"><span class="header-section-number">2.7</span> Further reading</a></li>
   </ul>
@@ -492,16 +496,16 @@ X^\top X\beta^* = X^\top Y
 <section id="using-python-for-least-squares-regression" class="level3" data-number="2.4.1">
 <h3 data-number="2.4.1" class="anchored" data-anchor-id="using-python-for-least-squares-regression"><span class="header-section-number">2.4.1</span> Using Python for Least-Squares Regression</h3>
 <p>Now let’s explore how we can actually solve for our optimal weights, <span class="math inline">\(\beta^*\)</span>, given some training data with code. First, we need to import the libraries we need to work with matrices/vectors (<code>numpy</code>), plot results (<code>matplotlib</code>), work with dataframes (<code>pandas</code>), and easily perform more math than base python allows like <span class="math inline">\(\pi\)</span>, sines, cosines, and square-roots (<code>math</code>).</p>
-<div id="e56d625e" class="cell" data-execution_count="1">
+<div id="5a2c5a1a" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np </span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt </span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now let’s say we’ve imported some pandas dataframe called <code>df</code> that contains a set of empirical data from <strong>Example 1</strong> (Assume it comes from experimental trials or simulations). We can print the first few rows of the dataset using the <code>df.head()</code> method:</p>
-<div id="23fe36d9" class="cell" data-execution_count="3">
+<div id="f757da2b" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="497">
+<div class="cell-output cell-output-display" data-execution_count="129">
 <div>
 
 
@@ -558,28 +562,28 @@ X^\top X\beta^* = X^\top Y
 </div>
 </div>
 <p>Let’s define our input features as <span class="math inline">\(x(z) = (\alpha, \rho, v)^\top\)</span>. We can now form <span class="math inline">\(\mathbf{X}\)</span> (our training inputs) and <span class="math inline">\(\mathbf{Y}\)</span> (our training outputs) matrices by extracting the input features and outputs from the dataframe:</p>
-<div id="3123e49a" class="cell" data-execution_count="4">
+<div id="ebf592c4" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The hstack method concatenates column vectors into </span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># an N x d matrix like [1 alpha rho velocity]</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.hstack((np.ones((N, <span class="dv">1</span>)), df[[<span class="st">'alpha'</span>, <span class="st">'rho'</span>, <span class="st">'velocity'</span>]].values)).T </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.hstack((np.ones((N, <span class="dv">1</span>)), df[[<span class="st">'alpha'</span>, <span class="st">'rho'</span>, <span class="st">'velocity'</span>]].values))</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>Y <span class="op">=</span> df[<span class="st">'f_drag'</span>].values</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>We can solve for <span class="math inline">\(\beta^*\)</span> using the <code>np.linalg.lstsq()</code> function which efficiently solves the least-squares equation <span class="math inline">\(\mathbf{X}^\top \beta = \mathbf{Y}\)</span>. The <code>rcond</code> keyword argument specifies how “well-conditioned” we want our result to be, achieved by cutting off the smallest singular values of <span class="math inline">\(\mathbf{X}\)</span> (don’t worry too much about this for now). Setting it to <code>None</code> assumes <span class="math inline">\(\mathbf{X}\)</span> is well-conditioned i.e.&nbsp;far from being rank-deficient. By default, the <code>lstsq()</code> function returns a list of the optimal weights, <span class="math inline">\(\beta^*\)</span>, the residuals of the training data (<span class="math inline">\(\mathbf{X}^\top \beta - \mathbf{Y}\)</span>), the rank of <span class="math inline">\(\mathbf{X}^\top\)</span>, and the singular values of <span class="math inline">\(\mathbf{X}^\top\)</span>. For now, we’re only interested in <span class="math inline">\(\beta^*\)</span>, so we use <code>[0]</code> to select this value.</p>
-<div id="323288dd" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>beta_hat <span class="op">=</span> np.linalg.lstsq(X.T, Y, rcond<span class="op">=</span><span class="va">None</span>)[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>We can solve for <span class="math inline">\(\beta^*\)</span> using the <code>np.linalg.lstsq()</code> function which efficiently solves the least-squares equation <span class="math inline">\(\mathbf{X}\beta = \mathbf{Y}\)</span>. The <code>rcond</code> keyword argument specifies how “well-conditioned” we want our result to be, achieved by cutting off the smallest singular values of <span class="math inline">\(\mathbf{X}\)</span> (don’t worry too much about this for now). Setting it to <code>None</code> assumes <span class="math inline">\(\mathbf{X}\)</span> is well-conditioned i.e.&nbsp;far from being rank-deficient. By default, the <code>lstsq()</code> function returns a list of the optimal weights, <span class="math inline">\(\beta^*\)</span>, the residuals of the training data (<span class="math inline">\(\mathbf{X}\beta - \mathbf{Y}\)</span>), the rank of <span class="math inline">\(\mathbf{X}\)</span>, and the singular values of <span class="math inline">\(\mathbf{X}\)</span>. For now, we’re only interested in <span class="math inline">\(\beta^*\)</span>, so we use <code>[0]</code> to select this value.</p>
+<div id="c7cba675" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>beta_hat <span class="op">=</span> np.linalg.lstsq(X, Y, rcond<span class="op">=</span><span class="va">None</span>)[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We are now able to compute the model’s predictions at the training inputs:</p>
-<div id="fb5145c2" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Y_hat <span class="op">=</span> X.T <span class="op">@</span> beta_hat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="72da55e2" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Y_hat <span class="op">=</span> X <span class="op">@</span> beta_hat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Let’s now plot <span class="math inline">\(\hat{\mathbf{Y}}\)</span> and <span class="math inline">\(\mathbf{Y}\)</span> to examine how closely correlated the two are. A straight line with slope 1 would mean the linear regression model exactly matched all of the training outputs:</p>
-<div id="2701e3ba" class="cell" data-execution_count="7">
+<div id="52a54aa5" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="dv">4</span>))</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>plt.scatter(Y, Y_hat)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>plt.grid()</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"True Drag Force"</span>)</span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Model Predicted Drag Force"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="501">
+<div class="cell-output cell-output-display" data-execution_count="133">
 <pre><code>Text(0, 0.5, 'Model Predicted Drag Force')</code></pre>
 </div>
 <div class="cell-output cell-output-display">
@@ -595,7 +599,40 @@ X^\top X\beta^* = X^\top Y
 </section>
 <section id="assessing-the-learned-models" class="level2" data-number="2.5">
 <h2 data-number="2.5" class="anchored" data-anchor-id="assessing-the-learned-models"><span class="header-section-number">2.5</span> Assessing the learned models</h2>
-<p>various metrics, validation? definitely test data sets.</p>
+<p>various metrics, validation? definitely test data</p>
+<section id="common-performance-metrics" class="level3" data-number="2.5.1">
+<h3 data-number="2.5.1" class="anchored" data-anchor-id="common-performance-metrics"><span class="header-section-number">2.5.1</span> Common Performance Metrics</h3>
+<p>Once we have trained a model i.e.&nbsp;we have computed the optimal <span class="math inline">\(\beta\)</span> that maps our training inputs to our training outputs, it’s important to have some quantitative way to measure how “well” our model is able to do this. There are many, many ways to measure model performance. For regression problems, the popular <code>sklearn</code> python package for machine learning has thirteen different metrics to assess model performance. We will outline some of the most prominent metrics in this section.</p>
+<p>In the case of regression problems, a natural way to assess this is to measure the error between the model’s predictions and actual outputs. One common way this is computed is with <strong>mean squared error</strong>:</p>
+<p><span class="math display">\[
+MSE = \frac{1}{N} \sum_{i=1}^N (\hat{y}_i - y_i)^2
+\]</span></p>
+<p>where <span class="math inline">\(\hat{y}_i\)</span> is the model’s best approximation of <span class="math inline">\(y_i\)</span>, using inputs <span class="math inline">\(x_i\)</span>. Because of how linear regression is formulated, the estimator <span class="math inline">\(\beta^*\)</span> will be the set of weights that minimize the MSE of the training data. If <span class="math inline">\(\mathbf{X}\)</span> is full-rank, <span class="math inline">\(\beta^*\)</span> will be unique. However, many data-scientists dislike the MSE because it penalizes higher errors more than lower errors and in the context of physical experiments the squared error doesn’t have easily interpretable units. For example, in <strong>Example 1</strong> we sought to predict drag-force in <span class="math inline">\(N\)</span>. Using the MSE would produce an error in <span class="math inline">\(N^2\)</span> which doesn’t have an intuitive physical interpretation. For this reason, many scientists use the <strong>mean absolute error</strong>:</p>
+<p><span class="math display">\[
+MAE = \frac{1}{N} \sum_{i=1}^N |\hat{y}_i - y_i|
+\]</span></p>
+<p>In <strong>Example 1</strong>, this would give us an error with units of <span class="math inline">\(N\)</span> that we can interpret as “the linear regression model deviates from the true outputs by ___ <span class="math inline">\(N\)</span> on average”. If the output data significantly varies in magnitude over the domain of the input, then we may expect MSE and MAE to dominate in places where the magnitude of <span class="math inline">\(y\)</span> is large. To combat this problem, we might choose to use <strong>mean relative error</strong> to assess the performance of our model. This scales the error at each input/output pair according to how large the output is:</p>
+<p><span class="math display">\[
+MRE = \frac{1}{N} \sum_{i=1}^N \frac{|\hat{y}_i - y_i|}{|y_i|}
+\]</span></p>
+<p>At the end of <strong>2.4</strong>, we plotted each training output, <span class="math inline">\(y_i\)</span>, on the x-axis of a plot and the model’s best guess (<span class="math inline">\(\hat{y}_i\)</span>) on the y-axis. If the model was able to perfectly match each <span class="math inline">\(y_i\)</span>, then we should expect a perfect line with a slope of 1 (<span class="math inline">\(\hat{y}=y\)</span>). Using the <strong>pearson correlation coefficient</strong>, often denoted <span class="math inline">\(R\)</span> or the <strong>coefficient of determination</strong>, <span class="math inline">\(R^2\)</span>, we can assess how accurately the model is able to match a given set of outputs. We can compute this as:</p>
+<p><span class="math display">\[
+R = \frac{\sum (\hat{y}_i -\bar{\hat{y}})(y_i - \bar{y})}{\sqrt{\sum (\hat{y}_i -\bar{\hat{y}})^2 \sum (y_i - \bar{y})^2}}
+\]</span></p>
+<p>When <span class="math inline">\(\hat{y}\)</span> perfectly matches the true outputs, <span class="math inline">\(y\)</span>, we get a pearson correlation coefficient of <span class="math inline">\(R=R^2=1.0\)</span>. Anything lower indicates an imperfect match between the model’s predictions and the true outputs.</p>
+</section>
+<section id="cross-validation" class="level3" data-number="2.5.2">
+<h3 data-number="2.5.2" class="anchored" data-anchor-id="cross-validation"><span class="header-section-number">2.5.2</span> Cross-Validation</h3>
+<p>Up to now, we have only discussed model performance as it relates to the data used to train the model. However, the entire reason we go to the trouble of training machine learning models is so they can be used to make accurate new predictions on unseen data. Famous LLMs like ChatGPT are so valuable because we can ask them questions they have never seen before and they can still provide coherent, useful answers.</p>
+<p>Oftentimes, when machine learning models are highly expressive, (i.e.&nbsp;can model complex functional relationships) they tend to <strong>overfit</strong> to their training data. This happens when the model is so good at matching its training data, it does not generalize well to data it hasn’t seen before. This can be especially problematic when our training data contains some sort of noise or uncertainty and our trained model begins to predict the noise in the training data.</p>
+<p>A straightforward method to assess how much a model is overfitting its training data is to break up the training data into a <code>train</code> and <code>test</code> set. Usually around 80% of the training data is used to train the model and about 20% is kept out of the training process and used to evaluate the model’s ability to generalize to data it hasn’t seen before. A model that generalizes well should exhibit approximately the same performance stats for its training and testing data. When a model shows significantly worse performance on its <code>test</code> dataset, this indicates that the model might be overfitting its training data.</p>
+<p>Let’s refer back to <strong>Example 1</strong>, when we were trying to accurately predict the force of drag on an airfoil. Say we break up the training data (<code>X</code> and <code>Y</code>) into (<code>Xtrain</code>, <code>Ytrain</code>) and (<code>Xtest</code>, <code>Ytest</code>); one dataset to train the model and one to evaluate it. Suppose we receive the following values for Mean Absolute Error on the training and test predictions:</p>
+<ul>
+<li><code>Training MAE: 61.456 N</code></li>
+<li><code>Testing  MAE: 595.328 N</code></li>
+</ul>
+<p>This shows that the model exhibits significantly lower error on its training data, and much higher on data it hasn’t seen before. This is typically a dead giveaway of overfitting.</p>
+</section>
 </section>
 <section id="exercises" class="level2" data-number="2.6">
 <h2 data-number="2.6" class="anchored" data-anchor-id="exercises"><span class="header-section-number">2.6</span> Exercises</h2>

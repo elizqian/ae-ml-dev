@@ -234,20 +234,20 @@ Let's define our input features as $x(z) = (\alpha, \rho, v)^\top$. We can now f
 ```{python}
 # The hstack method concatenates column vectors into 
 # an N x d matrix like [1 alpha rho velocity]
-X = np.hstack((np.ones((N, 1)), df[['alpha', 'rho', 'velocity']].values)).T 
+X = np.hstack((np.ones((N, 1)), df[['alpha', 'rho', 'velocity']].values))
 Y = df['f_drag'].values
 ```
 
-We can solve for $\beta^*$ using the `np.linalg.lstsq()` function which efficiently solves the least-squares equation $\bX^\top \beta = \bY$. The `rcond` keyword argument specifies how "well-conditioned" we want our result to be, achieved by cutting off the smallest singular values of $\bX$ (don't worry too much about this for now). Setting it to `None` assumes $\bX$ is well-conditioned i.e. far from being rank-deficient. By default, the `lstsq()` function returns a list of the optimal weights, $\beta^*$, the residuals of the training data ($\bX^\top \beta - \bY$), the rank of $\bX^\top$, and the singular values of $\bX^\top$. For now, we're only interested in $\beta^*$, so we use `[0]` to select this value.  
+We can solve for $\beta^*$ using the `np.linalg.lstsq()` function which efficiently solves the least-squares equation $\bX \beta = \bY$. The `rcond` keyword argument specifies how "well-conditioned" we want our result to be, achieved by cutting off the smallest singular values of $\bX$ (don't worry too much about this for now). Setting it to `None` assumes $\bX$ is well-conditioned i.e. far from being rank-deficient. By default, the `lstsq()` function returns a list of the optimal weights, $\beta^*$, the residuals of the training data ($\bX \beta - \bY$), the rank of $\bX$, and the singular values of $\bX$. For now, we're only interested in $\beta^*$, so we use `[0]` to select this value.  
 
 ```{python}
-beta_hat = np.linalg.lstsq(X.T, Y, rcond=None)[0]
+beta_hat = np.linalg.lstsq(X, Y, rcond=None)[0]
 ```
 
 We are now able to compute the model's predictions at the training inputs: 
 
 ```{python}
-Y_hat = X.T @ beta_hat
+Y_hat = X @ beta_hat
 ```
 
 Let's now plot $\hat{\mathbf{Y}}$ and $\mathbf{Y}$ to examine how closely correlated the two are. A straight line with slope 1 would mean the linear regression model exactly matched all of the training outputs: 
@@ -265,13 +265,59 @@ This plot shows that there is clearly a strong, but nonlinear relationship betwe
 
 ## Assessing the learned models
 
-various metrics, validation? definitely test data sets.
+various metrics, validation? definitely test data 
+ 
+
+### Common Performance Metrics
+
+Once we have trained a model i.e. we have computed the optimal $\beta$ that maps our training inputs to our training outputs, it's important to have some quantitative way to measure how "well" our model is able to do this. There are many, many ways to measure model performance. For regression problems, the popular `sklearn` python package for machine learning has thirteen different metrics to assess model performance. We will outline some of the most prominent metrics in this section.
+
+In the case of regression problems, a natural way to assess this is to measure the error between the model's predictions and actual outputs. One common way this is computed is with **mean squared error**: 
+
+$$ 
+MSE = \frac{1}{N} \sum_{i=1}^N (\hat{y}_i - y_i)^2 
+$$
+
+where $\hat{y}_i$ is the model's best approximation of $y_i$, using inputs $x_i$. Because of how linear regression is formulated, the estimator $\beta^*$ will be the set of weights that minimize the MSE of the training data. If $\bX$ is full-rank, $\beta^*$ will be unique. However, many data-scientists dislike the MSE because it penalizes higher errors more than lower errors and in the context of physical experiments the squared error doesn't have easily interpretable units. For example, in **Example 1** we sought to predict drag-force in $N$. Using the MSE would produce an error in $N^2$ which doesn't have an intuitive physical interpretation. For this reason, many scientists use the **mean absolute error**: 
+
+$$ 
+MAE = \frac{1}{N} \sum_{i=1}^N |\hat{y}_i - y_i| 
+$$
+
+In **Example 1**, this would give us an error with units of $N$ that we can interpret as "the linear regression model deviates from the true outputs by ___ $N$ on average". If the output data significantly varies in magnitude over the domain of the input, then we may expect MSE and MAE to dominate in places where the magnitude of $y$ is large. To combat this problem, we might choose to use **mean relative error** to assess the performance of our model. This scales the error at each input/output pair according to how large the output is: 
+
+$$ 
+MRE = \frac{1}{N} \sum_{i=1}^N \frac{|\hat{y}_i - y_i|}{|y_i|}
+$$
+
+At the end of **2.4**, we plotted each training output, $y_i$, on the x-axis of a plot and the model's best guess ($\hat{y}_i$) on the y-axis. If the model was able to perfectly match each $y_i$, then we should expect a perfect line with a slope of 1 ($\hat{y}=y$). Using the **pearson correlation coefficient**, often denoted $R$ or the **coefficient of determination**, $R^2$, we can assess how accurately the model is able to match a given set of outputs. We can compute this as: 
+
+$$ 
+R = \frac{\sum (\hat{y}_i -\bar{\hat{y}})(y_i - \bar{y})}{\sqrt{\sum (\hat{y}_i -\bar{\hat{y}})^2 \sum (y_i - \bar{y})^2}}
+$$ 
+
+When $\hat{y}$ perfectly matches the true outputs, $y$, we get a pearson correlation coefficient of $R=R^2=1.0$. Anything lower indicates an imperfect match between the model's predictions and the true outputs.
+
+### Cross-Validation 
+
+Up to now, we have only discussed model performance as it relates to the data used to train the model. However, the entire reason we go to the trouble of training machine learning models is so they can be used to make accurate new predictions on unseen data. Famous LLMs like ChatGPT are so valuable because we can ask them questions they have never seen before and they can still provide coherent, useful answers. 
+
+Oftentimes, when machine learning models are highly expressive, (i.e. can model complex functional relationships) they tend to **overfit** to their training data. This happens when the model is so good at matching its training data, it does not generalize well to data it hasn't seen before. This can be especially problematic when our training data contains some sort of noise or uncertainty and our trained model begins to predict the noise in the training data. 
+
+A straightforward method to assess how much a model is overfitting its training data is to break up the training data into a `train` and `test` set. Usually around 80% of the training data is used to train the model and about 20% is kept out of the training process and used to evaluate the model's ability to generalize to data it hasn't seen before. A model that generalizes well should exhibit approximately the same performance stats for its training and testing data. When a model shows significantly worse performance on its `test` dataset, this indicates that the model might be overfitting its training data. 
+
+Let's refer back to **Example 1**, when we were trying to accurately predict the force of drag on an airfoil. Say we break up the training data (`X` and `Y`) into (`Xtrain`, `Ytrain`) and (`Xtest`, `Ytest`); one dataset to train the model and one to evaluate it. Suppose we receive the following values for Mean Absolute Error on the training and test predictions: 
+
+* ``Training MAE: 61.456 N``
+* ``Testing  MAE: 595.328 N`` 
+
+This shows that the model exhibits significantly lower error on its training data, and much higher on data it hasn't seen before. This is typically a dead giveaway of overfitting. 
 
 ## Exercises
 
 a few relatively short questions that test the learning outcomes. 
 
-- math training: derive the derivative of the loss function by expanding, and then applying identities from [@petersen2012matrix]. Hard mode: prove the identities by calculation.
+- math training: derive the derivative of the loss function by expanding, and then applying identities from [@petersen2012matrix]. Hard mode: prove the identities by calculation. 
 
 - math training/review: what does it mean for a matrix $A$ to be invertible (inverse exists, square and full rank, linearly independent rows/columns)
 
