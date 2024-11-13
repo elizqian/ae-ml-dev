@@ -11,18 +11,12 @@ html-math-method:
 We begin our exploration of scientific machine learning methods in the fundamental setting of *linear regression problems*. The intended learning outcomes of these notes are that students should be able to:
 
 1. Classify a regression problem as linear or nonlinear
-
 2. Understand the abstract form of linear least squares problems
-
     a. Define the abstract form of linear least squares problems and be able to explain what its key ingredients are
-
     b. Translate a description of a model learning problem in words into a specific instance of the abstract form
-
     c. Construct examples of linear least squares problems, cast them in the abstract form, and explain their context
-
 3. Solve linear least-squares problems by deriving and solving the normal equations. 
-
-4. Evaluate linear regression models by computing and interpreting mean error, mean relative error, and R^2 values on both training and test data sets.
+4. Evaluate linear regression models by computing and interpreting mean error, mean relative error, and $R^2$ values on both training and test data sets.
 
 ## Classifying regression problems as linear vs nonlinear
 
@@ -301,7 +295,7 @@ Up to now, we have only discussed model performance as it relates to the data us
 
 Oftentimes, when machine learning models are highly expressive, (i.e. can model complex functional relationships) they tend to **overfit** to their training data. This happens when the model is so good at matching its training data, it does not generalize well to data it hasn't seen before. This can be especially problematic when our training data contains some sort of noise or uncertainty and our trained model begins to conform to the noise present in the training data. 
 
-A straightforward method to assess how much a model is overfitting its training data is to form a `train` and `test` set. Usually around 80% of the training data is used to train the model and about 20% is kept out of the training process and used to evaluate the model's ability to generalize to data it hasn't seen before. A model that generalizes well should exhibit approximately the same performance on its training and testing data. When a model shows significantly worse performance on its `test` dataset, this indicates that the model might be overfitting its training data. 
+A straightforward method to assess how much a model is overfitting its training data is to form a `train` and `test` set. Usually around 80% of the training data is used to train the model and about 20% is kept out of the training process and used to evaluate the model's ability to generalize to data it hasn't seen before. A model that generalizes well should exhibit approximately the same performance on its testing data as its training data. When a model shows significantly worse performance on its `test` dataset, this indicates that the model might be overfitting its training data. 
 
 Let's refer back to **Example 1**, when we were trying to accurately predict the force of drag on an airfoil. Say we break up the training data (`X` and `Y`) into (`Xtrain`, `Ytrain`) and (`Xtest`, `Ytest`); one dataset to train the model and one to evaluate it. Suppose we receive the following values for Mean Absolute Error on the training and test predictions: 
 
@@ -312,17 +306,145 @@ This shows that the model exhibits significantly lower error on its training dat
 
 ## Exercises
 
-a few relatively short questions that test the learning outcomes. 
+### Derivation of Gradient 
 
-- math training: derive the derivative of the loss function by expanding, and then applying identities from [@petersen2012matrix]. Hard mode: prove the identities by calculation. 
+Recall that the loss-function for least-squares regression can be written as the following (leaving out the constant $1/N$): 
 
-- math training/review: what does it mean for a matrix $A$ to be invertible (inverse exists, square and full rank, linearly independent rows/columns)
+$$ 
+\mathcal{L}(\beta) = || \bX \beta - \bY||_2^2 
+$$
 
-- math training: prove that $X^\top X$ is invertible iff $X$ has full column rank.
+Use the identities from the following note to show that the gradient of $\mathcal{L}$ with respect to $\beta$ can be written as: 
 
-- math training: explain why the minimizer is unique iff $X^\top X$ is invertible... what happens if it's not invertible?
+$$ 
+\nabla \mathcal{L}_{\beta} = 2 \left( \bX^\top \bX \beta - \bX^\top \bY \right) 
+$$
+
+*Recall that the gradient is defined as the vector such that each entry, $i$, satisfies:* 
+
+$$ \nabla \mathcal{L}_{\beta} = \begin{bmatrix} \frac{\partial \mathcal{L}}{\partial \beta_1 } \\ \vdots \\ \frac{\partial \mathcal{L}}{\partial \beta_N } \end{bmatrix}$$ 
+
+
+::: {.callout-note}
+## Useful Linear Algebra Identities 
+
+The following identities are useful in solving Exercise 1, but also quite useful for optimizing matrix/vector quantities in many different machine learning contexts. See [@petersen2012matrix] for a "Matrix Cookbook" filled with more useful identities. Consider $\bv, \bu \in \R^{N}$, $\bA \in \R^{N \times N}$
+$$ ||\bv||_2^2 = \bv^\top \bv $$
+$$\nabla \left( \bv^\top\bA \bv \right)_{\bv} =  2 \bA \bv $$
+
+$$ \nabla \left( \bv^\top \bu \right)_{\bv} = \nabla \left( \bu^\top \bv \right)_{\bv} = \bu $$
+:::
+
+::: {.callout-note collapse="true"}
+## Solution 
+
+$$ \mathcal{L}(\beta) = ||\bX \beta - \bY||_2^2 $$ 
+
+$$ \mathcal{L}(\beta) = (\bX \beta - \bY)^\top (\bX \beta - \bY) $$
+
+$$ \mathcal{L}(\beta) = (\beta^\top \bX^\top - \bY^\top) (\bX \beta - \bY) $$
+
+$$ \mathcal{L}(\beta) = \beta^\top \bX^\top \bX \beta - \beta^\top \bX^\top \bY - \bY^\top \bX \beta - \bY^\top \bY  $$
+
+$$ \mathcal{L}(\beta) = \beta^\top \bX^\top \bX \beta - 2 \beta^\top \bX^\top \bY  - \bY^\top \bY  $$
+
+$$ \nabla (\beta^\top \bX^\top \bX \beta) = 2 \bX^\top \bX \beta $$ 
+
+$$ \nabla (2 \beta^\top \bX^\top \bY) = 2 \bX^\top \bY $$ 
+
+$$ \nabla (\bY^\top \bY) = 0 $$ 
+
+$$ \nabla \mathcal{L}_{\beta} = 2 \bX^\top \bX \beta - 2 \bX^\top \bY + 0 = 2 \left( \bX^\top \bX \beta - \bX^\top \bY  \right) $$ 
+
+
+::: 
+
+### Conditions for an Invertible Matrix
+
+Consider a matrix $\bA \in \R^{n \times m}$. What properties does $\bA$ need to satisfy in order for $\bA$ to be invertible? *Hint: there are many properties of a matrix that show it is uniquely invertible. Think dimensions, fundamental spaces, $\bA^{-1} \bA = ?$, etc.* 
+
+:::{.callout-note collapse="true"}
+## Solution 
+The matrix $\bA$ must satisfy the following properties (many of these are different ways of saying the same thing): 
+
+* $\bA$ is a square matrix, i.e. $n = m$ 
+* A matrix $\bB$ exists such that $\bB \bA = \bA \bB = \bI$ where $\bI$ is an $n \times n$ identity matrix 
+- The columns of $\bA$ span $\R^{n}$ 
+- The columns of $\bA$ are linearly independent 
+- $\bA$ has no linearly dependent columns 
+- $\bA$ has no singular values equal to zero
+- The null-space of $\bA$ is empty 
+- The only solution of $\bA \bx = 0$ is $\bx = 0$. 
+:::
+
+### Full-rank $\bX$ means $\bX^\top \bX$ is Invertible
+
+Recall the expression for the optimal $\beta$ obtained by solving the normal equations in **Section 2.4**: 
+
+$$ 
+\beta^* = (\bX^\top \bX)^{-1} \bX^\top \bY 
+$$
+
+This expression involves the inverse of $\bX^\top \bX$. As we saw in the previous exercise, a matrix must satisfy strict conditions in order to be invertible. Show that $\bX^\top \bX$ is invertible <ins>if and only if</ins> $\bX$ has full column-rank, i.e. the columns of $\bX$ are linearly independent. *Hint: a symmetric positive definite matrix is always invertible.*
+
+::: {.callout-note collapse="true"}
+## Solution 
+
+Recall that a symmetric positive definite (SPD) matrix satisfies the following for all $\bv \neq 0$: 
+
+$$ \bv^\top \bA \bv > 0 $$
+
+If $\bX^\top \bX$ is SPD, then $\bX^\top \bX$ must be invertible. Hence, the following must hold for all $\bv \neq 0$: 
+
+$$ \bv^\top \bX^\top \bX \bv > 0 $$ 
+
+We can write this as the squared 2-norm of $\bX \bv$: 
+
+$$ \bv^\top \bX^\top \bX \bv = || \bX \bv||_2^2 > 0$$ 
+
+This is saying that any nonzero $\bv$ multiplied by $\bX$ must produce a vector with a norm greater than zero. In other words, $\bX \bv$ cannot produce the zero-vector when $\bv \neq 0$. This means that $\bX$ must have an empty null-space, which means that $\bX$ must have linearly independent columns which is another way of saying it has full column rank.
+:::
+
+### Uniqueness of the optimal $\beta$ 
+
+Consider the following least-squares problem, from which we solve for the optimal $\beta$ for least-squares regression: 
+
+$$ \bX^\top \bX \beta = \bX^\top \bY $$
+
+If $\bX^\top \bX$ is invertible (its columns are linearly independent, its null-space is empty, etc.), is it possible for more than one $\beta$ to satisfy this equation? Why? 
+
+If $\bX^\top \bX$ is **not** invertible, how many values of $\beta$ satisfy this equation? Why? 
+
+::: {.callout-note collapse="true"}
+## Solution 
+
+Solving $\bX^\top \bX \beta = \bX^\top \bY$ can be simplified to solving the general equation: 
+
+$$ \bA \beta = \bb$$ 
+
+If $\bA$ is invertible (meaning it has full column-rank, its columns are linearly independent, it has an empty nullspace, etc.), then there exists no nonzero $\beta$ such that: 
+
+$$ \bA \beta = 0 $$ 
+
+However, if $\bA$ is not invertible, it has a non-empty null-space, which means there exist nonzero $\beta$ that **does** satisfy $\bA \beta = 0$. Let us refer to a $\beta$ in the null-space of $\bA$ as $\beta_0$. Because a null-space is defined by the linear combination of one or more vectors, there are infinitely many combinations of vectors in the null-space that can produce a $\beta_0$ such that $\bA \beta_0 = 0$. Let's say we find a $\beta$ in the column-space of $\bA$ that solves the least-squares equation: 
+
+$$ \bA \beta = \bb $$ 
+
+If $\bA$ has a non-empty null space, then we can take a $\beta_0$ in the null-space of $\bA$ and make the following substitution: 
+
+$$ \bA (\beta + \beta_0) = \bA \beta + \bA \beta_0 = \bA \beta + 0 = \bA \beta $$ 
+
+This means we can add in *any* $\beta_0$ from the null-space and still end up with a nonzero $\beta$ that minimizes the least squares equation. Because we can form infinitely many vectors from the null-space, this means there are infinitely many solutions to the least-squares equation when $\bA$ is not invertible. 
+
+
+
+
+:::
 
 ## Further reading
 
-any appropriate links
+*Linear Algebra Crash Course (@sec-linalg)*
+
+*The Matrix Cookbook (@petersen2012matrix)*
+
 ---

@@ -11,7 +11,7 @@ execute:
     freeze: auto
 ---
 
-## Linear Algebra Crash Course
+## Linear Algebra Crash Course {#sec-linalg}
 
 Before we dive into the world of machine learning and optimization, it's important that we get comfortable with the fundamental building blocks of mathematics in higher dimensions: Linear Algebra. This course assumes you have seen basic concepts in Linear Algebra, but we'll provide a refresher to get everyone on the same page. 
 
