@@ -263,28 +263,25 @@ plt.ylabel("Model Predicted Drag Force")
 This plot shows that there is clearly a strong, but nonlinear relationship between the true and model-predicted drag-force. We observe that the linear regression model under-predicts the drag-force when the true force is very low or very high and the model over-predicts the drag-force when the true force is around 5000N. This shows that when the relationship between the input features and the output is nonlinear, linear regression may provide good estimates on average, but choosing features to better capture this nonlinearity may provide much more accurate outputs over the entire input domain. 
 
 
-## Assessing the learned models
-
-various metrics, validation? definitely test data 
- 
+## Assessing the learned models 
 
 ### Common Performance Metrics
 
-Once we have trained a model i.e. we have computed the optimal $\beta$ that maps our training inputs to our training outputs, it's important to have some quantitative way to measure how "well" our model is able to do this. There are many, many ways to measure model performance. For regression problems, the popular `sklearn` python package for machine learning has thirteen different metrics to assess model performance. We will outline some of the most prominent metrics in this section.
+Once we have trained a model (in the linear regression case, we have computed the optimal $\beta$ that maps our training inputs to our training outputs), it's important to have some quantitative way to measure how "well" our model is able to do this. There are many, many ways to measure model performance. For regression problems, the popular `sklearn` python package for machine learning has thirteen different metrics to assess model performance. We will outline some of the most prominent metrics in this section.
 
-In the case of regression problems, a natural way to assess this is to measure the error between the model's predictions and actual outputs. One common way this is computed is with **mean squared error**: 
+A natural way to assess model performance is to measure the error between the model's predictions and actual outputs. One common way to do this is computed is with **mean squared error**: 
 
 $$ 
 MSE = \frac{1}{N} \sum_{i=1}^N (\hat{y}_i - y_i)^2 
 $$
 
-where $\hat{y}_i$ is the model's best approximation of $y_i$, using inputs $x_i$. Because of how linear regression is formulated, the estimator $\beta^*$ will be the set of weights that minimize the MSE of the training data. If $\bX$ is full-rank, $\beta^*$ will be unique. However, many data-scientists dislike the MSE because it penalizes higher errors more than lower errors and in the context of physical experiments the squared error doesn't have easily interpretable units. For example, in **Example 1** we sought to predict drag-force in $N$. Using the MSE would produce an error in $N^2$ which doesn't have an intuitive physical interpretation. For this reason, many scientists use the **mean absolute error**: 
+where $\hat{y}_i$ is the model's best approximation of $y_i$, using inputs $x_i$. Because of how linear regression is formulated, the estimator $\beta^*$ will be the set of weights that minimize the MSE of the training data. If $\bX$ is full-rank, $\beta^*$ will be unique. However, many data-scientists dislike the MSE because it penalizes higher errors more than lower errors and in the context of physical experiments the squared error doesn't have easily interpretable units. For instance, in **Example 1** we sought to predict drag-force in Newtons. Using the MSE would produce an error with units of (Newtons)$^2$ which doesn't have an intuitive physical interpretation. For this reason, many scientists use the **mean absolute error**: 
 
 $$ 
 MAE = \frac{1}{N} \sum_{i=1}^N |\hat{y}_i - y_i| 
 $$
 
-In **Example 1**, this would give us an error with units of $N$ that we can interpret as "the linear regression model deviates from the true outputs by ___ $N$ on average". If the output data significantly varies in magnitude over the domain of the input, then we may expect MSE and MAE to dominate in places where the magnitude of $y$ is large. To combat this problem, we might choose to use **mean relative error** to assess the performance of our model. This scales the error at each input/output pair according to how large the output is: 
+In **Example 1**, this would give us an error with units of Newtons that we can interpret as "the linear regression model deviates from the true outputs by ___ Newtons on average". If the output data significantly varies in magnitude over the domain of the input, then we may expect MSE and MAE to dominate in places where the magnitude of $y$ is large. To combat this problem, we might choose to use **mean relative error** to assess the performance of our model. This scales the error at each input/output pair according to how large the output is: 
 
 $$ 
 MRE = \frac{1}{N} \sum_{i=1}^N \frac{|\hat{y}_i - y_i|}{|y_i|}
@@ -300,9 +297,9 @@ When $\hat{y}$ perfectly matches the true outputs, $y$, we get a pearson correla
 
 ### Cross-Validation 
 
-Up to now, we have only discussed model performance as it relates to the data used to train the model. However, the entire reason we go to the trouble of training machine learning models is so they can be used to make accurate new predictions on unseen data. Famous LLMs like ChatGPT are so valuable because we can ask them questions they have never seen before and they can still provide coherent, useful answers. 
+Up to now, we have only discussed model performance as it relates to the data used to train the model. However, the entire reason we go to the trouble of training machine learning models is so they can be used to make accurate predictions on unseen data. Famous LLMs like ChatGPT are so valuable because we can ask them questions they have never seen before and they can still provide coherent, useful answers. 
 
-Oftentimes, when machine learning models are highly expressive, (i.e. can model complex functional relationships) they tend to **overfit** to their training data. This happens when the model is so good at matching its training data, it does not generalize well to data it hasn't seen before. This can be especially problematic when our training data contains some sort of noise or uncertainty and our trained model begins to predict the noise in the training data. 
+Oftentimes, when machine learning models are highly expressive, (i.e. can model complex functional relationships) they tend to **overfit** to their training data. This happens when the model is so good at matching its training data, it does not generalize well to data it hasn't seen before. This can be especially problematic when our training data contains some sort of noise or uncertainty and our trained model begins to conform to the noise present in the training data. 
 
 A straightforward method to assess how much a model is overfitting its training data is to form a `train` and `test` set. Usually around 80% of the training data is used to train the model and about 20% is kept out of the training process and used to evaluate the model's ability to generalize to data it hasn't seen before. A model that generalizes well should exhibit approximately the same performance on its training and testing data. When a model shows significantly worse performance on its `test` dataset, this indicates that the model might be overfitting its training data. 
 
