@@ -467,9 +467,9 @@ y_i = \begin{cases} 1, \text{ patient has arrhythmia} \\ 0, \text{ patient has n
 <p>Linear least squares problems are special because they have closed form solutions: that is, we can write an analytical expression for the optimum parameters <span class="math inline">\(\beta^*\)</span> in terms of the data. To do so, we are going to define a feature data matrix <span class="math inline">\(X\in\mathbb{R}^{N\times n}\)</span> and an output data vector <span class="math inline">\(Y\in\mathbb{R}^N\)</span> as follows:</p>
 <p><span class="math display">\[
 X = \begin{pmatrix}
-- &amp;x(z_1) &amp; - \\
+- &amp;x^\top(z_1) &amp; - \\
 &amp; \vdots &amp; \\
-- &amp; x(z_N) &amp; -
+- &amp; x^\top(z_N) &amp; -
 \end{pmatrix},
 \qquad
 Y = \begin{pmatrix}
@@ -496,16 +496,16 @@ X^\top X\beta^* = X^\top Y
 <section id="using-python-for-least-squares-regression" class="level3" data-number="2.4.1">
 <h3 data-number="2.4.1" class="anchored" data-anchor-id="using-python-for-least-squares-regression"><span class="header-section-number">2.4.1</span> Using Python for Least-Squares Regression</h3>
 <p>Now let’s explore how we can actually solve for our optimal weights, <span class="math inline">\(\beta^*\)</span>, given some training data with code. First, we need to import the libraries we need to work with matrices/vectors (<code>numpy</code>), plot results (<code>matplotlib</code>), work with dataframes (<code>pandas</code>), and easily perform more math than base python allows like <span class="math inline">\(\pi\)</span>, sines, cosines, and square-roots (<code>math</code>).</p>
-<div id="89e5621b" class="cell" data-execution_count="1">
+<div id="04e88d0c" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np </span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt </span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now let’s say we’ve imported some pandas dataframe called <code>df</code> that contains a set of empirical data from <strong>Example 1</strong> (Assume it comes from experimental trials or simulations). We can print the first few rows of the dataset using the <code>df.head()</code> method:</p>
-<div id="c15a1262" class="cell" data-execution_count="3">
+<div id="57fd74f5" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="157">
+<div class="cell-output cell-output-display" data-execution_count="10">
 <div>
 <div>
 
@@ -564,28 +564,28 @@ X^\top X\beta^* = X^\top Y
 </div>
 </div>
 <p>Let’s define our input features as <span class="math inline">\(x(z) = (\alpha, \rho, v)^\top\)</span>. We can now form <span class="math inline">\(\mathbf{X}\)</span> (our training inputs) and <span class="math inline">\(\mathbf{Y}\)</span> (our training outputs) matrices by extracting the input features and outputs from the dataframe:</p>
-<div id="70babb88" class="cell" data-execution_count="4">
+<div id="b9169791" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The hstack method concatenates column vectors into </span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># an N x d matrix like [1 alpha rho velocity]</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.hstack((np.ones((N, <span class="dv">1</span>)), df[[<span class="st">'alpha'</span>, <span class="st">'rho'</span>, <span class="st">'velocity'</span>]].values))</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>Y <span class="op">=</span> df[<span class="st">'f_drag'</span>].values</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can solve for <span class="math inline">\(\beta^*\)</span> using the <code>np.linalg.lstsq()</code> function which efficiently solves the least-squares equation <span class="math inline">\(\mathbf{X}\beta = \mathbf{Y}\)</span>. The <code>rcond</code> keyword argument specifies how “well-conditioned” we want our result to be, achieved by cutting off the smallest singular values of <span class="math inline">\(\mathbf{X}\)</span> (don’t worry too much about this for now). Setting it to <code>None</code> assumes <span class="math inline">\(\mathbf{X}\)</span> is well-conditioned i.e.&nbsp;far from being rank-deficient. By default, the <code>lstsq()</code> function returns a list of the optimal weights, <span class="math inline">\(\beta^*\)</span>, the residuals of the training data (<span class="math inline">\(\mathbf{X}\beta - \mathbf{Y}\)</span>), the rank of <span class="math inline">\(\mathbf{X}\)</span>, and the singular values of <span class="math inline">\(\mathbf{X}\)</span>. For now, we’re only interested in <span class="math inline">\(\beta^*\)</span>, so we use <code>[0]</code> to select this value.</p>
-<div id="c5394b3a" class="cell" data-execution_count="5">
+<div id="8f1c9c87" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>beta_hat <span class="op">=</span> np.linalg.lstsq(X, Y, rcond<span class="op">=</span><span class="va">None</span>)[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We are now able to compute the model’s predictions at the training inputs:</p>
-<div id="657ebc27" class="cell" data-execution_count="6">
+<div id="be1be91c" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Y_hat <span class="op">=</span> X <span class="op">@</span> beta_hat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Let’s now plot <span class="math inline">\(\hat{\mathbf{Y}}\)</span> and <span class="math inline">\(\mathbf{Y}\)</span> to examine how closely correlated the two are. A straight line with slope 1 would mean the linear regression model exactly matched all of the training outputs:</p>
-<div id="5ee94ace" class="cell" data-execution_count="7">
+<div id="7a312e56" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="dv">4</span>))</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>plt.scatter(Y, Y_hat)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>plt.grid()</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"True Drag Force"</span>)</span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Model Predicted Drag Force"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="161">
+<div class="cell-output cell-output-display" data-execution_count="14">
 <pre><code>Text(0, 0.5, 'Model Predicted Drag Force')</code></pre>
 </div>
 <div class="cell-output cell-output-display">
@@ -742,7 +742,7 @@ $$ \bA (\beta + \beta_0) = \bA \beta + \bA \beta_0 = \bA \beta + 0 = \bA \beta $
 
 This means we can add in *any* $\beta_0$ from the null-space and still end up with a nonzero $\beta$ that minimizes the least squares equation. Because we can form infinitely many vectors from the null-space, this means there are infinitely many solutions to the least-squares equation when $\bA$ is not invertible. 
  -->
-<!-- ::: -->
+<!-- :::  -->
 </section>
 <section id="further-reading" class="level2" data-number="2.7">
 <h2 data-number="2.7" class="anchored" data-anchor-id="further-reading"><span class="header-section-number">2.7</span> Further reading</h2>

@@ -139,9 +139,9 @@ Linear least squares problems are special because they have closed form solution
 
 $$
 X = \begin{pmatrix}
-- &x(z_1) & - \\
+- &x^\top(z_1) & - \\
  & \vdots & \\
-- & x(z_N) & -
+- & x^\top(z_N) & -
 \end{pmatrix}, 
 \qquad 
 Y = \begin{pmatrix}
@@ -416,7 +416,7 @@ This means we can add in *any* $\beta_0$ from the null-space and still end up wi
 
 
 
-<!-- ::: -->
+<!-- :::  -->
 
 ## Further reading
 

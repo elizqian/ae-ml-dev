@@ -8,11 +8,62 @@ html-math-method:
 
 {{< include _macros.qmd >}}
 
+We now take a deeper dive into the structure of linear least squares problems. We will see how theoretical concepts from linear algebra can be used to describe and explain properties of learned linear regression models, and we will introduce fundamental algorithms from computational linear algebra that are used to solve linear least squares problems.
+
 The intended learning outcomes of these notes are that students should be able to:
 
 
-## range, kernel and expressivity, well-posedness
-start with "if invertible" and go from there...
+## Mathematical problem formulation
+We briefly recap the mathematical problem formulation that we consider. Given a data set $\{(z_i,y_i)\}_{i=1}^N$, where $z_i\in\R^d$ and $y_i\in\R$ are paired inputs and outputs, we choose a feature mapping $x: \R^d\to\R^n$, and define the matrix $X\in\R^{N\times n}$ and vector $Y\in\R^N$ as follows:
+
+$$
+X = \begin{pmatrix}
+- &x^\top(z_1) & - \\
+ & \vdots & \\
+- & x^\top(z_N) & -
+\end{pmatrix}, 
+\qquad 
+Y = \begin{pmatrix}
+y_1 \\ \vdots \\ y_N
+\end{pmatrix}.
+$$ {#eq-def-X-y}
+
+The least squares problem is then to solve (as introduced previously):
+
+$$
+\beta^* = \arg\min_{\beta\in\R^n} \frac1N\|X \beta - Y\|^2.
+$$ {#eq-ls-min}
+
+The minimization above is somewhat cumbersome to write, so you'll sometimes see the following expression used as shorthand for the above minimization (remember that the $1/N$ factor doesn't really matter for finding the minimum):
+
+$$ 
+X\beta = Y
+$$ {#eq-ls-matrix}
+
+This notation is particularly common in the linear algebra context which is the focus of these notes.
+
+## Well-posedness
+
+In math, the term "well-posedness" refers to the existence and uniqueness of solutions to a problem. 
+We say a mathematical problem is "well-posed" if it has a unique solution. Suppose for a moment that $N = n$ so that $X$ is square. Recall from linear algebra that the square linear system $X\beta=Y$ has a unique solution if and only if $X$ is invertible, and this solution is given by $\beta=X^{-1}Y$. 
+
+Linear least-squares problems consider the general case where $X$ is non-invertible. This happens in our linear regression case when $X$ is rectangular, but $X$ can also be square and non-invertible. There are essentially two ways $X$ can fail to be invertible:
+
+1. $X$ can have column rank less than $n$, i.e., the number of linearly independent columns in $X$ is less than the number of columns $n$. In this case, we say $X$ is "column rank-deficient" or $X$ "does not have full column rank".
+
+2. $X$ can have row rank less than $N$, i.e., the number of linearly independent rows in $X$ is less than the number of rows $N$. In this case, we say $X$ is "row rank-deficient" or $X$ "does not have full row rank".
+
+These are not mutually exclusive: $X$ can be simultaneously column rank-deficient and row rank-deficient. However, these different types of rank deficiencies have different consequences for well-posedness the existence and uniqueness of solutions, and different implications for learning linear regression models. 
+
+### Overdetermined least-squares problems
+
+Let's start with the row rank-deficient case. If $X$ has fewer linearly independent rows than the total number of rows, this means that some of the rows of $X$ are redundant. 
+One way this can happen is if we have multiple copies of the same input in the data set, i.e., suppose $z_1 = z_2$. Note that having multiple copies of the same input usually does not mean that the associated outputs are also copies of each other (so you can still have $y_1 \neq y_2$): for example, you might take multiple experimental measurements with the same configuration and get different measured values due to sensor noise or external factors that you don't account for in your inputs. If this happens, your data set contains "contradictory" information, because $x(z_1)^\top\beta=y_1$ and $x(z_2)^\top\beta= x(z_1)^\top\beta=y_2$ cannot simultaneously
+
+From the definition of $X$ in @eq-def-X-y, note that this only happens if some of our input data $\{z_i\}_{i=1}^N$ are redundant: that is, if we have multiple copies of some inputs in the data set.  
+
+
+You have to stay on your toes when using this shorthand though. Note that @eq-ls-matrix looks the same as a typical square linear system, i.e. $Ax = b$ for $A\in\R^{n\times n}, b\in\R^n$, but @eq-ls-matrix is generally defined for *rectangular* $X$.
 
 
 feature selection 
@@ -29,121 +80,24 @@ algorithm, cost
 
 for data reduction, and for regularization
 
-## Experimental Example
-
-Now suppose we have 100 experimental observations of various angles of attack, air-densities and velocities with the corresponding drag-force in a pandas DataFrame called `df`: 
-
-```{python}
-#| echo: false
-import numpy as np 
-import matplotlib.pyplot as plt 
-import pandas as pd
-import math
-
-np.random.seed(42)
-
-def Cd(alpha):
-    return 0.1 * np.exp(math.pi / 180.0 * alpha)
-
-def Fd(alpha, rho, v):
-    C_d = Cd(alpha)
-    A = 1.2 # m^2 
-    return 0.5*rho*alpha*v**2*C_d +1
-
-N = 100
-alpha = np.random.rand(N)*45
-rho = np.random.randn(N)*0.3 + 1.293 
-v = np.random.rand(N)*100
-F_d = Fd(alpha, rho, v) + 0*np.random.randn(N)
-
-df_dict = {
-    "alpha":alpha,
-    "rho":rho,
-    "velocity":v, 
-    "f_drag":F_d
-}
-
-df = pd.DataFrame(df_dict)
-```
-
-```{python}
-df.head()
-```
-
-We can create $\mathbf{X}$ and $\mathbf{Y}$ matrices by extracting the input features and outputs from the dataframe: 
-
-```{python}
-X = np.hstack((np.ones((N, 1)), df[['alpha', 'rho', 'velocity']].values))
-Y = df['f_drag'].values
-```
-
-We can solve for $\hat{\beta}$ by computing the normal equations: 
-
-```{python}
-beta_hat = np.linalg.inv(X.T @ X) @ (X.T @ Y)
-```
-
-And then compute the model's predictions at the training inputs: 
-
-```{python}
-Y_hat = X @ beta_hat
-```
-
-Now let's plot the $\hat{\mathbf{Y}}$ and $\mathbf{Y}$ to examine how closely correlated the two are. A straight line with slope-1 would mean the model exactly fitted all of the outputs: 
-
-```{python}
-plt.figure(figsize=(8,4))
-plt.scatter(Y, Y_hat)
-plt.grid()
-plt.xlabel("True Drag Force")
-plt.ylabel("Model Predicted Drag Force")
-```
-
-There is clearly a strong, but nonlinear correlation between the true and model-predicted drag-force. This indicates that there is a nonlinear relationship between the features and the output values. Let us quantify the MSE: 
-
-```{python}
-linear_mse = np.linalg.norm(Y_hat - Y, 2) / N
-print("Linear Features Mean-Squared Error: %.2f" % (linear_mse))
-```
 
 ## Using Nonlinear Features to Improve Model Performance
 
-We know the underlying formula for drag-force is: 
+<!-- We know the underlying formula for drag-force is: 
 
-$$ F_d = \frac{1}{2} \rho v^2 C_d A  $$ 
+$$ F_d = \frac{1}{2} \rho v^2 C_d A  $$  -->
 
-While this function doesn't depend on the angle of attack, we do see how the features are polynomially related to one another. Naturally, it is going to be difficult for a linear combination of features to replicate this. However, if we take the log of both sides, something interesting happens: 
+<!-- While this function doesn't depend on the angle of attack, we do see how the features are polynomially related to one another. Naturally, it is going to be difficult for a linear combination of features to replicate this. However, if we take the log of both sides, something interesting happens: 
 
 $$ \ln(F_d) = \ln(\frac{1}{2} \rho v^2 C_d A) = \ln(\frac{1}{2}) + \ln(\rho) + 2\ln(v) + \ln(C_d) + \ln(A) $$
 
 When our features and outputs are log-scaled, we see a friendly linear-combination of log-scaled versions features emerge! Let's alter our inputs and outputs accordingly, so our problem becomes: 
 
-$$ \mathbf{X} = \begin{bmatrix} 1 & \ln \alpha_1 & \ln \rho_1 & \ln v_1 \\ 1 & \ln \alpha_2 & \ln \rho_2 & \ln v_2 \\ & & \vdots & \\ 1 & \ln \alpha_N & \ln \rho_N & \ln v_N \end{bmatrix} , \mathbf{Y} = \begin{bmatrix} \ln F_{d1} \\ \ln F_{d2} \\ \vdots \\ \ln F_{d3} \end{bmatrix} $$ 
+$$ \mathbf{X} = \begin{bmatrix} 1 & \ln \alpha_1 & \ln \rho_1 & \ln v_1 \\ 1 & \ln \alpha_2 & \ln \rho_2 & \ln v_2 \\ & & \vdots & \\ 1 & \ln \alpha_N & \ln \rho_N & \ln v_N \end{bmatrix} , \mathbf{Y} = \begin{bmatrix} \ln F_{d1} \\ \ln F_{d2} \\ \vdots \\ \ln F_{d3} \end{bmatrix} $$  -->
 
-Let's see how this works programmatically: 
 
-```{python}
-X_log = np.hstack((np.ones((N, 1)), np.log(df[['alpha', 'rho', 'velocity']].values)))
-Y_log = np.log(df['f_drag'].values - df['f_drag'].min() + 1)
 
-beta_log = np.linalg.inv(X_log.T @ X_log) @ (X_log.T @ Y_log)
 
-Y_hat_log = np.exp(X_log @ beta_log)+ df['f_drag'].min() - 1
-
-plt.figure(figsize=(8,4))
-plt.scatter(Y, Y_hat_log)
-plt.grid()
-plt.xlabel("True Drag Force")
-plt.ylabel("Model Predicted Drag Force")
-```
-
-Now let's see if our MSE has changed: 
-
-```{python}
-log_mse = np.linalg.norm(Y_hat_log - Y, 2)/N
-print("Logarithmically Scaled Features Mean-Squared Error: %.2f" % (log_mse))
-```
-
-We have nearly a 5x reduction in MSE just by log-scaling our features! If we choose the right features, linear regression can be an extremely powerful method for approximating complex functions. 
+<!-- We have nearly a 5x reduction in MSE just by log-scaling our features! If we choose the right features, linear regression can be an extremely powerful method for approximating complex functions.  -->
 
 ---
