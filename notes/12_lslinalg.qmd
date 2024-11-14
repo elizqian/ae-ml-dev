@@ -57,14 +57,65 @@ These are not mutually exclusive: $X$ can be simultaneously column rank-deficien
 
 ### Overdetermined least-squares problems
 
-Let's start with the row rank-deficient case. If $X$ has fewer linearly independent rows than the total number of rows, this means that some of the rows of $X$ are redundant. 
-One way this can happen is if we have multiple copies of the same input in the data set, i.e., suppose $z_1 = z_2$. Note that having multiple copies of the same input usually does not mean that the associated outputs are also copies of each other (so you can still have $y_1 \neq y_2$): for example, you might take multiple experimental measurements with the same configuration and get different measured values due to sensor noise or external factors that you don't account for in your inputs. If this happens, your data set contains "contradictory" information, because $x(z_1)^\top\beta=y_1$ and $x(z_2)^\top\beta= x(z_1)^\top\beta=y_2$ cannot simultaneously
+Let's start with the row rank-deficient case. If $X$ has fewer linearly independent rows than the total number of rows, this means that some of the rows of $X$ are redundant.
+This means that some of the linear equations represented by rows of the linear system $X\beta=Y$ have redundant left-hand sides. 
+Because redundant equations place more constraints on the solution than can be simultaneously satisfied, this case is called the *overdetermined* case.
 
-From the definition of $X$ in @eq-def-X-y, note that this only happens if some of our input data $\{z_i\}_{i=1}^N$ are redundant: that is, if we have multiple copies of some inputs in the data set.  
+One way overdetermined linear systems can arise is if we have multiple copies of the same input in the data set, i.e., suppose $z_1 = z_2$. Note that having multiple copies of the same input datum usually does not mean that the associated output data are also copies of each other (so you can still have $y_1 \neq y_2$): for example, you might take multiple experimental measurements with the same configuration and get different measured values due to sensor noise or external factors that you don't account for in your inputs. If this happens, your data set contains "contradictory" information, because $x(z_1)^\top\beta=y_1$ and $x(z_2)^\top\beta= x(z_1)^\top\beta=y_2$ cannot simultaneously be true. 
+
+What does row rank-deficiency mean for solving $X\beta=Y$? In most cases this means that there is no choice of $\beta$ that will exactly solve the equation --- the equality cannot simultaneously hold for all rows of the system. That means *no solution exists* for the linear system. 
+
+Since no solution exists in the sense of $X\beta=Y$ holding exactly for all rows, we will define a different way of thinking about solutions. Let's define the *residual* of the system as follows:
+
+$$
+r(\beta) = X\beta-Y.
+$$ {#eq-res-def}
+
+For a given parameter $\beta$, the residual $r(\beta)$ is a measure of the model misfit over the training data set.
+Note that if $X\beta=Y$ holds with equality for all rows, then the residual is zero. In the overdetermined case where $X\beta=Y$, since we can't have a zero residual, we aim for the next best thing, which is minimizing the size of the residual (recall that the norm is a measure of the size of a vector)[^1]:
+
+[^1]: Note that the second equality follows because squaring the norm doesn't change where the minimum is because $a^2$ is monotone increasing in $a$ for non-negative $a$. 
+
+$$
+\beta^* = \arg\min_{\beta\in\R^n} \|r(\beta)\| = \arg\min_{\beta\in\R^n}\|r(\beta)\|^2
+$$ {#eq-ls-res-min}
+
+With the residual defined in @eq-res-def, the expression @eq-ls-res-min recovers our original expression for the formulation of a least-squares problem[^2], @eq-ls-min. In this sense, the least-squares formulation "fixes" the lack of existence of a solution to the linear system due to row redundancy. For this reason, if you see $X\beta=Y$ written for a non-invertible system, the way you should understand that is in the sense of solving @eq-ls-min[^3].
+
+[^2]: up to a multiplying constant anyway, which I've emphasized before really doesn't matter when it's inside a minimization.
+
+[^3]: see, for example, the documentation for the numpy function [<tt>linalg.lstsq</tt>](https://numpy.org/doc/stable/reference/generated/numpy.linalg.lstsq.html) or the [scipy version](https://docs.scipy.org/doc/scipy/reference/generated/scipy.linalg.lstsq.html#scipy.linalg.lstsq)
+
+::: {.callout-note}
+explain that row redundancy can also happen if not literally the same thing
+:::
 
 
-You have to stay on your toes when using this shorthand though. Note that @eq-ls-matrix looks the same as a typical square linear system, i.e. $Ax = b$ for $A\in\R^{n\times n}, b\in\R^n$, but @eq-ls-matrix is generally defined for *rectangular* $X$.
+### Underdetermined least-squares problems
 
+We now turn our attention to the column rank-deficient case. If $X$ has fewer linearly independent columns than the total number of columns, this means that some of the columns of $X$ are redundant. Recall that $X\beta\in\R^N=\sum_{j=1}^n \beta_j x_j$, where $x_j\in\R^N$ is the $j$th column of $X$. If $X$ has redundant columns, this means that there are different ways to weight the columns of $X$ using the coefficients in $\beta$ that lead to the same value for $X\beta$. This means that requiring $X\beta=Y$ will not fully specify what $\beta$ is, so we call this the *underdetermined* case. 
+
+One way underdetermined systems arise is if there are more unknown coefficients in $\beta$ than there data points to constrain the problem. This can happen if we choose a very large set of features ($n$ large) but only have a small amount of data ($N<n$).
+
+What does column rank-deficiency mean for solving $X\beta=Y$?
+This means that *the solution is not unique*. This non-uniqueness comes from the fact that column rank-deficiency of $X$ means that $X$ has a nonzero kernel (aka nullspace). Recall that this means there exists some nonzero $v\in\R^n$ satisfying $Xv = 0$. Let $r^*$ be the minimum possible residual, 
+
+$$
+r^* = \min_{\beta\in\R^n}\|r(\beta)\|.
+$$
+
+Suppose we find some $\beta^*$ that leads to this minimum residual, so that $r^* = X\beta^* - Y$. Well, if $v$ lies in the kernel of $X$, then we can add any multiple of $v$ to $\beta^*$ and get the same minimum residual! That is, if $\beta^*$ is *a* solution to @eq-ls-res-min, then so is $\beta^* + av$ for any $a\in\R$. This means there are infinitely many solutions. To make underdetermined problems well-posed, we have to decide on a way of choosing a single unique solution out of the many possible minimizers of @eq-ls-res-min. Deciding on a method of choosing a single unique solution out of many possible solutions is called *regularization* and is a topic we will explore in more depth later. In the meantime, the most common and vanilla way of regularizing is to specify that we want to find what's called the "minimum-norm" solution: i.e., out of all possible solutions, we take the smallest one. That is,
+
+$$
+\beta^* = \arg\min_{\beta\in\R^n} \|\beta\| \quad \text{subject to } \|X\beta - Y\| = r^*.
+$$
+
+
+
+
+::: {.callout-note}
+explain that col redundancy can also happen even if $N\geq n$ if features are redundant.
+:::
 
 feature selection 
 
@@ -80,8 +131,14 @@ algorithm, cost
 
 for data reduction, and for regularization
 
+## Exercises
 
-## Using Nonlinear Features to Improve Model Performance
+- some scenarios to classify is under or over-determined or both
+
+
+
+
+<!-- ## Using Nonlinear Features to Improve Model Performance -->
 
 <!-- We know the underlying formula for drag-force is: 
 

@@ -214,6 +214,7 @@ window.Quarto = {
   <li><a href="#well-posedness" id="toc-well-posedness" class="nav-link" data-scroll-target="#well-posedness"><span class="header-section-number">3.2</span> Well-posedness</a>
   <ul class="collapse">
   <li><a href="#overdetermined-least-squares-problems" id="toc-overdetermined-least-squares-problems" class="nav-link" data-scroll-target="#overdetermined-least-squares-problems"><span class="header-section-number">3.2.1</span> Overdetermined least-squares problems</a></li>
+  <li><a href="#underdetermined-least-squares-problems" id="toc-underdetermined-least-squares-problems" class="nav-link" data-scroll-target="#underdetermined-least-squares-problems"><span class="header-section-number">3.2.2</span> Underdetermined least-squares problems</a></li>
   </ul></li>
   <li><a href="#qr-decomposition" id="toc-qr-decomposition" class="nav-link" data-scroll-target="#qr-decomposition"><span class="header-section-number">3.3</span> QR decomposition</a></li>
   <li><a href="#svd" id="toc-svd" class="nav-link" data-scroll-target="#svd"><span class="header-section-number">3.4</span> SVD</a></li>
@@ -289,9 +290,57 @@ X\beta = Y
 <p>These are not mutually exclusive: <span class="math inline">\(X\)</span> can be simultaneously column rank-deficient and row rank-deficient. However, these different types of rank deficiencies have different consequences for well-posedness the existence and uniqueness of solutions, and different implications for learning linear regression models.</p>
 <section id="overdetermined-least-squares-problems" class="level3" data-number="3.2.1">
 <h3 data-number="3.2.1" class="anchored" data-anchor-id="overdetermined-least-squares-problems"><span class="header-section-number">3.2.1</span> Overdetermined least-squares problems</h3>
-<p>Let’s start with the row rank-deficient case. If <span class="math inline">\(X\)</span> has fewer linearly independent rows than the total number of rows, this means that some of the rows of <span class="math inline">\(X\)</span> are redundant. One way this can happen is if we have multiple copies of the same input in the data set, i.e., suppose <span class="math inline">\(z_1 = z_2\)</span>. Note that having multiple copies of the same input usually does not mean that the associated outputs are also copies of each other (so you can still have <span class="math inline">\(y_1 \neq y_2\)</span>): for example, you might take multiple experimental measurements with the same configuration and get different measured values due to sensor noise or external factors that you don’t account for in your inputs. If this happens, your data set contains “contradictory” information, because <span class="math inline">\(x(z_1)^\top\beta=y_1\)</span> and <span class="math inline">\(x(z_2)^\top\beta= x(z_1)^\top\beta=y_2\)</span> cannot simultaneously</p>
-<p>From the definition of <span class="math inline">\(X\)</span> in <a href="#eq-def-X-y" class="quarto-xref">Equation&nbsp;<span>3.1</span></a>, note that this only happens if some of our input data <span class="math inline">\(\{z_i\}_{i=1}^N\)</span> are redundant: that is, if we have multiple copies of some inputs in the data set.</p>
-<p>You have to stay on your toes when using this shorthand though. Note that <a href="#eq-ls-matrix" class="quarto-xref">Equation&nbsp;<span>3.3</span></a> looks the same as a typical square linear system, i.e.&nbsp;<span class="math inline">\(Ax = b\)</span> for <span class="math inline">\(A\in\mathbb{R}^{n\times n}, b\in\mathbb{R}^n\)</span>, but <a href="#eq-ls-matrix" class="quarto-xref">Equation&nbsp;<span>3.3</span></a> is generally defined for <em>rectangular</em> <span class="math inline">\(X\)</span>.</p>
+<p>Let’s start with the row rank-deficient case. If <span class="math inline">\(X\)</span> has fewer linearly independent rows than the total number of rows, this means that some of the rows of <span class="math inline">\(X\)</span> are redundant. This means that some of the linear equations represented by rows of the linear system <span class="math inline">\(X\beta=Y\)</span> have redundant left-hand sides. Because redundant equations place more constraints on the solution than can be simultaneously satisfied, this case is called the <em>overdetermined</em> case.</p>
+<p>One way overdetermined linear systems can arise is if we have multiple copies of the same input in the data set, i.e., suppose <span class="math inline">\(z_1 = z_2\)</span>. Note that having multiple copies of the same input datum usually does not mean that the associated output data are also copies of each other (so you can still have <span class="math inline">\(y_1 \neq y_2\)</span>): for example, you might take multiple experimental measurements with the same configuration and get different measured values due to sensor noise or external factors that you don’t account for in your inputs. If this happens, your data set contains “contradictory” information, because <span class="math inline">\(x(z_1)^\top\beta=y_1\)</span> and <span class="math inline">\(x(z_2)^\top\beta= x(z_1)^\top\beta=y_2\)</span> cannot simultaneously be true.</p>
+<p>What does row rank-deficiency mean for solving <span class="math inline">\(X\beta=Y\)</span>? In most cases this means that there is no choice of <span class="math inline">\(\beta\)</span> that will exactly solve the equation — the equality cannot simultaneously hold for all rows of the system. That means <em>no solution exists</em> for the linear system.</p>
+<p>Since no solution exists in the sense of <span class="math inline">\(X\beta=Y\)</span> holding exactly for all rows, we will define a different way of thinking about solutions. Let’s define the <em>residual</em> of the system as follows:</p>
+<p><span id="eq-res-def"><span class="math display">\[
+r(\beta) = X\beta-Y.
+\qquad(3.4)\]</span></span></p>
+<p>For a given parameter <span class="math inline">\(\beta\)</span>, the residual <span class="math inline">\(r(\beta)\)</span> is a measure of the model misfit over the training data set. Note that if <span class="math inline">\(X\beta=Y\)</span> holds with equality for all rows, then the residual is zero. In the overdetermined case where <span class="math inline">\(X\beta=Y\)</span>, since we can’t have a zero residual, we aim for the next best thing, which is minimizing the size of the residual (recall that the norm is a measure of the size of a vector)<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>:</p>
+<p><span id="eq-ls-res-min"><span class="math display">\[
+\beta^* = \arg\min_{\beta\in\mathbb{R}^n} \|r(\beta)\| = \arg\min_{\beta\in\mathbb{R}^n}\|r(\beta)\|^2
+\qquad(3.5)\]</span></span></p>
+<p>With the residual defined in <a href="#eq-res-def" class="quarto-xref">Equation&nbsp;<span>3.4</span></a>, the expression <a href="#eq-ls-res-min" class="quarto-xref">Equation&nbsp;<span>3.5</span></a> recovers our original expression for the formulation of a least-squares problem<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, <a href="#eq-ls-min" class="quarto-xref">Equation&nbsp;<span>3.2</span></a>. In this sense, the least-squares formulation “fixes” the lack of existence of a solution to the linear system due to row redundancy. For this reason, if you see <span class="math inline">\(X\beta=Y\)</span> written for a non-invertible system, the way you should understand that is in the sense of solving <a href="#eq-ls-min" class="quarto-xref">Equation&nbsp;<span>3.2</span></a><a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>explain that row redundancy can also happen if not literally the same thing</p>
+</div>
+</div>
+</section>
+<section id="underdetermined-least-squares-problems" class="level3" data-number="3.2.2">
+<h3 data-number="3.2.2" class="anchored" data-anchor-id="underdetermined-least-squares-problems"><span class="header-section-number">3.2.2</span> Underdetermined least-squares problems</h3>
+<p>We now turn our attention to the column rank-deficient case. If <span class="math inline">\(X\)</span> has fewer linearly independent columns than the total number of columns, this means that some of the columns of <span class="math inline">\(X\)</span> are redundant. Recall that <span class="math inline">\(X\beta\in\mathbb{R}^N=\sum_{j=1}^n \beta_j x_j\)</span>, where <span class="math inline">\(x_j\in\mathbb{R}^N\)</span> is the <span class="math inline">\(j\)</span>th column of <span class="math inline">\(X\)</span>. If <span class="math inline">\(X\)</span> has redundant columns, this means that there are different ways to weight the columns of <span class="math inline">\(X\)</span> using the coefficients in <span class="math inline">\(\beta\)</span> that lead to the same value for <span class="math inline">\(X\beta\)</span>. This means that requiring <span class="math inline">\(X\beta=Y\)</span> will not fully specify what <span class="math inline">\(\beta\)</span> is, so we call this the <em>underdetermined</em> case.</p>
+<p>One way underdetermined systems arise is if there are more unknown coefficients in <span class="math inline">\(\beta\)</span> than there data points to constrain the problem. This can happen if we choose a very large set of features (<span class="math inline">\(n\)</span> large) but only have a small amount of data (<span class="math inline">\(N&lt;n\)</span>).</p>
+<p>What does column rank-deficiency mean for solving <span class="math inline">\(X\beta=Y\)</span>? This means that <em>the solution is not unique</em>. This non-uniqueness comes from the fact that column rank-deficiency of <span class="math inline">\(X\)</span> means that <span class="math inline">\(X\)</span> has a nonzero kernel (aka nullspace). Recall that this means there exists some nonzero <span class="math inline">\(v\in\mathbb{R}^n\)</span> satisfying <span class="math inline">\(Xv = 0\)</span>. Let <span class="math inline">\(r^*\)</span> be the minimum possible residual,</p>
+<p><span class="math display">\[
+r^* = \min_{\beta\in\mathbb{R}^n}\|r(\beta)\|.
+\]</span></p>
+<p>Suppose we find some <span class="math inline">\(\beta^*\)</span> that leads to this minimum residual, so that <span class="math inline">\(r^* = X\beta^* - Y\)</span>. Well, if <span class="math inline">\(v\)</span> lies in the kernel of <span class="math inline">\(X\)</span>, then we can add any multiple of <span class="math inline">\(v\)</span> to <span class="math inline">\(\beta^*\)</span> and get the same minimum residual! That is, if <span class="math inline">\(\beta^*\)</span> is <em>a</em> solution to <a href="#eq-ls-res-min" class="quarto-xref">Equation&nbsp;<span>3.5</span></a>, then so is <span class="math inline">\(\beta^* + av\)</span> for any <span class="math inline">\(a\in\mathbb{R}\)</span>. This means there are infinitely many solutions. To make underdetermined problems well-posed, we have to decide on a way of choosing a single unique solution out of the many possible minimizers of <a href="#eq-ls-res-min" class="quarto-xref">Equation&nbsp;<span>3.5</span></a>. Deciding on a method of choosing a single unique solution out of many possible solutions is called <em>regularization</em> and is a topic we will explore in more depth later. In the meantime, the most common and vanilla way of regularizing is to specify that we want to find what’s called the “minimum-norm” solution: i.e., out of all possible solutions, we take the smallest one. That is,</p>
+<p><span class="math display">\[
+\beta^* = \arg\min_{\beta\in\mathbb{R}^n} \|\beta\| \quad \text{subject to } \|X\beta - Y\| = r^*.
+\]</span></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>explain that col redundancy can also happen even if <span class="math inline">\(N\geq n\)</span> if features are redundant.</p>
+</div>
+</div>
 <p>feature selection</p>
 <p>multiple solutions</p>
 <p>low-rank or near-low-rank-ness</p>
@@ -321,6 +370,14 @@ $$ \mathbf{X} = \begin{bmatrix} 1 & \ln \alpha_1 & \ln \rho_1 & \ln v_1 \\ 1 & \
 <hr>
 
 
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>Note that the second equality follows because squaring the norm doesn’t change where the minimum is because <span class="math inline">\(a^2\)</span> is monotone increasing in <span class="math inline">\(a\)</span> for non-negative <span class="math inline">\(a\)</span>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>up to a multiplying constant anyway, which I’ve emphasized before really doesn’t matter when it’s inside a minimization.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>see, for example, the documentation for the numpy function <a href="https://numpy.org/doc/stable/reference/generated/numpy.linalg.lstsq.html"><tt>linalg.lstsq</tt></a> or the <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.linalg.lstsq.html#scipy.linalg.lstsq">scipy version</a><a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
 </section>
 
 </main> <!-- /main -->
