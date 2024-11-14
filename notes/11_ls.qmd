@@ -306,64 +306,50 @@ This shows that the model exhibits significantly lower error on its training dat
 
 ## Exercises
 
-### Derivation of Gradient 
+1. Recall that the loss-function for least-squares regression is given by $\mathcal{L}(\beta) = \frac 1N|| X \beta - Y||_2^2$. Show that the gradient of $\mathcal{L}$ with respect to $\beta$ is given by $\nabla_\beta \mathcal{L} = \frac2N \left( X^\top X \beta - X^\top Y\right)$ 
 
-Recall that the loss-function for least-squares regression can be written as the following (leaving out the constant $1/N$): 
+    *Hint:* you may find the following identities from the Matrix Cookbook [@petersen2012matrix] useful. For $v,u\in\R^n$ and $A\in\R^{n\times n}$, the following hold:
 
-$$ 
-\mathcal{L}(\beta) = || \bX \beta - \bY||_2^2 
-$$
+    i. $\nabla_v (v^\top A v) = 2Av$
+    ii. $\nabla_v (v^\top u) = \nabla_v(u^\top v) = u$
 
-Use the identities from the following note to show that the gradient of $\mathcal{L}$ with respect to $\beta$ can be written as: 
+    For an extra-thorough learning experience, try deriving the above identities from the definitions of matrix-vector and dot products.
 
-$$ 
-\nabla \mathcal{L}_{\beta} = 2 \left( \bX^\top \bX \beta - \bX^\top \bY \right) 
-$$
+    <!-- ::: {.callout-note collapse="true"}
+    ## Solution 
 
-*Recall that the gradient is defined as the vector such that each entry, $i$, satisfies:* 
+    $$ \mathcal{L}(\beta) = ||\bX \beta - \bY||_2^2 $$ 
 
-$$ \nabla \mathcal{L}_{\beta} = \begin{bmatrix} \frac{\partial \mathcal{L}}{\partial \beta_1 } \\ \vdots \\ \frac{\partial \mathcal{L}}{\partial \beta_N } \end{bmatrix}$$ 
+    $$ \mathcal{L}(\beta) = (\bX \beta - \bY)^\top (\bX \beta - \bY) $$
 
+    $$ \mathcal{L}(\beta) = (\beta^\top \bX^\top - \bY^\top) (\bX \beta - \bY) $$
 
-::: {.callout-note}
-## Useful Linear Algebra Identities 
+    $$ \mathcal{L}(\beta) = \beta^\top \bX^\top \bX \beta - \beta^\top \bX^\top \bY - \bY^\top \bX \beta - \bY^\top \bY  $$
 
-The following identities are useful in solving Exercise 1, but also quite useful for optimizing matrix/vector quantities in many different machine learning contexts. See [@petersen2012matrix] for a "Matrix Cookbook" filled with more useful identities. Consider $\bv, \bu \in \R^{N}$, $\bA \in \R^{N \times N}$
-$$ ||\bv||_2^2 = \bv^\top \bv $$
-$$\nabla \left( \bv^\top\bA \bv \right)_{\bv} =  2 \bA \bv $$
+    $$ \mathcal{L}(\beta) = \beta^\top \bX^\top \bX \beta - 2 \beta^\top \bX^\top \bY  - \bY^\top \bY  $$
 
-$$ \nabla \left( \bv^\top \bu \right)_{\bv} = \nabla \left( \bu^\top \bv \right)_{\bv} = \bu $$
-:::
+    $$ \nabla (\beta^\top \bX^\top \bX \beta) = 2 \bX^\top \bX \beta $$ 
 
-::: {.callout-note collapse="true"}
-## Solution 
+    $$ \nabla (2 \beta^\top \bX^\top \bY) = 2 \bX^\top \bY $$ 
 
-$$ \mathcal{L}(\beta) = ||\bX \beta - \bY||_2^2 $$ 
+    $$ \nabla (\bY^\top \bY) = 0 $$ 
 
-$$ \mathcal{L}(\beta) = (\bX \beta - \bY)^\top (\bX \beta - \bY) $$
-
-$$ \mathcal{L}(\beta) = (\beta^\top \bX^\top - \bY^\top) (\bX \beta - \bY) $$
-
-$$ \mathcal{L}(\beta) = \beta^\top \bX^\top \bX \beta - \beta^\top \bX^\top \bY - \bY^\top \bX \beta - \bY^\top \bY  $$
-
-$$ \mathcal{L}(\beta) = \beta^\top \bX^\top \bX \beta - 2 \beta^\top \bX^\top \bY  - \bY^\top \bY  $$
-
-$$ \nabla (\beta^\top \bX^\top \bX \beta) = 2 \bX^\top \bX \beta $$ 
-
-$$ \nabla (2 \beta^\top \bX^\top \bY) = 2 \bX^\top \bY $$ 
-
-$$ \nabla (\bY^\top \bY) = 0 $$ 
-
-$$ \nabla \mathcal{L}_{\beta} = 2 \bX^\top \bX \beta - 2 \bX^\top \bY + 0 = 2 \left( \bX^\top \bX \beta - \bX^\top \bY  \right) $$ 
+    $$ \nabla \mathcal{L}_{\beta} = 2 \bX^\top \bX \beta - 2 \bX^\top \bY + 0 = 2 \left( \bX^\top \bX \beta - \bX^\top \bY  \right) $$ 
 
 
-::: 
+    :::  -->
 
-### Conditions for an Invertible Matrix
+2. Consider a matrix $\bA \in \R^{n \times m}$. Which of the following are necessary conditions for $\bA$ to be invertible? Which are sufficient? 
 
-Consider a matrix $\bA \in \R^{n \times m}$. What properties does $\bA$ need to satisfy in order for $\bA$ to be invertible? *Hint: there are many properties of a matrix that show it is uniquely invertible. Think dimensions, fundamental spaces, $\bA^{-1} \bA = ?$, etc.* 
+    a. $\bA$ is a square matrix, i.e. $n = m$  
+    b. The columns of $\bA$ span $\R^{n}$ 
+    c. The columns of $\bA$ are linearly independent 
+    d. $\bA$ has no linearly dependent columns 
+    e. The null-space of $\bA$ is empty 
+    f. The only solution of $\bA \bx = 0$ is $\bx = 0$. 
+<!-- What properties does $\bA$ need to satisfy in order for $\bA$ to be invertible? *Hint: there are many properties of a matrix that show it is uniquely invertible. Think dimensions, fundamental spaces, $\bA^{-1} \bA = ?$, etc.*  -->
 
-:::{.callout-note collapse="true"}
+<!-- :::{.callout-note collapse="true"}
 ## Solution 
 The matrix $\bA$ must satisfy the following properties (many of these are different ways of saying the same thing): 
 
@@ -375,19 +361,12 @@ The matrix $\bA$ must satisfy the following properties (many of these are differ
 - $\bA$ has no singular values equal to zero
 - The null-space of $\bA$ is empty 
 - The only solution of $\bA \bx = 0$ is $\bx = 0$. 
-:::
+::: -->
 
-### Full-rank $\bX$ means $\bX^\top \bX$ is Invertible
+3. Show that $X^\top X$ is invertible if and only if $X$ has full column-rank.
+ <!-- *Hint: a symmetric positive definite matrix is always invertible.* -->
 
-Recall the expression for the optimal $\beta$ obtained by solving the normal equations in **Section 2.4**: 
-
-$$ 
-\beta^* = (\bX^\top \bX)^{-1} \bX^\top \bY 
-$$
-
-This expression involves the inverse of $\bX^\top \bX$. As we saw in the previous exercise, a matrix must satisfy strict conditions in order to be invertible. Show that $\bX^\top \bX$ is invertible <ins>if and only if</ins> $\bX$ has full column-rank, i.e. the columns of $\bX$ are linearly independent. *Hint: a symmetric positive definite matrix is always invertible.*
-
-::: {.callout-note collapse="true"}
+<!-- ::: {.callout-note collapse="true"}
 ## Solution 
 
 Recall that a symmetric positive definite (SPD) matrix satisfies the following for all $\bv \neq 0$: 
@@ -403,13 +382,11 @@ We can write this as the squared 2-norm of $\bX \bv$:
 $$ \bv^\top \bX^\top \bX \bv = || \bX \bv||_2^2 > 0$$ 
 
 This is saying that any nonzero $\bv$ multiplied by $\bX$ must produce a vector with a norm greater than zero. In other words, $\bX \bv$ cannot produce the zero-vector when $\bv \neq 0$. This means that $\bX$ must have an empty null-space, which means that $\bX$ must have linearly independent columns which is another way of saying it has full column rank.
-:::
+::: -->
 
-### Uniqueness of the optimal $\beta$ 
+4. Explain why $\beta^*$ is the unique solution to the normal equations if $(X^\top X)$ is invertible. If $(X^\top X)$ is not invertible, describe all solutions to the normal equations. 
 
-Consider the following least-squares problem, from which we solve for the optimal $\beta$ for least-squares regression: 
-
-$$ \bX^\top \bX \beta = \bX^\top \bY $$
+<!-- $$ \bX^\top \bX \beta = \bX^\top \bY $$
 
 If $\bX^\top \bX$ is invertible (its columns are linearly independent, its null-space is empty, etc.), is it possible for more than one $\beta$ to satisfy this equation? Why? 
 
@@ -435,11 +412,11 @@ If $\bA$ has a non-empty null space, then we can take a $\beta_0$ in the null-sp
 $$ \bA (\beta + \beta_0) = \bA \beta + \bA \beta_0 = \bA \beta + 0 = \bA \beta $$ 
 
 This means we can add in *any* $\beta_0$ from the null-space and still end up with a nonzero $\beta$ that minimizes the least squares equation. Because we can form infinitely many vectors from the null-space, this means there are infinitely many solutions to the least-squares equation when $\bA$ is not invertible. 
+ -->
 
 
 
-
-:::
+<!-- ::: -->
 
 ## Further reading
 

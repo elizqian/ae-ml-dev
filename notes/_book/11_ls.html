@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.4.554">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>2&nbsp; Linear Least Squares Problems – AE 4803 AIM: Course Notes</title>
+<title>AE 4803 AIM: Course Notes - 2&nbsp; Linear Least Squares Problems</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -126,7 +126,7 @@ div.csl-indent {
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript"></script>
 
 <script type="text/javascript">
@@ -164,13 +164,13 @@ window.Quarto = {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./11_ls.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Linear Least Squares Problems</span></a></li></ol></nav>
-        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
-      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
@@ -242,9 +242,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
  <span class="menu-text">Appendices</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -284,13 +284,7 @@ window.Quarto = {
   <li><a href="#common-performance-metrics" id="toc-common-performance-metrics" class="nav-link" data-scroll-target="#common-performance-metrics"><span class="header-section-number">2.5.1</span> Common Performance Metrics</a></li>
   <li><a href="#cross-validation" id="toc-cross-validation" class="nav-link" data-scroll-target="#cross-validation"><span class="header-section-number">2.5.2</span> Cross-Validation</a></li>
   </ul></li>
-  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">2.6</span> Exercises</a>
-  <ul class="collapse">
-  <li><a href="#derivation-of-gradient" id="toc-derivation-of-gradient" class="nav-link" data-scroll-target="#derivation-of-gradient"><span class="header-section-number">2.6.1</span> Derivation of Gradient</a></li>
-  <li><a href="#conditions-for-an-invertible-matrix" id="toc-conditions-for-an-invertible-matrix" class="nav-link" data-scroll-target="#conditions-for-an-invertible-matrix"><span class="header-section-number">2.6.2</span> Conditions for an Invertible Matrix</a></li>
-  <li><a href="#full-rank-mathbfx-means-mathbfxtop-mathbfx-is-invertible" id="toc-full-rank-mathbfx-means-mathbfxtop-mathbfx-is-invertible" class="nav-link" data-scroll-target="#full-rank-mathbfx-means-mathbfxtop-mathbfx-is-invertible"><span class="header-section-number">2.6.3</span> Full-rank <span class="math inline">\(\mathbf{X}\)</span> means <span class="math inline">\(\mathbf{X}^\top \mathbf{X}\)</span> is Invertible</a></li>
-  <li><a href="#uniqueness-of-the-optimal-beta" id="toc-uniqueness-of-the-optimal-beta" class="nav-link" data-scroll-target="#uniqueness-of-the-optimal-beta"><span class="header-section-number">2.6.4</span> Uniqueness of the optimal <span class="math inline">\(\beta\)</span></a></li>
-  </ul></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">2.6</span> Exercises</a></li>
   <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading"><span class="header-section-number">2.7</span> Further reading</a></li>
   </ul>
 </nav>
@@ -502,20 +496,21 @@ X^\top X\beta^* = X^\top Y
 <section id="using-python-for-least-squares-regression" class="level3" data-number="2.4.1">
 <h3 data-number="2.4.1" class="anchored" data-anchor-id="using-python-for-least-squares-regression"><span class="header-section-number">2.4.1</span> Using Python for Least-Squares Regression</h3>
 <p>Now let’s explore how we can actually solve for our optimal weights, <span class="math inline">\(\beta^*\)</span>, given some training data with code. First, we need to import the libraries we need to work with matrices/vectors (<code>numpy</code>), plot results (<code>matplotlib</code>), work with dataframes (<code>pandas</code>), and easily perform more math than base python allows like <span class="math inline">\(\pi\)</span>, sines, cosines, and square-roots (<code>math</code>).</p>
-<div id="363951d2" class="cell" data-execution_count="1">
+<div id="89e5621b" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np </span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt </span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now let’s say we’ve imported some pandas dataframe called <code>df</code> that contains a set of empirical data from <strong>Example 1</strong> (Assume it comes from experimental trials or simulations). We can print the first few rows of the dataset using the <code>df.head()</code> method:</p>
-<div id="0379a55c" class="cell" data-execution_count="3">
+<div id="c15a1262" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="605">
+<div class="cell-output cell-output-display" data-execution_count="157">
+<div>
 <div>
 
 
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
@@ -567,35 +562,36 @@ X^\top X\beta^* = X^\top Y
 </div>
 </div>
 </div>
+</div>
 <p>Let’s define our input features as <span class="math inline">\(x(z) = (\alpha, \rho, v)^\top\)</span>. We can now form <span class="math inline">\(\mathbf{X}\)</span> (our training inputs) and <span class="math inline">\(\mathbf{Y}\)</span> (our training outputs) matrices by extracting the input features and outputs from the dataframe:</p>
-<div id="0c76ed5b" class="cell" data-execution_count="4">
+<div id="70babb88" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The hstack method concatenates column vectors into </span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># an N x d matrix like [1 alpha rho velocity]</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.hstack((np.ones((N, <span class="dv">1</span>)), df[[<span class="st">'alpha'</span>, <span class="st">'rho'</span>, <span class="st">'velocity'</span>]].values))</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>Y <span class="op">=</span> df[<span class="st">'f_drag'</span>].values</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can solve for <span class="math inline">\(\beta^*\)</span> using the <code>np.linalg.lstsq()</code> function which efficiently solves the least-squares equation <span class="math inline">\(\mathbf{X}\beta = \mathbf{Y}\)</span>. The <code>rcond</code> keyword argument specifies how “well-conditioned” we want our result to be, achieved by cutting off the smallest singular values of <span class="math inline">\(\mathbf{X}\)</span> (don’t worry too much about this for now). Setting it to <code>None</code> assumes <span class="math inline">\(\mathbf{X}\)</span> is well-conditioned i.e.&nbsp;far from being rank-deficient. By default, the <code>lstsq()</code> function returns a list of the optimal weights, <span class="math inline">\(\beta^*\)</span>, the residuals of the training data (<span class="math inline">\(\mathbf{X}\beta - \mathbf{Y}\)</span>), the rank of <span class="math inline">\(\mathbf{X}\)</span>, and the singular values of <span class="math inline">\(\mathbf{X}\)</span>. For now, we’re only interested in <span class="math inline">\(\beta^*\)</span>, so we use <code>[0]</code> to select this value.</p>
-<div id="e221982d" class="cell" data-execution_count="5">
+<div id="c5394b3a" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>beta_hat <span class="op">=</span> np.linalg.lstsq(X, Y, rcond<span class="op">=</span><span class="va">None</span>)[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We are now able to compute the model’s predictions at the training inputs:</p>
-<div id="91f83d40" class="cell" data-execution_count="6">
+<div id="657ebc27" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Y_hat <span class="op">=</span> X <span class="op">@</span> beta_hat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Let’s now plot <span class="math inline">\(\hat{\mathbf{Y}}\)</span> and <span class="math inline">\(\mathbf{Y}\)</span> to examine how closely correlated the two are. A straight line with slope 1 would mean the linear regression model exactly matched all of the training outputs:</p>
-<div id="384b2e77" class="cell" data-execution_count="7">
+<div id="5ee94ace" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="dv">4</span>))</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>plt.scatter(Y, Y_hat)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>plt.grid()</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"True Drag Force"</span>)</span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Model Predicted Drag Force"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="609">
+<div class="cell-output cell-output-display" data-execution_count="161">
 <pre><code>Text(0, 0.5, 'Model Predicted Drag Force')</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="11_ls_files/figure-html/cell-8-output-2.png" width="697" height="356" class="figure-img"></p>
+<p><img src="11_ls_files/figure-html/cell-8-output-2.png" width="697" height="350" class="figure-img"></p>
 </figure>
 </div>
 </div>
@@ -641,152 +637,116 @@ R = \frac{\sum (\hat{y}_i -\bar{\hat{y}})(y_i - \bar{y})}{\sqrt{\sum (\hat{y}_i 
 </section>
 <section id="exercises" class="level2" data-number="2.6">
 <h2 data-number="2.6" class="anchored" data-anchor-id="exercises"><span class="header-section-number">2.6</span> Exercises</h2>
-<section id="derivation-of-gradient" class="level3" data-number="2.6.1">
-<h3 data-number="2.6.1" class="anchored" data-anchor-id="derivation-of-gradient"><span class="header-section-number">2.6.1</span> Derivation of Gradient</h3>
-<p>Recall that the loss-function for least-squares regression can be written as the following (leaving out the constant <span class="math inline">\(1/N\)</span>):</p>
-<p><span class="math display">\[
-\mathcal{L}(\beta) = || \mathbf{X}\beta - \mathbf{Y}||_2^2
-\]</span></p>
-<p>Use the identities from the following note to show that the gradient of <span class="math inline">\(\mathcal{L}\)</span> with respect to <span class="math inline">\(\beta\)</span> can be written as:</p>
-<p><span class="math display">\[
-\nabla \mathcal{L}_{\beta} = 2 \left( \mathbf{X}^\top \mathbf{X}\beta - \mathbf{X}^\top \mathbf{Y}\right)
-\]</span></p>
-<p><em>Recall that the gradient is defined as the vector such that each entry, <span class="math inline">\(i\)</span>, satisfies:</em></p>
-<p><span class="math display">\[ \nabla \mathcal{L}_{\beta} = \begin{bmatrix} \frac{\partial \mathcal{L}}{\partial \beta_1 } \\ \vdots \\ \frac{\partial \mathcal{L}}{\partial \beta_N } \end{bmatrix}\]</span></p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Useful Linear Algebra Identities
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>The following identities are useful in solving Exercise 1, but also quite useful for optimizing matrix/vector quantities in many different machine learning contexts. See <span class="citation" data-cites="petersen2012matrix">(<a href="references.html#ref-petersen2012matrix" role="doc-biblioref">Petersen and Pedersen 2012</a>)</span> for a “Matrix Cookbook” filled with more useful identities. Consider <span class="math inline">\(\mathbf{v}, \mathbf{u}\in \mathbb{R}^{N}\)</span>, <span class="math inline">\(\mathbf{A}\in \mathbb{R}^{N \times N}\)</span> <span class="math display">\[ ||\mathbf{v}||_2^2 = \mathbf{v}^\top \mathbf{v}\]</span> <span class="math display">\[\nabla \left( \mathbf{v}^\top\mathbf{A}\mathbf{v}\right)_{\mathbf{v}} =  2 \mathbf{A}\mathbf{v}\]</span></p>
-<p><span class="math display">\[ \nabla \left( \mathbf{v}^\top \mathbf{u}\right)_{\mathbf{v}} = \nabla \left( \mathbf{u}^\top \mathbf{v}\right)_{\mathbf{v}} = \mathbf{u}\]</span></p>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Solution
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-6" class="callout-6-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p><span class="math display">\[ \mathcal{L}(\beta) = ||\mathbf{X}\beta - \mathbf{Y}||_2^2 \]</span></p>
-<p><span class="math display">\[ \mathcal{L}(\beta) = (\mathbf{X}\beta - \mathbf{Y})^\top (\mathbf{X}\beta - \mathbf{Y}) \]</span></p>
-<p><span class="math display">\[ \mathcal{L}(\beta) = (\beta^\top \mathbf{X}^\top - \mathbf{Y}^\top) (\mathbf{X}\beta - \mathbf{Y}) \]</span></p>
-<p><span class="math display">\[ \mathcal{L}(\beta) = \beta^\top \mathbf{X}^\top \mathbf{X}\beta - \beta^\top \mathbf{X}^\top \mathbf{Y}- \mathbf{Y}^\top \mathbf{X}\beta - \mathbf{Y}^\top \mathbf{Y}\]</span></p>
-<p><span class="math display">\[ \mathcal{L}(\beta) = \beta^\top \mathbf{X}^\top \mathbf{X}\beta - 2 \beta^\top \mathbf{X}^\top \mathbf{Y}- \mathbf{Y}^\top \mathbf{Y}\]</span></p>
-<p><span class="math display">\[ \nabla (\beta^\top \mathbf{X}^\top \mathbf{X}\beta) = 2 \mathbf{X}^\top \mathbf{X}\beta \]</span></p>
-<p><span class="math display">\[ \nabla (2 \beta^\top \mathbf{X}^\top \mathbf{Y}) = 2 \mathbf{X}^\top \mathbf{Y}\]</span></p>
-<p><span class="math display">\[ \nabla (\mathbf{Y}^\top \mathbf{Y}) = 0 \]</span></p>
-<p><span class="math display">\[ \nabla \mathcal{L}_{\beta} = 2 \mathbf{X}^\top \mathbf{X}\beta - 2 \mathbf{X}^\top \mathbf{Y}+ 0 = 2 \left( \mathbf{X}^\top \mathbf{X}\beta - \mathbf{X}^\top \mathbf{Y}\right) \]</span></p>
-</div>
-</div>
-</div>
-</section>
-<section id="conditions-for-an-invertible-matrix" class="level3" data-number="2.6.2">
-<h3 data-number="2.6.2" class="anchored" data-anchor-id="conditions-for-an-invertible-matrix"><span class="header-section-number">2.6.2</span> Conditions for an Invertible Matrix</h3>
-<p>Consider a matrix <span class="math inline">\(\mathbf{A}\in \mathbb{R}^{n \times m}\)</span>. What properties does <span class="math inline">\(\mathbf{A}\)</span> need to satisfy in order for <span class="math inline">\(\mathbf{A}\)</span> to be invertible? <em>Hint: there are many properties of a matrix that show it is uniquely invertible. Think dimensions, fundamental spaces, <span class="math inline">\(\mathbf{A}^{-1} \mathbf{A}= ?\)</span>, etc.</em></p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Solution
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-7" class="callout-7-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>The matrix <span class="math inline">\(\mathbf{A}\)</span> must satisfy the following properties (many of these are different ways of saying the same thing):</p>
-<ul>
-<li><span class="math inline">\(\mathbf{A}\)</span> is a square matrix, i.e.&nbsp;<span class="math inline">\(n = m\)</span></li>
-<li>A matrix <span class="math inline">\(\mathbf{B}\)</span> exists such that <span class="math inline">\(\mathbf{B}\mathbf{A}= \mathbf{A}\mathbf{B}= \mathbf{I}\)</span> where <span class="math inline">\(\mathbf{I}\)</span> is an <span class="math inline">\(n \times n\)</span> identity matrix</li>
+<ol type="1">
+<li><p>Recall that the loss-function for least-squares regression is given by <span class="math inline">\(\mathcal{L}(\beta) = \frac 1N|| X \beta - Y||_2^2\)</span>. Show that the gradient of <span class="math inline">\(\mathcal{L}\)</span> with respect to <span class="math inline">\(\beta\)</span> is given by <span class="math inline">\(\nabla_\beta \mathcal{L} = \frac2N \left( X^\top X \beta - X^\top Y\right)\)</span></p>
+<p><em>Hint:</em> you may find the following identities from the Matrix Cookbook <span class="citation" data-cites="petersen2012matrix">(<a href="references.html#ref-petersen2012matrix" role="doc-biblioref">Petersen and Pedersen 2012</a>)</span> useful. For <span class="math inline">\(v,u\in\mathbb{R}^n\)</span> and <span class="math inline">\(A\in\mathbb{R}^{n\times n}\)</span>, the following hold:</p>
+<ol type="i">
+<li><span class="math inline">\(\nabla_v (v^\top A v) = 2Av\)</span></li>
+<li><span class="math inline">\(\nabla_v (v^\top u) = \nabla_v(u^\top v) = u\)</span></li>
+</ol>
+<p>For an extra-thorough learning experience, try deriving the above identities from the definitions of matrix-vector and dot products.</p>
+<p><!-- ::: {.callout-note collapse="true"}
+ ## Solution 
+
+ $$ \mathcal{L}(\beta) = ||\bX \beta - \bY||_2^2 $$ 
+
+ $$ \mathcal{L}(\beta) = (\bX \beta - \bY)^\top (\bX \beta - \bY) $$
+
+ $$ \mathcal{L}(\beta) = (\beta^\top \bX^\top - \bY^\top) (\bX \beta - \bY) $$
+
+ $$ \mathcal{L}(\beta) = \beta^\top \bX^\top \bX \beta - \beta^\top \bX^\top \bY - \bY^\top \bX \beta - \bY^\top \bY  $$
+
+ $$ \mathcal{L}(\beta) = \beta^\top \bX^\top \bX \beta - 2 \beta^\top \bX^\top \bY  - \bY^\top \bY  $$
+
+ $$ \nabla (\beta^\top \bX^\top \bX \beta) = 2 \bX^\top \bX \beta $$ 
+
+ $$ \nabla (2 \beta^\top \bX^\top \bY) = 2 \bX^\top \bY $$ 
+
+ $$ \nabla (\bY^\top \bY) = 0 $$ 
+
+ $$ \nabla \mathcal{L}_{\beta} = 2 \bX^\top \bX \beta - 2 \bX^\top \bY + 0 = 2 \left( \bX^\top \bX \beta - \bX^\top \bY  \right) $$ 
+
+
+ :::  --></p></li>
+<li><p>Consider a matrix <span class="math inline">\(\mathbf{A}\in \mathbb{R}^{n \times m}\)</span>. Which of the following are necessary conditions for <span class="math inline">\(\mathbf{A}\)</span> to be invertible? Which are sufficient?</p>
+<ol type="a">
+<li><span class="math inline">\(\mathbf{A}\)</span> is a square matrix, i.e.&nbsp;<span class="math inline">\(n = m\)</span><br>
+</li>
 <li>The columns of <span class="math inline">\(\mathbf{A}\)</span> span <span class="math inline">\(\mathbb{R}^{n}\)</span></li>
 <li>The columns of <span class="math inline">\(\mathbf{A}\)</span> are linearly independent</li>
 <li><span class="math inline">\(\mathbf{A}\)</span> has no linearly dependent columns</li>
-<li><span class="math inline">\(\mathbf{A}\)</span> has no singular values equal to zero</li>
 <li>The null-space of <span class="math inline">\(\mathbf{A}\)</span> is empty</li>
-<li>The only solution of <span class="math inline">\(\mathbf{A}\mathbf{x}= 0\)</span> is <span class="math inline">\(\mathbf{x}= 0\)</span>.</li>
-</ul>
-</div>
-</div>
-</div>
-</section>
-<section id="full-rank-mathbfx-means-mathbfxtop-mathbfx-is-invertible" class="level3" data-number="2.6.3">
-<h3 data-number="2.6.3" class="anchored" data-anchor-id="full-rank-mathbfx-means-mathbfxtop-mathbfx-is-invertible"><span class="header-section-number">2.6.3</span> Full-rank <span class="math inline">\(\mathbf{X}\)</span> means <span class="math inline">\(\mathbf{X}^\top \mathbf{X}\)</span> is Invertible</h3>
-<p>Recall the expression for the optimal <span class="math inline">\(\beta\)</span> obtained by solving the normal equations in <strong>Section 2.4</strong>:</p>
-<p><span class="math display">\[
-\beta^* = (\mathbf{X}^\top \mathbf{X})^{-1} \mathbf{X}^\top \mathbf{Y}
-\]</span></p>
-<p>This expression involves the inverse of <span class="math inline">\(\mathbf{X}^\top \mathbf{X}\)</span>. As we saw in the previous exercise, a matrix must satisfy strict conditions in order to be invertible. Show that <span class="math inline">\(\mathbf{X}^\top \mathbf{X}\)</span> is invertible <ins>if and only if</ins> <span class="math inline">\(\mathbf{X}\)</span> has full column-rank, i.e.&nbsp;the columns of <span class="math inline">\(\mathbf{X}\)</span> are linearly independent. <em>Hint: a symmetric positive definite matrix is always invertible.</em></p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Solution
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-8" class="callout-8-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>Recall that a symmetric positive definite (SPD) matrix satisfies the following for all <span class="math inline">\(\mathbf{v}\neq 0\)</span>:</p>
-<p><span class="math display">\[ \mathbf{v}^\top \mathbf{A}\mathbf{v}&gt; 0 \]</span></p>
-<p>If <span class="math inline">\(\mathbf{X}^\top \mathbf{X}\)</span> is SPD, then <span class="math inline">\(\mathbf{X}^\top \mathbf{X}\)</span> must be invertible. Hence, the following must hold for all <span class="math inline">\(\mathbf{v}\neq 0\)</span>:</p>
-<p><span class="math display">\[ \mathbf{v}^\top \mathbf{X}^\top \mathbf{X}\mathbf{v}&gt; 0 \]</span></p>
-<p>We can write this as the squared 2-norm of <span class="math inline">\(\mathbf{X}\mathbf{v}\)</span>:</p>
-<p><span class="math display">\[ \mathbf{v}^\top \mathbf{X}^\top \mathbf{X}\mathbf{v}= || \mathbf{X}\mathbf{v}||_2^2 &gt; 0\]</span></p>
-<p>This is saying that any nonzero <span class="math inline">\(\mathbf{v}\)</span> multiplied by <span class="math inline">\(\mathbf{X}\)</span> must produce a vector with a norm greater than zero. In other words, <span class="math inline">\(\mathbf{X}\mathbf{v}\)</span> cannot produce the zero-vector when <span class="math inline">\(\mathbf{v}\neq 0\)</span>. This means that <span class="math inline">\(\mathbf{X}\)</span> must have an empty null-space, which means that <span class="math inline">\(\mathbf{X}\)</span> must have linearly independent columns which is another way of saying it has full column rank.</p>
-</div>
-</div>
-</div>
-</section>
-<section id="uniqueness-of-the-optimal-beta" class="level3" data-number="2.6.4">
-<h3 data-number="2.6.4" class="anchored" data-anchor-id="uniqueness-of-the-optimal-beta"><span class="header-section-number">2.6.4</span> Uniqueness of the optimal <span class="math inline">\(\beta\)</span></h3>
-<p>Consider the following least-squares problem, from which we solve for the optimal <span class="math inline">\(\beta\)</span> for least-squares regression:</p>
-<p><span class="math display">\[ \mathbf{X}^\top \mathbf{X}\beta = \mathbf{X}^\top \mathbf{Y}\]</span></p>
-<p>If <span class="math inline">\(\mathbf{X}^\top \mathbf{X}\)</span> is invertible (its columns are linearly independent, its null-space is empty, etc.), is it possible for more than one <span class="math inline">\(\beta\)</span> to satisfy this equation? Why?</p>
-<p>If <span class="math inline">\(\mathbf{X}^\top \mathbf{X}\)</span> is <strong>not</strong> invertible, how many values of <span class="math inline">\(\beta\)</span> satisfy this equation? Why?</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Solution
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-9" class="callout-9-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>Solving <span class="math inline">\(\mathbf{X}^\top \mathbf{X}\beta = \mathbf{X}^\top \mathbf{Y}\)</span> can be simplified to solving the general equation:</p>
-<p><span class="math display">\[ \mathbf{A}\beta = \mathbf{b}\]</span></p>
-<p>If <span class="math inline">\(\mathbf{A}\)</span> is invertible (meaning it has full column-rank, its columns are linearly independent, it has an empty nullspace, etc.), then there exists no nonzero <span class="math inline">\(\beta\)</span> such that:</p>
-<p><span class="math display">\[ \mathbf{A}\beta = 0 \]</span></p>
-<p>However, if <span class="math inline">\(\mathbf{A}\)</span> is not invertible, it has a non-empty null-space, which means there exist nonzero <span class="math inline">\(\beta\)</span> that <strong>does</strong> satisfy <span class="math inline">\(\mathbf{A}\beta = 0\)</span>. Let us refer to a <span class="math inline">\(\beta\)</span> in the null-space of <span class="math inline">\(\mathbf{A}\)</span> as <span class="math inline">\(\beta_0\)</span>. Because a null-space is defined by the linear combination of one or more vectors, there are infinitely many combinations of vectors in the null-space that can produce a <span class="math inline">\(\beta_0\)</span> such that <span class="math inline">\(\mathbf{A}\beta_0 = 0\)</span>. Let’s say we find a <span class="math inline">\(\beta\)</span> in the column-space of <span class="math inline">\(\mathbf{A}\)</span> that solves the least-squares equation:</p>
-<p><span class="math display">\[ \mathbf{A}\beta = \mathbf{b}\]</span></p>
-<p>If <span class="math inline">\(\mathbf{A}\)</span> has a non-empty null space, then we can take a <span class="math inline">\(\beta_0\)</span> in the null-space of <span class="math inline">\(\mathbf{A}\)</span> and make the following substitution:</p>
-<p><span class="math display">\[ \mathbf{A}(\beta + \beta_0) = \mathbf{A}\beta + \mathbf{A}\beta_0 = \mathbf{A}\beta + 0 = \mathbf{A}\beta \]</span></p>
-<p>This means we can add in <em>any</em> <span class="math inline">\(\beta_0\)</span> from the null-space and still end up with a nonzero <span class="math inline">\(\beta\)</span> that minimizes the least squares equation. Because we can form infinitely many vectors from the null-space, this means there are infinitely many solutions to the least-squares equation when <span class="math inline">\(\mathbf{A}\)</span> is not invertible.</p>
-</div>
-</div>
-</div>
-</section>
+<li>The only solution of <span class="math inline">\(\mathbf{A}\mathbf{x}= 0\)</span> is <span class="math inline">\(\mathbf{x}= 0\)</span>. <!-- What properties does $\bA$ need to satisfy in order for $\bA$ to be invertible? *Hint: there are many properties of a matrix that show it is uniquely invertible. Think dimensions, fundamental spaces, $\bA^{-1} \bA = ?$, etc.*  --></li>
+</ol></li>
+</ol>
+<!-- :::{.callout-note collapse="true"}
+## Solution 
+The matrix $\bA$ must satisfy the following properties (many of these are different ways of saying the same thing): 
+
+* $\bA$ is a square matrix, i.e. $n = m$ 
+* A matrix $\bB$ exists such that $\bB \bA = \bA \bB = \bI$ where $\bI$ is an $n \times n$ identity matrix 
+- The columns of $\bA$ span $\R^{n}$ 
+- The columns of $\bA$ are linearly independent 
+- $\bA$ has no linearly dependent columns 
+- $\bA$ has no singular values equal to zero
+- The null-space of $\bA$ is empty 
+- The only solution of $\bA \bx = 0$ is $\bx = 0$. 
+::: -->
+<ol start="3" type="1">
+<li>Show that <span class="math inline">\(X^\top X\)</span> is invertible if and only if <span class="math inline">\(X\)</span> has full column-rank. <!-- *Hint: a symmetric positive definite matrix is always invertible.* --></li>
+</ol>
+<!-- ::: {.callout-note collapse="true"}
+## Solution 
+
+Recall that a symmetric positive definite (SPD) matrix satisfies the following for all $\bv \neq 0$: 
+
+$$ \bv^\top \bA \bv > 0 $$
+
+If $\bX^\top \bX$ is SPD, then $\bX^\top \bX$ must be invertible. Hence, the following must hold for all $\bv \neq 0$: 
+
+$$ \bv^\top \bX^\top \bX \bv > 0 $$ 
+
+We can write this as the squared 2-norm of $\bX \bv$: 
+
+$$ \bv^\top \bX^\top \bX \bv = || \bX \bv||_2^2 > 0$$ 
+
+This is saying that any nonzero $\bv$ multiplied by $\bX$ must produce a vector with a norm greater than zero. In other words, $\bX \bv$ cannot produce the zero-vector when $\bv \neq 0$. This means that $\bX$ must have an empty null-space, which means that $\bX$ must have linearly independent columns which is another way of saying it has full column rank.
+::: -->
+<ol start="4" type="1">
+<li>Explain why <span class="math inline">\(\beta^*\)</span> is the unique solution to the normal equations if <span class="math inline">\((X^\top X)\)</span> is invertible. If <span class="math inline">\((X^\top X)\)</span> is not invertible, describe all solutions to the normal equations.</li>
+</ol>
+<!-- $$ \bX^\top \bX \beta = \bX^\top \bY $$
+
+If $\bX^\top \bX$ is invertible (its columns are linearly independent, its null-space is empty, etc.), is it possible for more than one $\beta$ to satisfy this equation? Why? 
+
+If $\bX^\top \bX$ is **not** invertible, how many values of $\beta$ satisfy this equation? Why? 
+
+::: {.callout-note collapse="true"}
+## Solution 
+
+Solving $\bX^\top \bX \beta = \bX^\top \bY$ can be simplified to solving the general equation: 
+
+$$ \bA \beta = \bb$$ 
+
+If $\bA$ is invertible (meaning it has full column-rank, its columns are linearly independent, it has an empty nullspace, etc.), then there exists no nonzero $\beta$ such that: 
+
+$$ \bA \beta = 0 $$ 
+
+However, if $\bA$ is not invertible, it has a non-empty null-space, which means there exist nonzero $\beta$ that **does** satisfy $\bA \beta = 0$. Let us refer to a $\beta$ in the null-space of $\bA$ as $\beta_0$. Because a null-space is defined by the linear combination of one or more vectors, there are infinitely many combinations of vectors in the null-space that can produce a $\beta_0$ such that $\bA \beta_0 = 0$. Let's say we find a $\beta$ in the column-space of $\bA$ that solves the least-squares equation: 
+
+$$ \bA \beta = \bb $$ 
+
+If $\bA$ has a non-empty null space, then we can take a $\beta_0$ in the null-space of $\bA$ and make the following substitution: 
+
+$$ \bA (\beta + \beta_0) = \bA \beta + \bA \beta_0 = \bA \beta + 0 = \bA \beta $$ 
+
+This means we can add in *any* $\beta_0$ from the null-space and still end up with a nonzero $\beta$ that minimizes the least squares equation. Because we can form infinitely many vectors from the null-space, this means there are infinitely many solutions to the least-squares equation when $\bA$ is not invertible. 
+ -->
+<!-- ::: -->
 </section>
 <section id="further-reading" class="level2" data-number="2.7">
 <h2 data-number="2.7" class="anchored" data-anchor-id="further-reading"><span class="header-section-number">2.7</span> Further reading</h2>
-<p><em>Linear Algebra Crash Course (<a href="00_linalg.html#sec-linalg" class="quarto-xref"><span>Section A.1</span></a>)</em></p>
+<p><em>Linear Algebra Crash Course (<span class="quarto-unresolved-ref">?sec-linalg</span>)</em></p>
 <p><em>The Matrix Cookbook (<span class="citation" data-cites="petersen2012matrix">Petersen and Pedersen (<a href="references.html#ref-petersen2012matrix" role="doc-biblioref">2012</a>)</span>)</em></p>
 <hr>
 
@@ -840,7 +800,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const onCopySuccess = function(e) {
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -872,29 +843,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
-  }
-  const getTextToCopy = function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-    text: getTextToCopy
   });
-  clipboard.on('success', onCopySuccess);
-  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
-    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-      text: getTextToCopy,
-      container: window.document.getElementById('quarto-embedded-source-code-modal')
-    });
-    clipboardModal.on('success', onCopySuccess);
-  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp('/' + window.location.host + '/');
@@ -902,7 +851,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {
