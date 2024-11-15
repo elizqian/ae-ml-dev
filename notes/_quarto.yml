@@ -10,7 +10,7 @@ book:
     - 01_intro.qmd
     - 11_ls.qmd
     - 12_lslinalg.qmd
-    - 13_lsstat.qmd
+    - 13_lsnla.qmd
     - 20_ugbo.qmd
     - 21_ugbo2.qmd
     - references.qmd

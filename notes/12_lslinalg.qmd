@@ -14,7 +14,15 @@ The intended learning outcomes of these notes are that students should be able t
 
 
 ## Mathematical problem formulation
-We briefly recap the mathematical problem formulation that we consider. Given a data set $\{(z_i,y_i)\}_{i=1}^N$, where $z_i\in\R^d$ and $y_i\in\R$ are paired inputs and outputs, we choose a feature mapping $x: \R^d\to\R^n$, and define the matrix $X\in\R^{N\times n}$ and vector $Y\in\R^N$ as follows:
+We briefly recap the mathematical problem formulation that we consider. Given a data set $\{(z_i,y_i)\}_{i=1}^N$, where $z_i\in\R^d$ and $y_i\in\R$ are paired inputs and outputs, we choose a feature mapping $x: \R^d\to\R^n$. 
+We seek to find coefficients $\beta\in\R^n$ so that the model 
+
+$$
+f(z;\beta) = x(z)^\top\beta = \sum_{j=1}^n \beta_j x_j(z) 
+$$
+
+accurately predicts the output $y$. 
+To do this, we define the matrix $X\in\R^{N\times n}$ and vector $Y\in\R^N$,
 
 $$
 X = \begin{pmatrix}
@@ -25,29 +33,37 @@ X = \begin{pmatrix}
 \qquad 
 Y = \begin{pmatrix}
 y_1 \\ \vdots \\ y_N
-\end{pmatrix}.
+\end{pmatrix},
 $$ {#eq-def-X-y}
 
-The least squares problem is then to solve (as introduced previously):
+and write the least-squares problem as follows:
 
 $$
-\beta^* = \arg\min_{\beta\in\R^n} \frac1N\|X \beta - Y\|^2.
-$$ {#eq-ls-min}
-
-The minimization above is somewhat cumbersome to write, so you'll sometimes see the following expression used as shorthand for the above minimization (remember that the $1/N$ factor doesn't really matter for finding the minimum):
-
-$$ 
 X\beta = Y
 $$ {#eq-ls-matrix}
 
-This notation is particularly common in the linear algebra context which is the focus of these notes.
+This is a different notation than the minimization (@eq-linreg-minimization) introduced earlier, but is also fairly common. One way to think of the expression @eq-ls-matrix is to note that our goal is to find $\beta$ so that $X\beta$ is as close to $Y$ is possible -- where ideally we would have $X\beta = Y$. But @eq-ls-matrix has a more precise and technical meaning. The goal of these notes is to explain that precise technical definition and its implications for model learning.
 
-## Well-posedness
+## Well-posedness of $X\beta = Y$
 
 In math, the term "well-posedness" refers to the existence and uniqueness of solutions to a problem. 
-We say a mathematical problem is "well-posed" if it has a unique solution. Suppose for a moment that $N = n$ so that $X$ is square. Recall from linear algebra that the square linear system $X\beta=Y$ has a unique solution if and only if $X$ is invertible, and this solution is given by $\beta=X^{-1}Y$. 
+We say a mathematical problem is "well-posed" if it has a unique solution. Existence and uniqueness of solutions may seem like abstract theoretical concepts, but as we will soon see, they have very practical consequences for the accuracy and reliability of the models we learn.
 
-Linear least-squares problems consider the general case where $X$ is non-invertible. This happens in our linear regression case when $X$ is rectangular, but $X$ can also be square and non-invertible. There are essentially two ways $X$ can fail to be invertible:
+### Well-posedness of square linear systems
+
+Suppose for a moment that $N = n$. Then the square linear system $X\beta = Y$ describes a system of $n$ linear equations for $n$ unknowns (the elements of the unknown coefficient vector $\beta\in\R^n$). The problem of solving $X\beta = Y$ for $\beta$ is well-posed if and only if $X$ is invertible. In this case, the solution exists and is uniquely given by $\beta=X^{-1}Y$.
+
+Remember that in our setting, $X$ is a matrix of feature data (one row per data point), and $Y$ is a vector with the corresponding output data. For square invertible $X$, the *existence* of a solution to $X\beta=Y$ means that there is a choice of $\beta$ so that the learned model will *interpolate* the data, i.e., the model will satisfy
+
+$$
+f(z_i;\beta) = y_i \quad \text{for all }i = 1,\ldots,N.
+$$
+
+The fact that the solution is *unique* means there is only one choice of $\beta$ that perfectly matches the data. Imagine for a moment if there were more than one choice of $\beta$ that perfectly matched the data: how would you choose which $\beta$ to use for predicting model outputs at new inputs?
+
+
+What if $X$ is *not* invertible? This is clearly the case in the general linear regression problem we have set up where $N\neq n$ and $X$ is rectangular, but $X$ can also be non-invertible and square.
+There are essentially two ways $X$ can fail to be invertible:
 
 1. $X$ can have column rank less than $n$, i.e., the number of linearly independent columns in $X$ is less than the number of columns $n$. In this case, we say $X$ is "column rank-deficient" or $X$ "does not have full column rank".
 
@@ -63,16 +79,17 @@ Because redundant equations place more constraints on the solution than can be s
 
 One way overdetermined linear systems can arise is if we have multiple copies of the same input in the data set, i.e., suppose $z_1 = z_2$. Note that having multiple copies of the same input datum usually does not mean that the associated output data are also copies of each other (so you can still have $y_1 \neq y_2$): for example, you might take multiple experimental measurements with the same configuration and get different measured values due to sensor noise or external factors that you don't account for in your inputs. If this happens, your data set contains "contradictory" information, because $x(z_1)^\top\beta=y_1$ and $x(z_2)^\top\beta= x(z_1)^\top\beta=y_2$ cannot simultaneously be true. 
 
-What does row rank-deficiency mean for solving $X\beta=Y$? In most cases this means that there is no choice of $\beta$ that will exactly solve the equation --- the equality cannot simultaneously hold for all rows of the system. That means *no solution exists* for the linear system. 
+What does row rank-deficiency mean for solving $X\beta=Y$? In most cases this means that there is no choice of $\beta$ that will exactly solve the equation --- the equality cannot simultaneously hold for all rows of the system. That means *no solution exists* for the linear system. This means there is no choice of $\beta$ that can perfectly match all the data. 
 
-Since no solution exists in the sense of $X\beta=Y$ holding exactly for all rows, we will define a different way of thinking about solutions. Let's define the *residual* of the system as follows:
+Instead of looking for $\beta$ that yields a perfect match to the data, the least-squares problem formulation looks to minimize the misfit to the data. 
+Let's define the *residual* of the system as follows:
 
 $$
 r(\beta) = X\beta-Y.
 $$ {#eq-res-def}
 
-For a given parameter $\beta$, the residual $r(\beta)$ is a measure of the model misfit over the training data set.
-Note that if $X\beta=Y$ holds with equality for all rows, then the residual is zero. In the overdetermined case where $X\beta=Y$, since we can't have a zero residual, we aim for the next best thing, which is minimizing the size of the residual (recall that the norm is a measure of the size of a vector)[^1]:
+For a given parameter $\beta$, the residual norm $\|r(\beta)\|$ is a measure of the model misfit over the training data set.
+Note that if $X\beta=Y$ holds with equality for all rows, then the residual (norm) is zero. In the overdetermined case where $X\beta=Y$, since we can't have a zero residual, we aim for the next best thing, which is minimizing the size of the residual (recall that the norm is a measure of the size of a vector)[^1]:
 
 [^1]: Note that the second equality follows because squaring the norm doesn't change where the minimum is because $a^2$ is monotone increasing in $a$ for non-negative $a$. 
 
@@ -80,7 +97,7 @@ $$
 \beta^* = \arg\min_{\beta\in\R^n} \|r(\beta)\| = \arg\min_{\beta\in\R^n}\|r(\beta)\|^2
 $$ {#eq-ls-res-min}
 
-With the residual defined in @eq-res-def, the expression @eq-ls-res-min recovers our original expression for the formulation of a least-squares problem[^2], @eq-ls-min. In this sense, the least-squares formulation "fixes" the lack of existence of a solution to the linear system due to row redundancy. For this reason, if you see $X\beta=Y$ written for a non-invertible system, the way you should understand that is in the sense of solving @eq-ls-min[^3].
+With the residual defined in @eq-res-def, the expression @eq-ls-res-min recovers our original expression for the formulation of a least-squares problem[^2], @eq-linreg-minimization. In this sense, the least-squares formulation "fixes" the lack of existence of a solution to the linear system due to row redundancy. For this reason, if you see $X\beta=Y$ written for a non-invertible system[^3], the way you should understand that is in the sense of solving @eq-linreg-minimization.
 
 [^2]: up to a multiplying constant anyway, which I've emphasized before really doesn't matter when it's inside a minimization.
 
@@ -93,7 +110,7 @@ explain that row redundancy can also happen if not literally the same thing
 
 ### Underdetermined least-squares problems
 
-We now turn our attention to the column rank-deficient case. If $X$ has fewer linearly independent columns than the total number of columns, this means that some of the columns of $X$ are redundant. Recall that $X\beta\in\R^N=\sum_{j=1}^n \beta_j x_j$, where $x_j\in\R^N$ is the $j$th column of $X$. If $X$ has redundant columns, this means that there are different ways to weight the columns of $X$ using the coefficients in $\beta$ that lead to the same value for $X\beta$. This means that requiring $X\beta=Y$ will not fully specify what $\beta$ is, so we call this the *underdetermined* case. 
+We now turn our attention to the column rank-deficient case. If $X$ has fewer linearly independent columns than the total number of columns, this means that some of the columns of $X$ are redundant. Recall that $X\beta\in\R^N=\sum_{j=1}^n \beta_j x_j$, where $x_j\in\R^N$ is the $j$th column of $X$. If $X$ has redundant columns, this means that there are different ways to weight the columns of $X$ using the coefficients in $\beta$ that lead to the same model predictions. This means that requiring $X\beta=Y$ will not fully specify what $\beta$ is, so we call this the *underdetermined* case. 
 
 One way underdetermined systems arise is if there are more unknown coefficients in $\beta$ than there data points to constrain the problem. This can happen if we choose a very large set of features ($n$ large) but only have a small amount of data ($N<n$).
 
@@ -104,11 +121,13 @@ $$
 r^* = \min_{\beta\in\R^n}\|r(\beta)\|.
 $$
 
-Suppose we find some $\beta^*$ that leads to this minimum residual, so that $r^* = X\beta^* - Y$. Well, if $v$ lies in the kernel of $X$, then we can add any multiple of $v$ to $\beta^*$ and get the same minimum residual! That is, if $\beta^*$ is *a* solution to @eq-ls-res-min, then so is $\beta^* + av$ for any $a\in\R$. This means there are infinitely many solutions. To make underdetermined problems well-posed, we have to decide on a way of choosing a single unique solution out of the many possible minimizers of @eq-ls-res-min. Deciding on a method of choosing a single unique solution out of many possible solutions is called *regularization* and is a topic we will explore in more depth later. In the meantime, the most common and vanilla way of regularizing is to specify that we want to find what's called the "minimum-norm" solution: i.e., out of all possible solutions, we take the smallest one. That is,
+Suppose we find some $\beta^*$ that leads to this minimum residual, so that $r^* = X\beta^* - Y$. Well, if $v$ lies in the kernel of $X$, then we can add any multiple of $v$ to $\beta^*$ and get the same minimum residual! That is, if $\beta^*$ is *a* solution to @eq-ls-res-min, then so is $\beta^* + av$ for any $a\in\R$. This means there are infinitely many solutions. To make underdetermined problems well-posed, we have to decide on a way of choosing a single unique solution out of the many possible minimizers of @eq-ls-res-min. 
+
+Deciding on a method of choosing a single unique solution out of many possible solutions is called *regularization* and is a topic we will explore in more depth later. In the meantime, the most common and vanilla way of regularizing is to specify that we want to find what's called the "minimum-norm" solution: i.e., out of all possible solutions, we take the smallest one. That is,
 
 $$
 \beta^* = \arg\min_{\beta\in\R^n} \|\beta\| \quad \text{subject to } \|X\beta - Y\| = r^*.
-$$
+$$ {#eq-min-norm-ls}
 
 
 
@@ -117,23 +136,35 @@ $$
 explain that col redundancy can also happen even if $N\geq n$ if features are redundant.
 :::
 
-feature selection 
+### Summary of linear least-squares problem formulation
 
-multiple solutions 
+For $X$ and $y$ defined as in @eq-def-X-y, to solve $X\beta=Y$ means to find the minimum-norm least-squares solution as described in @eq-min-norm-ls. This is generally what is happening under the hood when you use any scientific computing or machine learning software that has a built-in least-squares function, including
 
-low-rank or near-low-rank-ness
+- <tt>scipy.linalg.lstsq</tt>
+- <tt>numpy.linalg.lstsq</tt>
+- MATLAB's "backslash operator" <tt>\\</tt> also known as <tt>mldivide</tt>
 
-## QR decomposition
+In a later chapter we will introduce some of the basic algorithms that are used to find (minimum-norm) least-squares solutions that these functions use. For now you should focus on understanding the precise mathematical definition of the least squares solution given in @eq-min-norm-ls.
 
-algorithm, cost 
+## Feature selection: expressivity, accuracy, and well-posedness
 
-## SVD 
+You may wonder why you should bother understanding what these built-in functions are doing if they're going to just do them for you. One reason is that you can debug machine learning code much more effectively if you understand what the code is supposed to be doing theoretically. Another reason is that considerations of well-posedness have big implications for your job as an intelligent human designer of machine learning models. 
 
-for data reduction, and for regularization
+For linear regression models, your job as an intelligent human is to decide on the *feature* mapping $x:\R^d \to\R^n$, which determines what kinds of terms appear in your learned model. 
+
+
+give examples of choice of features (polynomial, fourier, random features/neural nets) as well as examples where you might downselect (image/PDE data)
+
+explain expressivity in terms of the columnspace (range) of the features (basis), generally more features = more expressivity = more ability to match the training data
+
+point out that however, more expressivity means more likely to be underdetermined, requiring regularization
+
+link to overfitting and accuracy on test vs training data. move the cross validation part here?
+
 
 ## Exercises
 
-- some scenarios to classify is under or over-determined or both
+- some scenarios to classify as under or over-determined or both
 
 
 
