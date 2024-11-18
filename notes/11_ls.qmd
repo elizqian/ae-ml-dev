@@ -64,7 +64,7 @@ Taken together, the three ingredients I have defined above define a *linear leas
 
 ## Examples 
 
-### Example 1: Aerodynamic drag prediction
+### Example 1: Aerodynamic drag prediction {#airfoil-example}
 
 <!-- ![Image Source: [@erauAirfoil2024]](images/AirfoilDrag.png){fig-align="center" width=80%} -->
 
@@ -103,34 +103,21 @@ Note that we use $\beta$ to denote the unknown parameters in both $f^{(1)}$ and 
 
 Least-squares regression is a powerful tool for estimating unknown quantities in many scientific and engineering disciplines beyond Aerospace. Let's instead say we are interested in accurately estimating the maximum displacement at the midpoint of a bridge under various input-conditions measured by sensors along the bridge. Suppose we can accurately gather the following inputs: 
 
-* $L$ - **Load (kN):** The total weight applied to the bridge, measured through load cells at the entry and exit of the bridge. 
-* $T$ - **Temperature (C):** the temperature at the midpoint of the bridge, measured through thermocouple sensors. 
-* $f$ - **Frequency (Hz):** the dominant frequency present in the bridge, measured through accelerometers. 
+* Load applied to the bridge, $L$ 
+* Temperature at the midpoint of the bridge, $T$ 
+* Dominant frequency in the bridge, $f$ 
 
-We are interested in quickly estimating the **Maximum Displacement (mm)**, $D$, from these parameters. As we can see, the context of our problem has changed entirely, but we can still fit it into our existing framework by defining the input vector $z=(L, T, f)^\top$ and output $y=D$. If we take $N$ measurements throughout the year under various environmental conditions, we can again form some training dataset $\{(z_i, y_i)\}_{i=1}^N$ which we can use to define some feature-set $x(z)$ and then solve for the optimal weights that map $x(z)$ to $y$ identically to how we did in **Example 1**.  
+We are interested in quickly estimating the Maximum Displacement (mm), $D$, from these measurements. As we can see, the context of our problem has changed entirely, but we can still fit it into our existing framework by defining the input vector $z=(L, T, f)^\top$ and output $y=D$. If we take $N$ measurements throughout the year under various environmental conditions, we can again form some training dataset $\{(z_i, y_i)\}_{i=1}^N$ which we can use to define some feature-set $x(z)$ and then solve for the optimal weights that map $x(z)$ to $y$ identically to how we did in [Example 1](#airfoil-example).  
 
 ### Example 3: Detecting Cardiac Arrhythmia using Health-Monitoring Devices 
 
-Many health issues are often difficult to detect without extensive testing. However, with the increase in biometric data available from devices such as smartphones and smart-watches, it has become increasingly feasible to predict disease by leveraging this information. According to Johns Hopkins, "an arrhythmia is an abnormality in the timing or pattern of the heartbeat," which can be life-threatening. Let's now suppose we have developed a smart-watch that gathers the following health-data from its user: 
+Many health issues are often difficult to detect without extensive testing. However, with the increase in biometric data available from devices such as smartphones and smart-watches, it has become increasingly feasible to predict health conditions by leveraging this information. $V O_2$ max is a measure of the maximum rate at which a person can use oxygen during exercising and is considered a standard measure of cardiovascular fitness. However, to measure this experimentally requires an extensive laboratory test that measures the volume of oxygen a patient breathes during exercising. Let's now suppose we have developed a smart-watch that gathers the following health-data from its user: 
 
-* $v$ - **Heartrate Variability (ms):** This is the variation in time between consecutive heart beats. If this value is low, it can be an indicator of stress or irregular heart conditions. 
-* $r$ - **Resting Heart Rate (beats per minute):** the rate at which someone's heart beats in the absence of activity. 
-* $b$ - **Respiratory Rate (breaths per minute):** the rate at which someone breathes. 
+* Median daily Step-Count $s$ 
+* Resting Heart Rate $r$ 
+* Respiratory Rate $b$
 
-And suppose we are interested in the *probability* that a patient has an arrhythmia. 
-
-::: {.callout-note}
-## Estimating categorical outputs
-Note that in this scenario, the patient either has an arrhythmia or does not. This is different from when we sought to estimate a continuous quantity like drag-force or the maximum displacement of a bridge. This is an example of a **classification** problem: problems in which the outputs belong to a specific category rather than a continuous numerical value. To represent such outcomes, we need to assign discrete numeric values (usually a 0 or a 1) to the training outputs to indicate whether or not something has occurred. In this case, we might assign a 0 when a patient does not have an arrhythmia and a 1 when the patient does have an arrhythmia. Because linear regression is a continuous estimator (i.e. it will always output a numerical value instead of exactly 0 or 1), we can interpret the output as the *probability* of a 1. 
-:::
-
-Let's say we have a large sample of many patients of various ages and demographics who have worn our smart-watch for a long period of time. For the $i$ th patient, suppose we have $v_i$, $r_i$ and $b_i$ collected from the device and we know whether or not they have a heart arrhythmia or not. Let's define each training output $y_i$ as the following: 
-
-$$ 
-y_i = \begin{cases} 1, \text{ patient has arrhythmia} \\ 0, \text{ patient has no arrhythmia} \end{cases}
-$$
-
-Even though these outputs are discrete/categorical, our training process is identical. We form a training dataset, $\{(z_i, y_i)\}_{i=1}^N$ and solve the least-squares regression problem using the discrete values for $y$ exactly how we did in **Example 1**. However, now when our model attempts to map $x(z)$ to $y$, it will give the best estimate for whether the output should be a 0 or a 1. Naturally, the model will have some uncertainty for inputs it has never seen before and will likely output a number *around* this range. Let's suppose we feed our trained model some unseen $z_{\text{new}}$ (e.g. a patient not in the training data), then form $x(z_{\text{new}})$, and lastly find that $x(z_{\text{new}})^\top \beta = 0.86$. This indicates a high probability of this patient having an arrhythmia, which may be vital information to relay to the patient or healthcare provider. This simple example shows how these machine learning algorithms can have a direct impact on the quality of human life. 
+From these measurements, we are interested in accurately estimating the $VO_2$ max of a patient. Let's say we have a large sample of many patients of various ages and demographics who have worn our smart-watch for a long period of time. For the $i$ th patient, suppose we have $s_i$, $r_i$ and $b_i$ collected from the device and we have measured each patient's actual $VO_2$ max in a laboratory setting, which we denote $y_i$. We then form a training dataset, $\{(z_i, y_i)\}_{i=1}^N$ and solve the least-squares regression problem using the discrete values for $y$ exactly how we did in [Example 1](#airfoil-example). 
 
 
 ## Solving linear least squares problems
@@ -189,7 +176,7 @@ import pandas as pd
 import math
 ```
 
-Now let's say we've imported some pandas dataframe called `df` that contains a set of empirical data from **Example 1** (Assume it comes from experimental trials or simulations). We can print the first few rows of the dataset using the `df.head()` method: 
+Now let's say we've imported some pandas dataframe called `df` that contains a set of empirical data from [Example 1](#airfoil-example) (Assume it comes from experimental trials or simulations). We can print the first few rows of the dataset using the `df.head()` method: 
 
 ```{python}
 #| echo: false
@@ -223,7 +210,7 @@ df = pd.DataFrame(df_dict)
 df.head()
 ```
 
-Let's define our input features as $x(z) = (\alpha, \rho, v)^\top$. We can now form $\bX$ (our training inputs) and $\bY$ (our training outputs) matrices by extracting the input features and outputs from the dataframe: 
+Let's define our input features as $x(z) = (\alpha, \rho, v)^\top$. We can now form $X$ (our training inputs) and $Y$ (our training outputs) matrices by extracting the input features and outputs from the dataframe: 
 
 ```{python}
 # The hstack method concatenates column vectors into 
@@ -232,19 +219,19 @@ X = np.hstack((np.ones((N, 1)), df[['alpha', 'rho', 'velocity']].values))
 Y = df['f_drag'].values
 ```
 
-We can solve for $\beta^*$ using the `np.linalg.lstsq()` function which efficiently solves the least-squares equation $\bX \beta = \bY$. The `rcond` keyword argument specifies how "well-conditioned" we want our result to be, achieved by cutting off the smallest singular values of $\bX$ (don't worry too much about this for now). Setting it to `None` assumes $\bX$ is well-conditioned i.e. far from being rank-deficient. By default, the `lstsq()` function returns a list of the optimal weights, $\beta^*$, the residuals of the training data ($\bX \beta - \bY$), the rank of $\bX$, and the singular values of $\bX$. For now, we're only interested in $\beta^*$, so we use `[0]` to select this value.  
+We can solve for $\beta^*$ using the `np.linalg.lstsq()` function which efficiently solves the least-squares equation $X \beta = Y$. The `rcond` keyword argument specifies how "well-conditioned" we want our result to be, achieved by cutting off the smallest singular values of $X$ (don't worry too much about this for now). Setting it to `None` assumes $X$ is well-conditioned i.e. far from being rank-deficient. By default, the `lstsq()` function returns a list of the optimal weights, $\beta^*$, the residuals of the training data ($X \beta - Y$), the rank of $X$, and the singular values of $X$. For now, we're only interested in $\beta^*$, so we use `[0]` to select this value.  
 
 ```{python}
-beta_hat = np.linalg.lstsq(X, Y, rcond=None)[0]
+beta_star = np.linalg.lstsq(X, Y, rcond=None)[0]
 ```
 
 We are now able to compute the model's predictions at the training inputs: 
 
 ```{python}
-Y_hat = X @ beta_hat
+Y_hat = X @ beta_star
 ```
 
-Let's now plot $\hat{\mathbf{Y}}$ and $\mathbf{Y}$ to examine how closely correlated the two are. A straight line with slope 1 would mean the linear regression model exactly matched all of the training outputs: 
+Let's now plot $\hat{{Y}}$ and ${Y}$ to examine how closely correlated the two are. A straight line with slope 1 would mean the linear regression model exactly matched all of the training outputs: 
 
 ```{python}
 plt.figure(figsize=(8,4))
@@ -263,25 +250,25 @@ This plot shows that there is clearly a strong, but nonlinear relationship betwe
 
 Once we have trained a model (in the linear regression case, we have computed the optimal $\beta$ that maps our training inputs to our training outputs), it's important to have some quantitative way to measure how "well" our model is able to do this. There are many, many ways to measure model performance. For regression problems, the popular `sklearn` python package for machine learning has thirteen different metrics to assess model performance. We will outline some of the most prominent metrics in this section.
 
-A natural way to assess model performance is to measure the error between the model's predictions and actual outputs. One common way to do this is computed is with **mean squared error**: 
+A natural way to assess model performance is to measure the error between the model's predictions and actual outputs. One common way to do this is computed is with *mean squared error*: 
 
 $$ 
-MSE = \frac{1}{N} \sum_{i=1}^N (\hat{y}_i - y_i)^2 
+\text{MSE} = \frac{1}{N} \sum_{i=1}^N (\hat{y}_i - y_i)^2 
 $$
 
-where $\hat{y}_i$ is the model's best approximation of $y_i$, using inputs $x_i$. Because of how linear regression is formulated, the estimator $\beta^*$ will be the set of weights that minimize the MSE of the training data. If $\bX$ is full-rank, $\beta^*$ will be unique. However, many data-scientists dislike the MSE because it penalizes higher errors more than lower errors and in the context of physical experiments the squared error doesn't have easily interpretable units. For instance, in **Example 1** we sought to predict drag-force in Newtons. Using the MSE would produce an error with units of (Newtons)$^2$ which doesn't have an intuitive physical interpretation. For this reason, many scientists use the **mean absolute error**: 
+where $\hat{y}_i$ is the model's best approximation of $y_i$, using inputs $x_i$. Because of how linear regression is formulated, the estimator $\beta^*$ will be the set of weights that minimize the MSE of the training data. If $X$ is full-rank, $\beta^*$ will be unique. However, many data-scientists dislike the MSE because it penalizes higher errors more than lower errors and in the context of physical experiments the squared error doesn't have easily interpretable units. For instance, in [Example 1](#airfoil-example) we sought to predict drag-force in Newtons. Using the MSE would produce an error with units of (Newtons)$^2$ which doesn't have an intuitive physical interpretation. For this reason, many scientists use the *mean absolute error*: 
 
 $$ 
-MAE = \frac{1}{N} \sum_{i=1}^N |\hat{y}_i - y_i| 
+\text{MAE} = \frac{1}{N} \sum_{i=1}^N |\hat{y}_i - y_i| 
 $$
 
-In **Example 1**, this would give us an error with units of Newtons that we can interpret as "the linear regression model deviates from the true outputs by ___ Newtons on average". If the output data significantly varies in magnitude over the domain of the input, then we may expect MSE and MAE to dominate in places where the magnitude of $y$ is large. To combat this problem, we might choose to use **mean relative error** to assess the performance of our model. This scales the error at each input/output pair according to how large the output is: 
+In [Example 1](#airfoil-example), this would give us an error with units of Newtons that we can interpret as "the linear regression model deviates from the true outputs by ___ Newtons on average". If the output data significantly varies in magnitude over the domain of the input, then we may expect MSE and MAE to dominate in places where the magnitude of $y$ is large. To combat this problem, we might choose to use *mean relative error* to assess the performance of our model. This scales the error at each input/output pair according to how large the output is: 
 
 $$ 
-MRE = \frac{1}{N} \sum_{i=1}^N \frac{|\hat{y}_i - y_i|}{|y_i|}
+\text{MSE} = \frac{1}{N} \sum_{i=1}^N \frac{|\hat{y}_i - y_i|}{|y_i|}
 $$
 
-At the end of **2.4**, we plotted each training output, $y_i$, on the x-axis of a plot and the model's best guess ($\hat{y}_i$) on the y-axis. If the model was able to perfectly match each $y_i$, then we should expect a perfect line with a slope of 1 ($\hat{y}=y$). Using the **pearson correlation coefficient**, often denoted $R$ or the **coefficient of determination**, $R^2$, we can assess how accurately the model is able to match a given set of outputs. We can compute this as: 
+At the end of **2.4**, we plotted each training output, $y_i$, on the x-axis of a plot and the model's best guess ($\hat{y}_i$) on the y-axis. If the model was able to perfectly match each $y_i$, then we should expect a perfect line with a slope of 1 ($\hat{y}=y$). Using the *pearson correlation coefficient*, often denoted $R$ or the *coefficient of determination*, $R^2$, we can assess how accurately the model is able to match a given set of outputs. We can compute this as: 
 
 $$ 
 R = \frac{\sum (\hat{y}_i -\bar{\hat{y}})(y_i - \bar{y})}{\sqrt{\sum (\hat{y}_i -\bar{\hat{y}})^2 \sum (y_i - \bar{y})^2}}
@@ -293,11 +280,11 @@ When $\hat{y}$ perfectly matches the true outputs, $y$, we get a pearson correla
 
 Up to now, we have only discussed model performance as it relates to the data used to train the model. However, the entire reason we go to the trouble of training machine learning models is so they can be used to make accurate predictions on unseen data. Famous LLMs like ChatGPT are so valuable because we can ask them questions they have never seen before and they can still provide coherent, useful answers. 
 
-Oftentimes, when machine learning models are highly expressive, (i.e. can model complex functional relationships) they tend to **overfit** to their training data. This happens when the model is so good at matching its training data, it does not generalize well to data it hasn't seen before. This can be especially problematic when our training data contains some sort of noise or uncertainty and our trained model begins to conform to the noise present in the training data. 
+Oftentimes, when machine learning models are highly expressive, (i.e. can model complex functional relationships) they tend to *overfit* to their training data. This happens when the model is so good at matching its training data, it does not generalize well to data it hasn't seen before. This can be especially problematic when our training data contains some sort of noise or uncertainty and our trained model begins to conform to the noise present in the training data. 
 
 A straightforward method to assess how much a model is overfitting its training data is to form a `train` and `test` set. Usually around 80% of the training data is used to train the model and about 20% is kept out of the training process and used to evaluate the model's ability to generalize to data it hasn't seen before. A model that generalizes well should exhibit approximately the same performance on its testing data as its training data. When a model shows significantly worse performance on its `test` dataset, this indicates that the model might be overfitting its training data. 
 
-Let's refer back to **Example 1**, when we were trying to accurately predict the force of drag on an airfoil. Say we break up the training data (`X` and `Y`) into (`Xtrain`, `Ytrain`) and (`Xtest`, `Ytest`); one dataset to train the model and one to evaluate it. Suppose we receive the following values for Mean Absolute Error on the training and test predictions: 
+Let's refer back to [Example 1](#airfoil-example), when we were trying to accurately predict the force of drag on an airfoil. Say we break up the training data (`X` and `Y`) into (`Xtrain`, `Ytrain`) and (`Xtest`, `Ytest`); one dataset to train the model and one to evaluate it. Suppose we receive the following values for Mean Absolute Error on the training and test predictions: 
 
 * ``Training MAE: 61.456 N``
 * ``Testing  MAE: 595.328 N`` 
@@ -318,49 +305,49 @@ This shows that the model exhibits significantly lower error on its training dat
     <!-- ::: {.callout-note collapse="true"}
     ## Solution 
 
-    $$ \mathcal{L}(\beta) = ||\bX \beta - \bY||_2^2 $$ 
+    $$ \mathcal{L}(\beta) = ||X \beta - Y||_2^2 $$ 
 
-    $$ \mathcal{L}(\beta) = (\bX \beta - \bY)^\top (\bX \beta - \bY) $$
+    $$ \mathcal{L}(\beta) = (X \beta - Y)^\top (X \beta - Y) $$
 
-    $$ \mathcal{L}(\beta) = (\beta^\top \bX^\top - \bY^\top) (\bX \beta - \bY) $$
+    $$ \mathcal{L}(\beta) = (\beta^\top X^\top - Y^\top) (X \beta - Y) $$
 
-    $$ \mathcal{L}(\beta) = \beta^\top \bX^\top \bX \beta - \beta^\top \bX^\top \bY - \bY^\top \bX \beta - \bY^\top \bY  $$
+    $$ \mathcal{L}(\beta) = \beta^\top X^\top X \beta - \beta^\top X^\top Y - Y^\top X \beta - Y^\top Y  $$
 
-    $$ \mathcal{L}(\beta) = \beta^\top \bX^\top \bX \beta - 2 \beta^\top \bX^\top \bY  - \bY^\top \bY  $$
+    $$ \mathcal{L}(\beta) = \beta^\top X^\top X \beta - 2 \beta^\top X^\top Y  - Y^\top Y  $$
 
-    $$ \nabla (\beta^\top \bX^\top \bX \beta) = 2 \bX^\top \bX \beta $$ 
+    $$ \nabla (\beta^\top X^\top X \beta) = 2 X^\top X \beta $$ 
 
-    $$ \nabla (2 \beta^\top \bX^\top \bY) = 2 \bX^\top \bY $$ 
+    $$ \nabla (2 \beta^\top X^\top Y) = 2 X^\top Y $$ 
 
-    $$ \nabla (\bY^\top \bY) = 0 $$ 
+    $$ \nabla (Y^\top Y) = 0 $$ 
 
-    $$ \nabla \mathcal{L}_{\beta} = 2 \bX^\top \bX \beta - 2 \bX^\top \bY + 0 = 2 \left( \bX^\top \bX \beta - \bX^\top \bY  \right) $$ 
+    $$ \nabla \mathcal{L}_{\beta} = 2 X^\top X \beta - 2 X^\top Y + 0 = 2 \left( X^\top X \beta - X^\top Y  \right) $$ 
 
 
     :::  -->
 
-2. Consider a matrix $\bA \in \R^{n \times m}$. Which of the following are necessary conditions for $\bA$ to be invertible? Which are sufficient? 
+2. Consider a matrix $A \in \R^{n \times m}$. Which of the following are necessary conditions for $A$ to be invertible? Which are sufficient? 
 
-    a. $\bA$ is a square matrix, i.e. $n = m$  
-    b. The columns of $\bA$ span $\R^{n}$ 
-    c. The columns of $\bA$ are linearly independent 
-    d. $\bA$ has no linearly dependent columns 
-    e. The null-space of $\bA$ is empty 
-    f. The only solution of $\bA \bx = 0$ is $\bx = 0$. 
-<!-- What properties does $\bA$ need to satisfy in order for $\bA$ to be invertible? *Hint: there are many properties of a matrix that show it is uniquely invertible. Think dimensions, fundamental spaces, $\bA^{-1} \bA = ?$, etc.*  -->
+    a. $A$ is a square matrix, i.e. $n = m$  
+    b. The columns of $A$ span $\R^{n}$ 
+    c. The columns of $A$ are linearly independent 
+    d. $A$ has no linearly dependent columns 
+    e. The null-space of $A$ is empty 
+    f. The only solution of $A X = 0$ is $X = 0$. 
+<!-- What properties does $A$ need to satisfy in order for $A$ to be invertible? *Hint: there are many properties of a matrix that show it is uniquely invertible. Think dimensions, fundamental spaces, $A^{-1} A = ?$, etc.*  -->
 
 <!-- :::{.callout-note collapse="true"}
 ## Solution 
-The matrix $\bA$ must satisfy the following properties (many of these are different ways of saying the same thing): 
+The matrix $A$ must satisfy the following properties (many of these are different ways of saying the same thing): 
 
-* $\bA$ is a square matrix, i.e. $n = m$ 
-* A matrix $\bB$ exists such that $\bB \bA = \bA \bB = \bI$ where $\bI$ is an $n \times n$ identity matrix 
-- The columns of $\bA$ span $\R^{n}$ 
-- The columns of $\bA$ are linearly independent 
-- $\bA$ has no linearly dependent columns 
-- $\bA$ has no singular values equal to zero
-- The null-space of $\bA$ is empty 
-- The only solution of $\bA \bx = 0$ is $\bx = 0$. 
+* $A$ is a square matrix, i.e. $n = m$ 
+* A matrix $\bB$ exists such that $\bB A = A \bB = \bI$ where $\bI$ is an $n \times n$ identity matrix 
+- The columns of $A$ span $\R^{n}$ 
+- The columns of $A$ are linearly independent 
+- $A$ has no linearly dependent columns 
+- $A$ has no singular values equal to zero
+- The null-space of $A$ is empty 
+- The only solution of $A X = 0$ is $X = 0$. 
 ::: -->
 
 3. Show that $X^\top X$ is invertible if and only if $X$ has full column-rank.
@@ -371,47 +358,47 @@ The matrix $\bA$ must satisfy the following properties (many of these are differ
 
 Recall that a symmetric positive definite (SPD) matrix satisfies the following for all $\bv \neq 0$: 
 
-$$ \bv^\top \bA \bv > 0 $$
+$$ \bv^\top A \bv > 0 $$
 
-If $\bX^\top \bX$ is SPD, then $\bX^\top \bX$ must be invertible. Hence, the following must hold for all $\bv \neq 0$: 
+If $X^\top X$ is SPD, then $X^\top X$ must be invertible. Hence, the following must hold for all $\bv \neq 0$: 
 
-$$ \bv^\top \bX^\top \bX \bv > 0 $$ 
+$$ \bv^\top X^\top X \bv > 0 $$ 
 
-We can write this as the squared 2-norm of $\bX \bv$: 
+We can write this as the squared 2-norm of $X \bv$: 
 
-$$ \bv^\top \bX^\top \bX \bv = || \bX \bv||_2^2 > 0$$ 
+$$ \bv^\top X^\top X \bv = || X \bv||_2^2 > 0$$ 
 
-This is saying that any nonzero $\bv$ multiplied by $\bX$ must produce a vector with a norm greater than zero. In other words, $\bX \bv$ cannot produce the zero-vector when $\bv \neq 0$. This means that $\bX$ must have an empty null-space, which means that $\bX$ must have linearly independent columns which is another way of saying it has full column rank.
+This is saying that any nonzero $\bv$ multiplied by $X$ must produce a vector with a norm greater than zero. In other words, $X \bv$ cannot produce the zero-vector when $\bv \neq 0$. This means that $X$ must have an empty null-space, which means that $X$ must have linearly independent columns which is another way of saying it has full column rank.
 ::: -->
 
 4. Explain why $\beta^*$ is the unique solution to the normal equations if $(X^\top X)$ is invertible. If $(X^\top X)$ is not invertible, describe all solutions to the normal equations. 
 
-<!-- $$ \bX^\top \bX \beta = \bX^\top \bY $$
+<!-- $$ X^\top X \beta = X^\top Y $$
 
-If $\bX^\top \bX$ is invertible (its columns are linearly independent, its null-space is empty, etc.), is it possible for more than one $\beta$ to satisfy this equation? Why? 
+If $X^\top X$ is invertible (its columns are linearly independent, its null-space is empty, etc.), is it possible for more than one $\beta$ to satisfy this equation? Why? 
 
-If $\bX^\top \bX$ is **not** invertible, how many values of $\beta$ satisfy this equation? Why? 
+If $X^\top X$ is **not** invertible, how many values of $\beta$ satisfy this equation? Why? 
 
 ::: {.callout-note collapse="true"}
 ## Solution 
 
-Solving $\bX^\top \bX \beta = \bX^\top \bY$ can be simplified to solving the general equation: 
+Solving $X^\top X \beta = X^\top Y$ can be simplified to solving the general equation: 
 
-$$ \bA \beta = \bb$$ 
+$$ A \beta = \bb$$ 
 
-If $\bA$ is invertible (meaning it has full column-rank, its columns are linearly independent, it has an empty nullspace, etc.), then there exists no nonzero $\beta$ such that: 
+If $A$ is invertible (meaning it has full column-rank, its columns are linearly independent, it has an empty nullspace, etc.), then there exists no nonzero $\beta$ such that: 
 
-$$ \bA \beta = 0 $$ 
+$$ A \beta = 0 $$ 
 
-However, if $\bA$ is not invertible, it has a non-empty null-space, which means there exist nonzero $\beta$ that **does** satisfy $\bA \beta = 0$. Let us refer to a $\beta$ in the null-space of $\bA$ as $\beta_0$. Because a null-space is defined by the linear combination of one or more vectors, there are infinitely many combinations of vectors in the null-space that can produce a $\beta_0$ such that $\bA \beta_0 = 0$. Let's say we find a $\beta$ in the column-space of $\bA$ that solves the least-squares equation: 
+However, if $A$ is not invertible, it has a non-empty null-space, which means there exist nonzero $\beta$ that **does** satisfy $A \beta = 0$. Let us refer to a $\beta$ in the null-space of $A$ as $\beta_0$. Because a null-space is defined by the linear combination of one or more vectors, there are infinitely many combinations of vectors in the null-space that can produce a $\beta_0$ such that $A \beta_0 = 0$. Let's say we find a $\beta$ in the column-space of $A$ that solves the least-squares equation: 
 
-$$ \bA \beta = \bb $$ 
+$$ A \beta = \bb $$ 
 
-If $\bA$ has a non-empty null space, then we can take a $\beta_0$ in the null-space of $\bA$ and make the following substitution: 
+If $A$ has a non-empty null space, then we can take a $\beta_0$ in the null-space of $A$ and make the following substitution: 
 
-$$ \bA (\beta + \beta_0) = \bA \beta + \bA \beta_0 = \bA \beta + 0 = \bA \beta $$ 
+$$ A (\beta + \beta_0) = A \beta + A \beta_0 = A \beta + 0 = A \beta $$ 
 
-This means we can add in *any* $\beta_0$ from the null-space and still end up with a nonzero $\beta$ that minimizes the least squares equation. Because we can form infinitely many vectors from the null-space, this means there are infinitely many solutions to the least-squares equation when $\bA$ is not invertible. 
+This means we can add in *any* $\beta_0$ from the null-space and still end up with a nonzero $\beta$ that minimizes the least squares equation. Because we can form infinitely many vectors from the null-space, this means there are infinitely many solutions to the least-squares equation when $A$ is not invertible. 
  -->
 
 
