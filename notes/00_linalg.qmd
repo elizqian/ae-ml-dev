@@ -11,13 +11,13 @@ execute:
     freeze: auto
 ---
 
-## Linear Algebra Crash Course {#sec-linalg}
+{{< include _macros.qmd >}}
 
 Before we dive into the world of machine learning and optimization, it's important that we get comfortable with the fundamental building blocks of mathematics in higher dimensions: Linear Algebra. This course assumes you have seen basic concepts in Linear Algebra, but we'll provide a refresher to get everyone on the same page. 
 
-#### Scalars, Vectors, and Matrices 
+## Scalars, Vectors, and Matrices 
 
-**Notation** 
+### Notation 
 
 Let's introduce some notation: $\mathbb{R}$ is the set of real numbers, $\mathbb{C}$ is the set of complex numbers, and the operator $\in$ designates that a variable *belongs* to a set. To define a real scalar (i.e. just a number), $c$, we write: 
 
@@ -39,7 +39,7 @@ a_{m1} & a_{m2} & \dots & a_{mn}
 \end{bmatrix} \in \mathbb{R}^{m \times n }
 $$ 
 
-**The Transposes**
+### The Transpose
 
 The "transpose" of a matrix or vector, swaps the rows and columns. In other words, the first row becomes the first column, the second row the second column and so-on: 
 
@@ -57,26 +57,68 @@ Transposing the product of matrices reverses their order:
 
 $$ \left( \mathbf{A} \mathbf{B} \mathbf{C} \mathbf{D} \right)^\top = \mathbf{D}^\top \mathbf{C}^\top \mathbf{B}^\top \mathbf{A}^\top $$ 
 
-**Addition & subtraction** 
+### Addition & subtraction 
 
 Technically, only objects of the same dimensionality can be added or subtracted with one another. So, scalars can only be added to scalars, vectors can only be added to vectors of the same dimension, and matrices can only be added to other matrices with the same numbers of rows and columns. Some software like MATLAB or NumPy might let you add scalars to vectors and matrices and under the hood they multiply that scalar by a vector/matrix of ones to make the dimensions match. 
 
+::: {.callout-caution collapse="true"}
+## Examples of `numpy` allowing mathematically invalid operations 
+Mathematically, none of the following are valid operations. However, `numpy` allows us to do them by secretly adding in a vector of ones so that the vector/matrix dimensions are valid. This can be confusing for new programmers. 
 
-#### Scalar Multiplication 
+*Adding a scalar to a vector* 
+```{python}
+import numpy as np 
+# Defining a vector 
+u = np.array([
+  1, 2, 3
+])
+
+# Adding a scalar to a vector
+print(u + 5)
+# What numpy does to make the dimensions match
+print(u + 5*np.ones_like(u)) 
+```
+
+*Adding a row-vector to a column-vector*
+```{python}
+# Reshaping u to a column-vector 
+u = u.reshape((3,1))
+
+# Defining a row-vector, v 
+v = np.array([
+  4, 5, 6
+]).reshape((1,3)) 
+
+# Adding the row-vector v to a column-vector u
+print(v + u)
+# What numpy does to make the dimensions match
+print(np.outer(u, np.ones(3)) + np.outer(np.ones(3), v)) 
+```
+:::
+
+## Scalar Multiplication 
 
 Generally, scalars can multiply by any structure (scalar, vector, and matrix) and do not change its dimension. They only "scale" its value by a certain amount. Hence, multiplying a scalar by a scalar returns a scalar, multiplying a scalar times a vector returns a vector, and multiplying a scalar by a matrix returns a matrix. Scalar multiplication is also commutative, i.e. $c\mathbf{A} = \mathbf{A}c$ for all scalars $c$. Consider our scalar, $c$, from the previous section, another scalar, $b$, the vector $\mathbf{x} \in \mathbb{R}^n$ and the matrix $\mathbf{A} \in \mathbb{R}^{m \times n}$ 
 
-* **Scalar-Scalar Product:** $$b \times c = bc \in \mathbb{R}$$
-* **Scalar-Vector Product:** $$ c \mathbf{x} = \mathbf{x} c = \begin{bmatrix} c x_1 \\ \vdots \\ c x_n \end{bmatrix} \in \mathbb{R}^n $$
-* **Scalar-Matrix Product:** $$ c \mathbf{A} = \mathbf{A} c = \begin{bmatrix} c a_{11} & c a_{12} & \dots & c a_{1n} \\ 
+### Scalar-Scalar Product 
+
+$$ b \times c = bc \in \mathbb{R} $$
+
+### Scalar-Vector Product 
+
+$$ c \mathbf{x} = \mathbf{x} c = \begin{bmatrix} c x_1 \\ \vdots \\ c x_n \end{bmatrix} \in \mathbb{R}^n $$
+
+### Scalar-Matrix Product 
+
+$$ c \mathbf{A} = \mathbf{A} c = \begin{bmatrix} c a_{11} & c a_{12} & \dots & c a_{1n} \\ 
 c a_{21} & c a_{22} & & c a_{2n} \\ 
 \vdots & & \ddots & \vdots \\ 
 c a_{m1} & c a_{m2} & \dots & c a_{mn}
 \end{bmatrix} \in \mathbb{R}^{m \times n } $$ 
 
-#### Matrix & Vector Multiplication 
+## Matrix & Vector Multiplication 
 
-**Vector-Vector Multiplication**
+### Vector-Vector Multiplication
 
 To multiply two matrices (or two vectors, or a matrix with a vector), their inner dimensions must always match. Hence, the only valid way to multiply two vectors is by "inner" or "outer" products. Consider two vectors, $\mathbf{u} \in \mathbb{R}^n$ and $x \in \mathbb{R}^n$. An "**Inner Product**" (sometimes called the Dot-Product) is defined as: 
 
@@ -98,7 +140,7 @@ Important notes on outer products:
 * As long as $\mathbf{w}$ and $\mathbf{x}$ are vectors, outer products share an inner dimension of $1$, which means that any two vectors have an outer product. 
 * Lastly, this operation is *non-commutative*, meaning $\mathbf{w} \mathbf{x}^\top \neq \mathbf{x} \mathbf{w}^\top$. Rather, these two are transposes of each other. 
 
-**Matrix-Vector Multiplication** 
+### Matrix-Vector Multiplication 
 
 Multiplying a matrix with a vector means the dimension of the vector must equal the number of columns of the matrix. Recall $\mathbf{A} \in \mathbb{R}^{m \times n}$ and $\mathbf{x} \in \mathbb{R}^n$. Note that the columns of $\mathbf{A}$ match the dimension of $\mathbf{x}$, which are both size $n$. The product $\mathbf{A}\mathbf{x}$ can be written as: 
 
@@ -116,7 +158,7 @@ $$ \mathbf{A}\mathbf{x} = \begin{bmatrix} | & | &  & | \\
 
 where $\mathbf{a}_i$ is the $i$th column of $\mathbf{A}$. Note that matrix-vector multiplication forms a linear map from one dimensional vector-space to another. In this case, $\mathbf{A}\mathbf{x}$ maps a vector from $\mathbb{R}^n$ to $\mathbb{R}^m$. This linear transformation from one dimensionality to another is a core component of many machine learning algorithms. 
 
-**Matrix-Matrix Multiplication** 
+### Matrix-Matrix Multiplication 
 
 Consider two matrices, $\mathbf{A} \in \mathbb{R}^{m \times n}$ and $\mathbf{B} \in \mathbb{R}^{n \times k}$, where $m \neq k$. Again, the inner dimensions must match to multiply matrices. Because $\mathbf{A}$ multiplied by $\mathbf{B}$ have an inner-dimension of $n$, they can be multiplied. Similar to matrix-vector multiplication, we can visualize the product of $\mathbf{A}$ and $\mathbf{B}$ by breaking up the columns and rows of $\mathbf{A}$ and $\mathbf{B}$, respectively: 
 
@@ -132,23 +174,13 @@ As we can see, this is a sum of outer products (vectors multiplied by transposed
 
 $$ \mathbf{A}\mathbf{B} = \sum_{i=1}^n \mathbf{a}_i \mathbf{b}_i \in \mathbb{R}^{m \times k}$$ 
 
-*Note:* matrix multiplication is generally non-commutative; The product $\mathbf{A}\mathbf{B}$ is valid, because the number of columns of $\mathbf{A}$ matches the number of rows of $\mathbf{B}$. However, the product $\mathbf{B}\mathbf{A}$ is not valid, because the number of columns of $\mathbf{B}$ does not equal the number of rows of $\mathbf{A}$. 
+*Note:* matrix multiplication is generally non-commutative; The product $\mathbf{A}\mathbf{B}$ is valid, because the number of columns of $\mathbf{A}$ matches the number of rows of $\mathbf{B}$. However, the product $\mathbf{B}\mathbf{A}$ is not valid, because the number of columns of $\mathbf{B}$ does not equal the number of rows of $\mathbf{A}$. The product $\mathbf{B}\mathbf{A}$ can be multiplied if $\mathbf{A}$ and $\mathbf{B}$ are both square matrices of the same size. However, even if the dimensions do match, generally speaking, $\mathbf{BA \neq AB}$. 
 
-#### Vector Norms 
+## Vector Norms 
 
-Oftentimes, it is useful to know how "big" a vector is. And there are many different ways of computing this. The "norm" of an object is a measure of how "large" it is, according to some rule. Consider $\mathbf{x} \in \mathbb{R}^n$. The $l_p$ norm is defined by the following: 
+Oftentimes, it is useful to know how "big" a vector is. And there are many different ways of computing this. The "norm" of an object is a measure of how "large" it is, according to some rule. Consider $\mathbf{x} \in \mathbb{R}^n$. We'll start with the most common norm:  
 
-$$ ||\mathbf{x}||_p = \left( \sum_{i=1}^n |x_i|^p \right)^{1/p} $$
-
-This formula may not be so intuitive, so let's consider three special instances of the $l_p$ norms: 
-
-**The 1-Norm**
-
-The 1-norm of $\mathbf{x}$ is simply the sum of the absolute-value of its entries: 
-
-$$ ||\mathbf{x}||_1 = |x_1| + |x_2| + \dots + |x_n| $$ 
-
-**The 2-Norm** 
+### The 2-Norm
 
 The 2-norm of $x$ (which we will use most-often in this class) is defined as the squareroot of the squares of its entries: 
 
@@ -158,17 +190,43 @@ The reason the 2-norm is so useful is the fact that the square of the $l_2$ norm
 
 $$ \mathbf{x}^\top \mathbf{x} = x_1^2 + x_2^2 + \dots + x_3^2 = ||\mathbf{x}||_2^2 $$ 
 
-This helps us write a norm in terms of matrix-vector operations, which is extremely useful for optimization. The 2-norm is also quite important because it is the first $l_p$ norm with a continuous derivative, which cannot be said of the 1-norm since it uses absolute-value functions.
+This helps us write a norm in terms of matrix-vector operations, which is extremely useful for optimization. The 2-norm is also quite important because it is the first $l_p$ norm with a continuous derivative, which cannot be said of the 1-norm since it uses absolute-value functions. 
 
-**The Infinity-Norm**
+### The $l_p$-Norm 
+
+We can take the definition of the 2-Norm and generalize it to describe a class of norms known as $l_p$ norms. The $l_p$ norm of a vector is defined by the following: 
+
+$$ ||\mathbf{x}||_p = \left( \sum_{i=1}^n |x_i|^p \right)^{1/p} $$
+
+### The 1-Norm
+
+The 1-norm of $\mathbf{x}$ is simply the sum of the absolute-value of its entries: 
+
+$$ ||\mathbf{x}||_1 = |x_1| + |x_2| + \dots + |x_n| $$ 
+
+### The Infinity-Norm
 
 The infinity-norm takes the limit as $p \rightarrow \infty$ and when this limit is solved, this norm simply becomes the entry of $x$ with the largest absolute value: 
 
 $$ ||\mathbf{x}||_\infty = \max \{ |x_1|, |x_2|, \dots, |x_n| \} $$ 
 
-### Rank, Range/Column-Space and Null-Spaces
+## Rank, Range/Column-Space and Null-Spaces
 
-**Linear-Independence** 
+### Linear Combinations and Span 
+
+Many of the following ideas hinge upon the idea of "Linear Combinations" of vectors. Consider two vectors $\bu, \bv \in \R^{d}$. A linear combination of $\bu$ and $\bv$ is the vector produced by the following: 
+
+$$ \bw = c_1 \bu + c_2 \bv $$ 
+
+where $c_1$ and $c_2$ are scalars. We can generalize this idea by saying that all possible realizations of $\bw$ live in the vector-space $\mathcal{W}$ defined by the "span" by $\bu$ and $\bv$. This is denoted: 
+
+$$ \bw \in \mathcal{W} = \text{Span}\left( \bu, \bv \right) $$ 
+
+We can read this in plain english as "the vector $\bw$ belongs to the vector-space $\mathcal{W}$ which is defined by all possible linear combinations of $\bu$ and $\bv$". 
+
+
+
+### Linear-Independence 
 
 This is a fundamental idea in Linear Algebra. A set of vectors is said to be "Linearly Independent" if no vector in this set can be reconstructed with any of the others. In other words, no one vector can be reproduced by scaling or combining any of the others. For example, consider the following three vectors: 
 
@@ -176,9 +234,11 @@ $$ \{ \begin{bmatrix} 1 \\ 0 \\ 0 \end{bmatrix}, \begin{bmatrix} 0 \\ 1 \\ 0 \en
 
 Because each vector in this set points in its own unique direction, it is impossible to reconstruct one of these vectors as a linear combination of any others. This may be true with more complex vectors that aren't unit vectors along the dimensions of the vector-space. 
 
-**Rank** 
+### Rank 
 
-The rank of a matrix is simply the number of linearly independent columns. Consider the following matrix: 
+Technically, there are two types of rank: Column Rank and Row-Rank. In this class, when we say "rank", we will be referring to the column rank. 
+
+The column rank of a matrix is simply its number of linearly independent column-vectors (the row-rank is the number of linearly independent row-vectors). Consider the following matrix: 
 
 $$ \mathbf{A} = \begin{bmatrix} 1 & 2 & 1 & 4 \\ 0 & 1 & 1 & 2 \\ 0 & 0 & 2 & 0 \end{bmatrix} $$ 
 
@@ -186,7 +246,7 @@ The first-three columns of $\mathbf{A}$ are linearly independent because they ca
 
 *Theorem:* No matrix $\mathbf{A} \in \mathbb{R}^{m \times n}$ where $m < n$ can be full-rank.  This is because only $m$ vectors can span $\mathbb{R}^m$, and since there are more than $m$ columns, we must have some redundancy. 
 
-**Range/Column-Space** 
+### Range/Column-Space  
 
 The Range, Column-Space or Image of a matrix, $\mathbf{A}$, is the span of all possible combinations of its columns. In human words, it describes the space of $\mathbf{Ax}$ for all possible $\mathbf{x}$. Consider the following matrix: 
 
@@ -196,7 +256,7 @@ Note that the second column is a multiple of the first column, hence, the range 
 
 $$ \text{Range}(\mathbf{A}) = \text{span} \left( \begin{bmatrix} 1 \\ 3 \\ 2 \end{bmatrix}\right) $$ 
 
-**Null-Space** 
+### Null-Space  
 
 The Null-Space of a matrix, $\mathbf{A}$ is the set of all nonzero vectors, $\mathbf{x}$ such that $\mathbf{Ax=0}$. Consider a simple example: 
 
@@ -223,7 +283,7 @@ Hence, we see that $x_3$ can be any scalar and satisfy this systems of equations
 $$ \mathbf{x} = \begin{bmatrix} 1 \\ -1 \\ 1 \end{bmatrix} x_3 = \text{span}\left( \begin{bmatrix} 1 \\ -1 \\ 1 \end{bmatrix} \right) = \text{Null}(\mathbf{A})$$ 
 
 
-#### The Identity Matrix 
+### The Identity Matrix 
 
 The identity matrix is a square, $n$-dimensional matrix consisting of ones on its diagonal and zeros elsewhere. It is called the identity matrix because it preserves the identity when multiplied by matrices and vectors. 
 
@@ -237,9 +297,11 @@ $$ \mathbf{I x = x } $$
 
 $$ \mathbf{x^\top I = x^\top} $$ 
 
-**Why is this useful?**
+:::{.callout-note}
+## Why is the identity matrix useful?
 
 The identity matrix simplifies expressions involving matrices. If we can transform a term into an identity matrix, then we can reduce the expression to only the remaining terms. 
+::: 
 
 ### Matrix Inverses 
 
@@ -251,7 +313,9 @@ $$ \mathbf{A} \mathbf{B} = \mathbf{B} \mathbf{A} = \mathbf{I} $$
 
 where $\mathbf{I}$ is the identity matrix. Such a $\mathbf{B}$ is denoted $\mathbf{A}^{-1}$. 
 
+## Further Reading 
 
+* A great read for a deeper dive into the relationship between Column, Row and Null-spaces of matrices: [Gil Strang's Fundamental Theorem of Linear Algebra](https://home.engineering.iastate.edu/~julied/classes/CE570/Notes/strangpaper.pdf){.external target="_blank"}
 
 
 

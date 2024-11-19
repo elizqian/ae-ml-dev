@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.5.56">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -19,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -160,8 +194,8 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./13_lsstat.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">LLS: Statistical Perspective</span></span></a>
+  <a href="./13_lsnla.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">LLS: Computational Considerations</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -209,11 +243,42 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#sec-linalg" id="toc-sec-linalg" class="nav-link active" data-scroll-target="#sec-linalg"><span class="header-section-number">A.1</span> Linear Algebra Crash Course</a>
+  <li><a href="#scalars-vectors-and-matrices" id="toc-scalars-vectors-and-matrices" class="nav-link active" data-scroll-target="#scalars-vectors-and-matrices"><span class="header-section-number">A.1</span> Scalars, Vectors, and Matrices</a>
   <ul class="collapse">
-  <li><a href="#rank-rangecolumn-space-and-null-spaces" id="toc-rank-rangecolumn-space-and-null-spaces" class="nav-link" data-scroll-target="#rank-rangecolumn-space-and-null-spaces"><span class="header-section-number">A.1.1</span> Rank, Range/Column-Space and Null-Spaces</a></li>
-  <li><a href="#matrix-inverses" id="toc-matrix-inverses" class="nav-link" data-scroll-target="#matrix-inverses"><span class="header-section-number">A.1.2</span> Matrix Inverses</a></li>
+  <li><a href="#notation" id="toc-notation" class="nav-link" data-scroll-target="#notation"><span class="header-section-number">A.1.1</span> Notation</a></li>
+  <li><a href="#the-transpose" id="toc-the-transpose" class="nav-link" data-scroll-target="#the-transpose"><span class="header-section-number">A.1.2</span> The Transpose</a></li>
+  <li><a href="#addition-subtraction" id="toc-addition-subtraction" class="nav-link" data-scroll-target="#addition-subtraction"><span class="header-section-number">A.1.3</span> Addition &amp; subtraction</a></li>
   </ul></li>
+  <li><a href="#scalar-multiplication" id="toc-scalar-multiplication" class="nav-link" data-scroll-target="#scalar-multiplication"><span class="header-section-number">A.2</span> Scalar Multiplication</a>
+  <ul class="collapse">
+  <li><a href="#scalar-scalar-product" id="toc-scalar-scalar-product" class="nav-link" data-scroll-target="#scalar-scalar-product"><span class="header-section-number">A.2.1</span> Scalar-Scalar Product</a></li>
+  <li><a href="#scalar-vector-product" id="toc-scalar-vector-product" class="nav-link" data-scroll-target="#scalar-vector-product"><span class="header-section-number">A.2.2</span> Scalar-Vector Product</a></li>
+  <li><a href="#scalar-matrix-product" id="toc-scalar-matrix-product" class="nav-link" data-scroll-target="#scalar-matrix-product"><span class="header-section-number">A.2.3</span> Scalar-Matrix Product</a></li>
+  </ul></li>
+  <li><a href="#matrix-vector-multiplication" id="toc-matrix-vector-multiplication" class="nav-link" data-scroll-target="#matrix-vector-multiplication"><span class="header-section-number">A.3</span> Matrix &amp; Vector Multiplication</a>
+  <ul class="collapse">
+  <li><a href="#vector-vector-multiplication" id="toc-vector-vector-multiplication" class="nav-link" data-scroll-target="#vector-vector-multiplication"><span class="header-section-number">A.3.1</span> Vector-Vector Multiplication</a></li>
+  <li><a href="#matrix-vector-multiplication-1" id="toc-matrix-vector-multiplication-1" class="nav-link" data-scroll-target="#matrix-vector-multiplication-1"><span class="header-section-number">A.3.2</span> Matrix-Vector Multiplication</a></li>
+  <li><a href="#matrix-matrix-multiplication" id="toc-matrix-matrix-multiplication" class="nav-link" data-scroll-target="#matrix-matrix-multiplication"><span class="header-section-number">A.3.3</span> Matrix-Matrix Multiplication</a></li>
+  </ul></li>
+  <li><a href="#vector-norms" id="toc-vector-norms" class="nav-link" data-scroll-target="#vector-norms"><span class="header-section-number">A.4</span> Vector Norms</a>
+  <ul class="collapse">
+  <li><a href="#the-2-norm" id="toc-the-2-norm" class="nav-link" data-scroll-target="#the-2-norm"><span class="header-section-number">A.4.1</span> The 2-Norm</a></li>
+  <li><a href="#the-l_p-norm" id="toc-the-l_p-norm" class="nav-link" data-scroll-target="#the-l_p-norm"><span class="header-section-number">A.4.2</span> The <span class="math inline">\(l_p\)</span>-Norm</a></li>
+  <li><a href="#the-1-norm" id="toc-the-1-norm" class="nav-link" data-scroll-target="#the-1-norm"><span class="header-section-number">A.4.3</span> The 1-Norm</a></li>
+  <li><a href="#the-infinity-norm" id="toc-the-infinity-norm" class="nav-link" data-scroll-target="#the-infinity-norm"><span class="header-section-number">A.4.4</span> The Infinity-Norm</a></li>
+  </ul></li>
+  <li><a href="#rank-rangecolumn-space-and-null-spaces" id="toc-rank-rangecolumn-space-and-null-spaces" class="nav-link" data-scroll-target="#rank-rangecolumn-space-and-null-spaces"><span class="header-section-number">A.5</span> Rank, Range/Column-Space and Null-Spaces</a>
+  <ul class="collapse">
+  <li><a href="#linear-combinations-and-span" id="toc-linear-combinations-and-span" class="nav-link" data-scroll-target="#linear-combinations-and-span"><span class="header-section-number">A.5.1</span> Linear Combinations and Span</a></li>
+  <li><a href="#linear-independence" id="toc-linear-independence" class="nav-link" data-scroll-target="#linear-independence"><span class="header-section-number">A.5.2</span> Linear-Independence</a></li>
+  <li><a href="#rank" id="toc-rank" class="nav-link" data-scroll-target="#rank"><span class="header-section-number">A.5.3</span> Rank</a></li>
+  <li><a href="#rangecolumn-space" id="toc-rangecolumn-space" class="nav-link" data-scroll-target="#rangecolumn-space"><span class="header-section-number">A.5.4</span> Range/Column-Space</a></li>
+  <li><a href="#null-space" id="toc-null-space" class="nav-link" data-scroll-target="#null-space"><span class="header-section-number">A.5.5</span> Null-Space</a></li>
+  <li><a href="#the-identity-matrix" id="toc-the-identity-matrix" class="nav-link" data-scroll-target="#the-identity-matrix"><span class="header-section-number">A.5.6</span> The Identity Matrix</a></li>
+  <li><a href="#matrix-inverses" id="toc-matrix-inverses" class="nav-link" data-scroll-target="#matrix-inverses"><span class="header-section-number">A.5.7</span> Matrix Inverses</a></li>
+  </ul></li>
+  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading"><span class="header-section-number">A.6</span> Further Reading</a></li>
   </ul>
 </nav>
     </div>
@@ -239,12 +304,20 @@ window.Quarto = {
 </header>
 
 
-<section id="sec-linalg" class="level2" data-number="A.1">
-<h2 data-number="A.1" class="anchored" data-anchor-id="sec-linalg"><span class="header-section-number">A.1</span> Linear Algebra Crash Course</h2>
+<div class="hidden">
+<!-- \renewcommand{\P}{\mathrm{P}} -->
+<!-- $$
+\DeclarePairedDelimiters{\set}{\{}{\}}
+\DeclareMathOperator*{\argmax}{argmax}
+$$
+
+\definecolor{quarto-callout-note-color}{HTML}{4477AA} -->
+</div>
 <p>Before we dive into the world of machine learning and optimization, it’s important that we get comfortable with the fundamental building blocks of mathematics in higher dimensions: Linear Algebra. This course assumes you have seen basic concepts in Linear Algebra, but we’ll provide a refresher to get everyone on the same page.</p>
-<section id="scalars-vectors-and-matrices" class="level4" data-number="A.1.0.1">
-<h4 data-number="A.1.0.1" class="anchored" data-anchor-id="scalars-vectors-and-matrices"><span class="header-section-number">A.1.0.1</span> Scalars, Vectors, and Matrices</h4>
-<p><strong>Notation</strong></p>
+<section id="scalars-vectors-and-matrices" class="level2" data-number="A.1">
+<h2 data-number="A.1" class="anchored" data-anchor-id="scalars-vectors-and-matrices"><span class="header-section-number">A.1</span> Scalars, Vectors, and Matrices</h2>
+<section id="notation" class="level3" data-number="A.1.1">
+<h3 data-number="A.1.1" class="anchored" data-anchor-id="notation"><span class="header-section-number">A.1.1</span> Notation</h3>
 <p>Let’s introduce some notation: <span class="math inline">\(\mathbb{R}\)</span> is the set of real numbers, <span class="math inline">\(\mathbb{C}\)</span> is the set of complex numbers, and the operator <span class="math inline">\(\in\)</span> designates that a variable <em>belongs</em> to a set. To define a real scalar (i.e.&nbsp;just a number), <span class="math inline">\(c\)</span>, we write:</p>
 <p><span class="math display">\[ c \in \mathbb{R}\]</span></p>
 <p>You can read this as “the variable <span class="math inline">\(c\)</span> belongs to the set of 1-dimensional real numbers.”</p>
@@ -257,7 +330,9 @@ a_{21} &amp; a_{22} &amp; &amp; a_{2n} \\
 a_{m1} &amp; a_{m2} &amp; \dots &amp; a_{mn}
 \end{bmatrix} \in \mathbb{R}^{m \times n }
 \]</span></p>
-<p><strong>The Transposes</strong></p>
+</section>
+<section id="the-transpose" class="level3" data-number="A.1.2">
+<h3 data-number="A.1.2" class="anchored" data-anchor-id="the-transpose"><span class="header-section-number">A.1.2</span> The Transpose</h3>
 <p>The “transpose” of a matrix or vector, swaps the rows and columns. In other words, the first row becomes the first column, the second row the second column and so-on:</p>
 <p><span class="math display">\[ \mathbf{x}^\top = \begin{bmatrix} x_1 &amp; \dots &amp; x_n \end{bmatrix} \in \mathbb{R}^{1 \times n} \]</span></p>
 <p><span class="math display">\[ \mathbf{A}^\top = \begin{bmatrix} a_{11} &amp; a_{21} &amp; \dots &amp; a_{m1} \\
@@ -267,25 +342,92 @@ a_{1n} &amp; a_{2n} &amp; \dots &amp; a_{mn}
 \end{bmatrix} \in \mathbb{R}^{n \times m } \]</span></p>
 <p>Transposing the product of matrices reverses their order:</p>
 <p><span class="math display">\[ \left( \mathbf{A} \mathbf{B} \mathbf{C} \mathbf{D} \right)^\top = \mathbf{D}^\top \mathbf{C}^\top \mathbf{B}^\top \mathbf{A}^\top \]</span></p>
-<p><strong>Addition &amp; subtraction</strong></p>
-<p>Technically, only objects of the same dimensionality can be added or subtracted with one another. So, scalars can only be added to scalars, vectors can only be added to vectors of the same dimension, and matrices can only be added to other matrices with the same numbers of rows and columns. Some software like MATLAB or NumPy might let you add scalars to vectors and matrices and under the hood they multiply that scalar by a vector/matrix of ones to make the dimensions match.</p>
 </section>
-<section id="scalar-multiplication" class="level4" data-number="A.1.0.2">
-<h4 data-number="A.1.0.2" class="anchored" data-anchor-id="scalar-multiplication"><span class="header-section-number">A.1.0.2</span> Scalar Multiplication</h4>
+<section id="addition-subtraction" class="level3" data-number="A.1.3">
+<h3 data-number="A.1.3" class="anchored" data-anchor-id="addition-subtraction"><span class="header-section-number">A.1.3</span> Addition &amp; subtraction</h3>
+<p>Technically, only objects of the same dimensionality can be added or subtracted with one another. So, scalars can only be added to scalars, vectors can only be added to vectors of the same dimension, and matrices can only be added to other matrices with the same numbers of rows and columns. Some software like MATLAB or NumPy might let you add scalars to vectors and matrices and under the hood they multiply that scalar by a vector/matrix of ones to make the dimensions match.</p>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Examples of <code>numpy</code> allowing mathematically invalid operations
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Mathematically, none of the following are valid operations. However, <code>numpy</code> allows us to do them by secretly adding in a vector of ones so that the vector/matrix dimensions are valid. This can be confusing for new programmers.</p>
+<p><em>Adding a scalar to a vector</em></p>
+<div id="03c04e06" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Defining a vector </span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>u <span class="op">=</span> np.array([</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Adding a scalar to a vector</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(u <span class="op">+</span> <span class="dv">5</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># What numpy does to make the dimensions match</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(u <span class="op">+</span> <span class="dv">5</span><span class="op">*</span>np.ones_like(u)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[6 7 8]
+[6 7 8]</code></pre>
+</div>
+</div>
+<p><em>Adding a row-vector to a column-vector</em></p>
+<div id="ab159f7d" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reshaping u to a column-vector </span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>u <span class="op">=</span> u.reshape((<span class="dv">3</span>,<span class="dv">1</span>))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Defining a row-vector, v </span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>v <span class="op">=</span> np.array([</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>]).reshape((<span class="dv">1</span>,<span class="dv">3</span>)) </span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Adding the row-vector v to a column-vector u</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(v <span class="op">+</span> u)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># What numpy does to make the dimensions match</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(np.outer(u, np.ones(<span class="dv">3</span>)) <span class="op">+</span> np.outer(np.ones(<span class="dv">3</span>), v)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[5 6 7]
+ [6 7 8]
+ [7 8 9]]
+[[5. 6. 7.]
+ [6. 7. 8.]
+ [7. 8. 9.]]</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="scalar-multiplication" class="level2" data-number="A.2">
+<h2 data-number="A.2" class="anchored" data-anchor-id="scalar-multiplication"><span class="header-section-number">A.2</span> Scalar Multiplication</h2>
 <p>Generally, scalars can multiply by any structure (scalar, vector, and matrix) and do not change its dimension. They only “scale” its value by a certain amount. Hence, multiplying a scalar by a scalar returns a scalar, multiplying a scalar times a vector returns a vector, and multiplying a scalar by a matrix returns a matrix. Scalar multiplication is also commutative, i.e.&nbsp;<span class="math inline">\(c\mathbf{A} = \mathbf{A}c\)</span> for all scalars <span class="math inline">\(c\)</span>. Consider our scalar, <span class="math inline">\(c\)</span>, from the previous section, another scalar, <span class="math inline">\(b\)</span>, the vector <span class="math inline">\(\mathbf{x} \in \mathbb{R}^n\)</span> and the matrix <span class="math inline">\(\mathbf{A} \in \mathbb{R}^{m \times n}\)</span></p>
-<ul>
-<li><strong>Scalar-Scalar Product:</strong> <span class="math display">\[b \times c = bc \in \mathbb{R}\]</span></li>
-<li><strong>Scalar-Vector Product:</strong> <span class="math display">\[ c \mathbf{x} = \mathbf{x} c = \begin{bmatrix} c x_1 \\ \vdots \\ c x_n \end{bmatrix} \in \mathbb{R}^n \]</span></li>
-<li><strong>Scalar-Matrix Product:</strong> <span class="math display">\[ c \mathbf{A} = \mathbf{A} c = \begin{bmatrix} c a_{11} &amp; c a_{12} &amp; \dots &amp; c a_{1n} \\
+<section id="scalar-scalar-product" class="level3" data-number="A.2.1">
+<h3 data-number="A.2.1" class="anchored" data-anchor-id="scalar-scalar-product"><span class="header-section-number">A.2.1</span> Scalar-Scalar Product</h3>
+<p><span class="math display">\[ b \times c = bc \in \mathbb{R} \]</span></p>
+</section>
+<section id="scalar-vector-product" class="level3" data-number="A.2.2">
+<h3 data-number="A.2.2" class="anchored" data-anchor-id="scalar-vector-product"><span class="header-section-number">A.2.2</span> Scalar-Vector Product</h3>
+<p><span class="math display">\[ c \mathbf{x} = \mathbf{x} c = \begin{bmatrix} c x_1 \\ \vdots \\ c x_n \end{bmatrix} \in \mathbb{R}^n \]</span></p>
+</section>
+<section id="scalar-matrix-product" class="level3" data-number="A.2.3">
+<h3 data-number="A.2.3" class="anchored" data-anchor-id="scalar-matrix-product"><span class="header-section-number">A.2.3</span> Scalar-Matrix Product</h3>
+<p><span class="math display">\[ c \mathbf{A} = \mathbf{A} c = \begin{bmatrix} c a_{11} &amp; c a_{12} &amp; \dots &amp; c a_{1n} \\
 c a_{21} &amp; c a_{22} &amp; &amp; c a_{2n} \\
 \vdots &amp; &amp; \ddots &amp; \vdots \\
 c a_{m1} &amp; c a_{m2} &amp; \dots &amp; c a_{mn}
-\end{bmatrix} \in \mathbb{R}^{m \times n } \]</span></li>
-</ul>
+\end{bmatrix} \in \mathbb{R}^{m \times n } \]</span></p>
 </section>
-<section id="matrix-vector-multiplication" class="level4" data-number="A.1.0.3">
-<h4 data-number="A.1.0.3" class="anchored" data-anchor-id="matrix-vector-multiplication"><span class="header-section-number">A.1.0.3</span> Matrix &amp; Vector Multiplication</h4>
-<p><strong>Vector-Vector Multiplication</strong></p>
+</section>
+<section id="matrix-vector-multiplication" class="level2" data-number="A.3">
+<h2 data-number="A.3" class="anchored" data-anchor-id="matrix-vector-multiplication"><span class="header-section-number">A.3</span> Matrix &amp; Vector Multiplication</h2>
+<section id="vector-vector-multiplication" class="level3" data-number="A.3.1">
+<h3 data-number="A.3.1" class="anchored" data-anchor-id="vector-vector-multiplication"><span class="header-section-number">A.3.1</span> Vector-Vector Multiplication</h3>
 <p>To multiply two matrices (or two vectors, or a matrix with a vector), their inner dimensions must always match. Hence, the only valid way to multiply two vectors is by “inner” or “outer” products. Consider two vectors, <span class="math inline">\(\mathbf{u} \in \mathbb{R}^n\)</span> and <span class="math inline">\(x \in \mathbb{R}^n\)</span>. An “<strong>Inner Product</strong>” (sometimes called the Dot-Product) is defined as:</p>
 <p><span class="math display">\[ \mathbf{u}^\top \mathbf{x} = \begin{bmatrix} u_1 &amp; \dots &amp; u_n \end{bmatrix} \begin{bmatrix} x_1 \\ \vdots \\ x_n \end{bmatrix} = u_1 x_1 + u_2 x_2 + \dots u_n x_n \in \mathbb{R}\]</span></p>
 <p>Some important notes about inner products:</p>
@@ -302,7 +444,9 @@ c a_{m1} &amp; c a_{m2} &amp; \dots &amp; c a_{mn}
 <li>As long as <span class="math inline">\(\mathbf{w}\)</span> and <span class="math inline">\(\mathbf{x}\)</span> are vectors, outer products share an inner dimension of <span class="math inline">\(1\)</span>, which means that any two vectors have an outer product.</li>
 <li>Lastly, this operation is <em>non-commutative</em>, meaning <span class="math inline">\(\mathbf{w} \mathbf{x}^\top \neq \mathbf{x} \mathbf{w}^\top\)</span>. Rather, these two are transposes of each other.</li>
 </ul>
-<p><strong>Matrix-Vector Multiplication</strong></p>
+</section>
+<section id="matrix-vector-multiplication-1" class="level3" data-number="A.3.2">
+<h3 data-number="A.3.2" class="anchored" data-anchor-id="matrix-vector-multiplication-1"><span class="header-section-number">A.3.2</span> Matrix-Vector Multiplication</h3>
 <p>Multiplying a matrix with a vector means the dimension of the vector must equal the number of columns of the matrix. Recall <span class="math inline">\(\mathbf{A} \in \mathbb{R}^{m \times n}\)</span> and <span class="math inline">\(\mathbf{x} \in \mathbb{R}^n\)</span>. Note that the columns of <span class="math inline">\(\mathbf{A}\)</span> match the dimension of <span class="math inline">\(\mathbf{x}\)</span>, which are both size <span class="math inline">\(n\)</span>. The product <span class="math inline">\(\mathbf{A}\mathbf{x}\)</span> can be written as:</p>
 <p><span class="math display">\[ \mathbf{A}\mathbf{x} = \begin{bmatrix} a_{11} &amp; a_{12} &amp; \dots &amp; a_{1n} \\
 a_{21} &amp; a_{22} &amp; &amp; a_{2n} \\
@@ -314,7 +458,9 @@ a_{m1} &amp; a_{m2} &amp; \dots &amp; a_{mn}
 \mathbf{a}_1 &amp; \mathbf{a}_2 &amp; \dots &amp; \mathbf{a}_n \\
 | &amp; | &amp; &amp; | \end{bmatrix} \begin{bmatrix} x_1 \\ \vdots \\ x_n \end{bmatrix} = \begin{bmatrix} | \\ \mathbf{a}_1 \\ | \end{bmatrix} x_1 + \begin{bmatrix} | \\ \mathbf{a}_2 \\ | \end{bmatrix} x_2 + \dots + \begin{bmatrix} | \\ \mathbf{a}_n \\ | \end{bmatrix} x_n  \in \mathbb{R}^m \]</span></p>
 <p>where <span class="math inline">\(\mathbf{a}_i\)</span> is the <span class="math inline">\(i\)</span>th column of <span class="math inline">\(\mathbf{A}\)</span>. Note that matrix-vector multiplication forms a linear map from one dimensional vector-space to another. In this case, <span class="math inline">\(\mathbf{A}\mathbf{x}\)</span> maps a vector from <span class="math inline">\(\mathbb{R}^n\)</span> to <span class="math inline">\(\mathbb{R}^m\)</span>. This linear transformation from one dimensionality to another is a core component of many machine learning algorithms.</p>
-<p><strong>Matrix-Matrix Multiplication</strong></p>
+</section>
+<section id="matrix-matrix-multiplication" class="level3" data-number="A.3.3">
+<h3 data-number="A.3.3" class="anchored" data-anchor-id="matrix-matrix-multiplication"><span class="header-section-number">A.3.3</span> Matrix-Matrix Multiplication</h3>
 <p>Consider two matrices, <span class="math inline">\(\mathbf{A} \in \mathbb{R}^{m \times n}\)</span> and <span class="math inline">\(\mathbf{B} \in \mathbb{R}^{n \times k}\)</span>, where <span class="math inline">\(m \neq k\)</span>. Again, the inner dimensions must match to multiply matrices. Because <span class="math inline">\(\mathbf{A}\)</span> multiplied by <span class="math inline">\(\mathbf{B}\)</span> have an inner-dimension of <span class="math inline">\(n\)</span>, they can be multiplied. Similar to matrix-vector multiplication, we can visualize the product of <span class="math inline">\(\mathbf{A}\)</span> and <span class="math inline">\(\mathbf{B}\)</span> by breaking up the columns and rows of <span class="math inline">\(\mathbf{A}\)</span> and <span class="math inline">\(\mathbf{B}\)</span>, respectively:</p>
 <p><span class="math display">\[ \mathbf{A}\mathbf{B} = \begin{bmatrix} | &amp; | &amp;  &amp; | \\
 \mathbf{a}_1 &amp; \mathbf{a}_2 &amp; \dots &amp; \mathbf{a}_n \\
@@ -323,43 +469,69 @@ a_{m1} &amp; a_{m2} &amp; \dots &amp; a_{mn}
 <p><span class="math display">\[ \mathbf{A}\mathbf{B} = \begin{bmatrix} | \\ \mathbf{a}_1 \\ | \end{bmatrix} \begin{bmatrix} - &amp; \mathbf{b}_1 &amp; - \end{bmatrix} +\begin{bmatrix} | \\ \mathbf{a}_2 \\ | \end{bmatrix} \begin{bmatrix} - &amp; \mathbf{b}_2 &amp; - \end{bmatrix} + \dots + \begin{bmatrix} | \\ \mathbf{a}_n \\ | \end{bmatrix} \begin{bmatrix} - &amp; \mathbf{b}_n &amp; - \end{bmatrix}\]</span></p>
 <p>As we can see, this is a sum of outer products (vectors multiplied by transposed vectors). We know <span class="math inline">\(\mathbf{A}\)</span> has <span class="math inline">\(m\)</span> rows and <span class="math inline">\(\mathbf{B}\)</span> has <span class="math inline">\(k\)</span> columns, so each outer product will form a <em>matrix</em> of dimension <span class="math inline">\(m \times k\)</span>:</p>
 <p><span class="math display">\[ \mathbf{A}\mathbf{B} = \sum_{i=1}^n \mathbf{a}_i \mathbf{b}_i \in \mathbb{R}^{m \times k}\]</span></p>
-<p><em>Note:</em> matrix multiplication is generally non-commutative; The product <span class="math inline">\(\mathbf{A}\mathbf{B}\)</span> is valid, because the number of columns of <span class="math inline">\(\mathbf{A}\)</span> matches the number of rows of <span class="math inline">\(\mathbf{B}\)</span>. However, the product <span class="math inline">\(\mathbf{B}\mathbf{A}\)</span> is not valid, because the number of columns of <span class="math inline">\(\mathbf{B}\)</span> does not equal the number of rows of <span class="math inline">\(\mathbf{A}\)</span>.</p>
+<p><em>Note:</em> matrix multiplication is generally non-commutative; The product <span class="math inline">\(\mathbf{A}\mathbf{B}\)</span> is valid, because the number of columns of <span class="math inline">\(\mathbf{A}\)</span> matches the number of rows of <span class="math inline">\(\mathbf{B}\)</span>. However, the product <span class="math inline">\(\mathbf{B}\mathbf{A}\)</span> is not valid, because the number of columns of <span class="math inline">\(\mathbf{B}\)</span> does not equal the number of rows of <span class="math inline">\(\mathbf{A}\)</span>. The product <span class="math inline">\(\mathbf{B}\mathbf{A}\)</span> can be multiplied if <span class="math inline">\(\mathbf{A}\)</span> and <span class="math inline">\(\mathbf{B}\)</span> are both square matrices of the same size. However, even if the dimensions do match, generally speaking, <span class="math inline">\(\mathbf{BA \neq AB}\)</span>.</p>
 </section>
-<section id="vector-norms" class="level4" data-number="A.1.0.4">
-<h4 data-number="A.1.0.4" class="anchored" data-anchor-id="vector-norms"><span class="header-section-number">A.1.0.4</span> Vector Norms</h4>
-<p>Oftentimes, it is useful to know how “big” a vector is. And there are many different ways of computing this. The “norm” of an object is a measure of how “large” it is, according to some rule. Consider <span class="math inline">\(\mathbf{x} \in \mathbb{R}^n\)</span>. The <span class="math inline">\(l_p\)</span> norm is defined by the following:</p>
-<p><span class="math display">\[ ||\mathbf{x}||_p = \left( \sum_{i=1}^n |x_i|^p \right)^{1/p} \]</span></p>
-<p>This formula may not be so intuitive, so let’s consider three special instances of the <span class="math inline">\(l_p\)</span> norms:</p>
-<p><strong>The 1-Norm</strong></p>
-<p>The 1-norm of <span class="math inline">\(\mathbf{x}\)</span> is simply the sum of the absolute-value of its entries:</p>
-<p><span class="math display">\[ ||\mathbf{x}||_1 = |x_1| + |x_2| + \dots + |x_n| \]</span></p>
-<p><strong>The 2-Norm</strong></p>
+</section>
+<section id="vector-norms" class="level2" data-number="A.4">
+<h2 data-number="A.4" class="anchored" data-anchor-id="vector-norms"><span class="header-section-number">A.4</span> Vector Norms</h2>
+<p>Oftentimes, it is useful to know how “big” a vector is. And there are many different ways of computing this. The “norm” of an object is a measure of how “large” it is, according to some rule. Consider <span class="math inline">\(\mathbf{x} \in \mathbb{R}^n\)</span>. We’ll start with the most common norm:</p>
+<section id="the-2-norm" class="level3" data-number="A.4.1">
+<h3 data-number="A.4.1" class="anchored" data-anchor-id="the-2-norm"><span class="header-section-number">A.4.1</span> The 2-Norm</h3>
 <p>The 2-norm of <span class="math inline">\(x\)</span> (which we will use most-often in this class) is defined as the squareroot of the squares of its entries:</p>
 <p><span class="math display">\[ ||\mathbf{x}||_2 = \sqrt{x_1^2 + x_2^2 + \dots + x_n^2} \]</span></p>
 <p>The reason the 2-norm is so useful is the fact that the square of the <span class="math inline">\(l_2\)</span> norm is an inner product of a vector with itself:</p>
 <p><span class="math display">\[ \mathbf{x}^\top \mathbf{x} = x_1^2 + x_2^2 + \dots + x_3^2 = ||\mathbf{x}||_2^2 \]</span></p>
 <p>This helps us write a norm in terms of matrix-vector operations, which is extremely useful for optimization. The 2-norm is also quite important because it is the first <span class="math inline">\(l_p\)</span> norm with a continuous derivative, which cannot be said of the 1-norm since it uses absolute-value functions.</p>
-<p><strong>The Infinity-Norm</strong></p>
+</section>
+<section id="the-l_p-norm" class="level3" data-number="A.4.2">
+<h3 data-number="A.4.2" class="anchored" data-anchor-id="the-l_p-norm"><span class="header-section-number">A.4.2</span> The <span class="math inline">\(l_p\)</span>-Norm</h3>
+<p>We can take the definition of the 2-Norm and generalize it to describe a class of norms known as <span class="math inline">\(l_p\)</span> norms. The <span class="math inline">\(l_p\)</span> norm of a vector is defined by the following:</p>
+<p><span class="math display">\[ ||\mathbf{x}||_p = \left( \sum_{i=1}^n |x_i|^p \right)^{1/p} \]</span></p>
+</section>
+<section id="the-1-norm" class="level3" data-number="A.4.3">
+<h3 data-number="A.4.3" class="anchored" data-anchor-id="the-1-norm"><span class="header-section-number">A.4.3</span> The 1-Norm</h3>
+<p>The 1-norm of <span class="math inline">\(\mathbf{x}\)</span> is simply the sum of the absolute-value of its entries:</p>
+<p><span class="math display">\[ ||\mathbf{x}||_1 = |x_1| + |x_2| + \dots + |x_n| \]</span></p>
+</section>
+<section id="the-infinity-norm" class="level3" data-number="A.4.4">
+<h3 data-number="A.4.4" class="anchored" data-anchor-id="the-infinity-norm"><span class="header-section-number">A.4.4</span> The Infinity-Norm</h3>
 <p>The infinity-norm takes the limit as <span class="math inline">\(p \rightarrow \infty\)</span> and when this limit is solved, this norm simply becomes the entry of <span class="math inline">\(x\)</span> with the largest absolute value:</p>
 <p><span class="math display">\[ ||\mathbf{x}||_\infty = \max \{ |x_1|, |x_2|, \dots, |x_n| \} \]</span></p>
 </section>
-<section id="rank-rangecolumn-space-and-null-spaces" class="level3" data-number="A.1.1">
-<h3 data-number="A.1.1" class="anchored" data-anchor-id="rank-rangecolumn-space-and-null-spaces"><span class="header-section-number">A.1.1</span> Rank, Range/Column-Space and Null-Spaces</h3>
-<p><strong>Linear-Independence</strong></p>
+</section>
+<section id="rank-rangecolumn-space-and-null-spaces" class="level2" data-number="A.5">
+<h2 data-number="A.5" class="anchored" data-anchor-id="rank-rangecolumn-space-and-null-spaces"><span class="header-section-number">A.5</span> Rank, Range/Column-Space and Null-Spaces</h2>
+<section id="linear-combinations-and-span" class="level3" data-number="A.5.1">
+<h3 data-number="A.5.1" class="anchored" data-anchor-id="linear-combinations-and-span"><span class="header-section-number">A.5.1</span> Linear Combinations and Span</h3>
+<p>Many of the following ideas hinge upon the idea of “Linear Combinations” of vectors. Consider two vectors <span class="math inline">\(\mathbf{u}, \mathbf{v}\in \mathbb{R}^{d}\)</span>. A linear combination of <span class="math inline">\(\mathbf{u}\)</span> and <span class="math inline">\(\mathbf{v}\)</span> is the vector produced by the following:</p>
+<p><span class="math display">\[ \mathbf{w}= c_1 \mathbf{u}+ c_2 \mathbf{v}\]</span></p>
+<p>where <span class="math inline">\(c_1\)</span> and <span class="math inline">\(c_2\)</span> are scalars. We can generalize this idea by saying that all possible realizations of <span class="math inline">\(\mathbf{w}\)</span> live in the vector-space <span class="math inline">\(\mathcal{W}\)</span> defined by the “span” by <span class="math inline">\(\mathbf{u}\)</span> and <span class="math inline">\(\mathbf{v}\)</span>. This is denoted:</p>
+<p><span class="math display">\[ \mathbf{w}\in \mathcal{W} = \text{Span}\left( \mathbf{u}, \mathbf{v}\right) \]</span></p>
+<p>We can read this in plain english as “the vector <span class="math inline">\(\mathbf{w}\)</span> belongs to the vector-space <span class="math inline">\(\mathcal{W}\)</span> which is defined by all possible linear combinations of <span class="math inline">\(\mathbf{u}\)</span> and <span class="math inline">\(\mathbf{v}\)</span>”.</p>
+</section>
+<section id="linear-independence" class="level3" data-number="A.5.2">
+<h3 data-number="A.5.2" class="anchored" data-anchor-id="linear-independence"><span class="header-section-number">A.5.2</span> Linear-Independence</h3>
 <p>This is a fundamental idea in Linear Algebra. A set of vectors is said to be “Linearly Independent” if no vector in this set can be reconstructed with any of the others. In other words, no one vector can be reproduced by scaling or combining any of the others. For example, consider the following three vectors:</p>
 <p><span class="math display">\[ \{ \begin{bmatrix} 1 \\ 0 \\ 0 \end{bmatrix}, \begin{bmatrix} 0 \\ 1 \\ 0 \end{bmatrix}, \begin{bmatrix} 0 \\ 0 \\ 1 \end{bmatrix}\} \]</span></p>
 <p>Because each vector in this set points in its own unique direction, it is impossible to reconstruct one of these vectors as a linear combination of any others. This may be true with more complex vectors that aren’t unit vectors along the dimensions of the vector-space.</p>
-<p><strong>Rank</strong></p>
-<p>The rank of a matrix is simply the number of linearly independent columns. Consider the following matrix:</p>
+</section>
+<section id="rank" class="level3" data-number="A.5.3">
+<h3 data-number="A.5.3" class="anchored" data-anchor-id="rank"><span class="header-section-number">A.5.3</span> Rank</h3>
+<p>Technically, there are two types of rank: Column Rank and Row-Rank. In this class, when we say “rank”, we will be referring to the column rank.</p>
+<p>The column rank of a matrix is simply its number of linearly independent column-vectors (the row-rank is the number of linearly independent row-vectors). Consider the following matrix:</p>
 <p><span class="math display">\[ \mathbf{A} = \begin{bmatrix} 1 &amp; 2 &amp; 1 &amp; 4 \\ 0 &amp; 1 &amp; 1 &amp; 2 \\ 0 &amp; 0 &amp; 2 &amp; 0 \end{bmatrix} \]</span></p>
 <p>The first-three columns of <span class="math inline">\(\mathbf{A}\)</span> are linearly independent because they cannot be reproduced using linear combinations of the other columns. However, the last column is a multiple of column 2, which means it <em>can</em> be reproduced using a linear combination of columns. Hence, this matrix has a rank of 3.</p>
 <p><em>Theorem:</em> No matrix <span class="math inline">\(\mathbf{A} \in \mathbb{R}^{m \times n}\)</span> where <span class="math inline">\(m &lt; n\)</span> can be full-rank. This is because only <span class="math inline">\(m\)</span> vectors can span <span class="math inline">\(\mathbb{R}^m\)</span>, and since there are more than <span class="math inline">\(m\)</span> columns, we must have some redundancy.</p>
-<p><strong>Range/Column-Space</strong></p>
+</section>
+<section id="rangecolumn-space" class="level3" data-number="A.5.4">
+<h3 data-number="A.5.4" class="anchored" data-anchor-id="rangecolumn-space"><span class="header-section-number">A.5.4</span> Range/Column-Space</h3>
 <p>The Range, Column-Space or Image of a matrix, <span class="math inline">\(\mathbf{A}\)</span>, is the span of all possible combinations of its columns. In human words, it describes the space of <span class="math inline">\(\mathbf{Ax}\)</span> for all possible <span class="math inline">\(\mathbf{x}\)</span>. Consider the following matrix:</p>
 <p><span class="math display">\[ \mathbf{A} = \begin{bmatrix} 1 &amp; 2 \\ 3 &amp; 6 \\ 2 &amp; 4  \end{bmatrix} \]</span></p>
 <p>Note that the second column is a multiple of the first column, hence, the range of <span class="math inline">\(\mathbf{A}\)</span> is:</p>
 <p><span class="math display">\[ \text{Range}(\mathbf{A}) = \text{span} \left( \begin{bmatrix} 1 \\ 3 \\ 2 \end{bmatrix}\right) \]</span></p>
-<p><strong>Null-Space</strong></p>
+</section>
+<section id="null-space" class="level3" data-number="A.5.5">
+<h3 data-number="A.5.5" class="anchored" data-anchor-id="null-space"><span class="header-section-number">A.5.5</span> Null-Space</h3>
 <p>The Null-Space of a matrix, <span class="math inline">\(\mathbf{A}\)</span> is the set of all nonzero vectors, <span class="math inline">\(\mathbf{x}\)</span> such that <span class="math inline">\(\mathbf{Ax=0}\)</span>. Consider a simple example:</p>
 <p><span class="math display">\[ \mathbf{A} = \begin{bmatrix} 1 &amp; 0 &amp; -1\\ 0 &amp; 1 &amp; 1   \end{bmatrix} \]</span></p>
 <p>We can find the set of <span class="math inline">\(\mathbf{x}\)</span> that produce the zero-vector by solving the following equation:</p>
@@ -370,27 +542,44 @@ a_{m1} &amp; a_{m2} &amp; \dots &amp; a_{mn}
 <p><span class="math display">\[ x_1 = x_3 \]</span> <span class="math display">\[ x_2 = -x_3 \]</span> <span class="math display">\[ x_3 = x_3 \]</span></p>
 <p>Hence, we see that <span class="math inline">\(x_3\)</span> can be any scalar and satisfy this systems of equations:</p>
 <p><span class="math display">\[ \mathbf{x} = \begin{bmatrix} 1 \\ -1 \\ 1 \end{bmatrix} x_3 = \text{span}\left( \begin{bmatrix} 1 \\ -1 \\ 1 \end{bmatrix} \right) = \text{Null}(\mathbf{A})\]</span></p>
-<section id="the-identity-matrix" class="level4" data-number="A.1.1.1">
-<h4 data-number="A.1.1.1" class="anchored" data-anchor-id="the-identity-matrix"><span class="header-section-number">A.1.1.1</span> The Identity Matrix</h4>
+</section>
+<section id="the-identity-matrix" class="level3" data-number="A.5.6">
+<h3 data-number="A.5.6" class="anchored" data-anchor-id="the-identity-matrix"><span class="header-section-number">A.5.6</span> The Identity Matrix</h3>
 <p>The identity matrix is a square, <span class="math inline">\(n\)</span>-dimensional matrix consisting of ones on its diagonal and zeros elsewhere. It is called the identity matrix because it preserves the identity when multiplied by matrices and vectors.</p>
 <p><span class="math display">\[ \mathbf{I} = \begin{bmatrix} 1 &amp; 0 &amp; \dots &amp; 0 \\ 0 &amp; 1  &amp; &amp; 0 \\ \vdots &amp; &amp; \ddots &amp; \vdots \\ 0 &amp; 0 &amp; \dots &amp; 1 \end{bmatrix} \]</span></p>
 <p>Consider <span class="math inline">\(\mathbf{I} \in \mathbb{R}^{n \times n}\)</span> to be an <span class="math inline">\(n \times n\)</span> identity matrix. If we recall <span class="math inline">\(\mathbf{A} \in \mathbb{m \times n}\)</span> and <span class="math inline">\(\mathbf{x} \in \mathbb{R}^n\)</span>:</p>
 <p><span class="math display">\[ \mathbf{A I = I A = A} \]</span></p>
 <p><span class="math display">\[ \mathbf{I x = x } \]</span></p>
 <p><span class="math display">\[ \mathbf{x^\top I = x^\top} \]</span></p>
-<p><strong>Why is this useful?</strong></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Why is the identity matrix useful?
+</div>
+</div>
+<div class="callout-body-container callout-body">
 <p>The identity matrix simplifies expressions involving matrices. If we can transform a term into an identity matrix, then we can reduce the expression to only the remaining terms.</p>
+</div>
+</div>
 </section>
-</section>
-<section id="matrix-inverses" class="level3" data-number="A.1.2">
-<h3 data-number="A.1.2" class="anchored" data-anchor-id="matrix-inverses"><span class="header-section-number">A.1.2</span> Matrix Inverses</h3>
+<section id="matrix-inverses" class="level3" data-number="A.5.7">
+<h3 data-number="A.5.7" class="anchored" data-anchor-id="matrix-inverses"><span class="header-section-number">A.5.7</span> Matrix Inverses</h3>
 <p>You may have noticed that, thus far, we have covered the addition, subtraction, and multiplication of matrices, which conspicuously leaves division. Well, unfortunately, matrix division is complex to say the least. For square matrices, division is accomplished via matrix inversion. However, not all matrices are invertible.</p>
 <p><em>Definition:</em> A matrix <span class="math inline">\(\mathbf{B}\)</span> is called the “inverse” of a square matrix <span class="math inline">\(\mathbf{A}\)</span> if and only if the following condition holds:</p>
 <p><span class="math display">\[ \mathbf{A} \mathbf{B} = \mathbf{B} \mathbf{A} = \mathbf{I} \]</span></p>
 <p>where <span class="math inline">\(\mathbf{I}\)</span> is the identity matrix. Such a <span class="math inline">\(\mathbf{B}\)</span> is denoted <span class="math inline">\(\mathbf{A}^{-1}\)</span>.</p>
-
-
 </section>
+</section>
+<section id="further-reading" class="level2" data-number="A.6">
+<h2 data-number="A.6" class="anchored" data-anchor-id="further-reading"><span class="header-section-number">A.6</span> Further Reading</h2>
+<ul>
+<li>A great read for a deeper dive into the relationship between Column, Row and Null-spaces of matrices: <a href="https://home.engineering.iastate.edu/~julied/classes/CE570/Notes/strangpaper.pdf" class="external" target="_blank">Gil Strang’s Fundamental Theorem of Linear Algebra</a></li>
+</ul>
+
+
 </section>
 
 </main> <!-- /main -->
