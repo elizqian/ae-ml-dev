@@ -1,0 +1,108 @@
+---
+title: "Example Quarto HTML Document"
+author: "Elizabeth Qian"
+bibliography: refs.bib
+html-math-method:
+  method: mathjax
+  url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+number-sections: true
+format: 
+    html: default
+execute:
+    echo: true
+---
+
+# Section 
+here is a paragraph with some **bold text** and some *italicized text* and some ***bold italicized text***
+
+
+## subsection
+
+This is a bulleted list
+
+- spatial discretization of governing PDEs &rarr; high-dimensional systems of equations
+- high-dimensionality &rarr; high cost
+
+and this is an enumerated one (note you need to have full blank lines between paragraphs/lists)
+
+1. examples: control, optimization, uncertainty quantification
+2.  traditional simulation is **too expensive** for the many-query setting
+
+
+Here is some in-line math: $\pmb{x}\in\mathbb{R}^d$, and here is some display math:
+
+$$
+ \hat{\pmb{A}} = \pmb{W}_r^\top\pmb{A}\pmb{V}_r
+$$
+
+and here are some references (if you hover over the rendered link it will show the full citation, which is cool):
+
+- [@antoulasApproximationLargeScaleDynamical2005]
+- [@bennerSurveyProjectionBasedModel2015]
+- [@bennerModelReductionApproximation2017]
+
+
+## column layout
+this is how you make columns (not sure why you'd need to for notes, but handy for slides)
+
+:::: {.columns}
+
+::: {.column width="50%"}
+Static problems:
+$$
+\mathbf{A}\pmb{x} = \pmb{b},
+$$
+
+$$
+\pmb{f}(\pmb{x})=\pmb{0},
+$$
+
+:::
+
+::: {.column width="50%"}
+Dynamic problems:
+$$
+\dot{\pmb{x}}(t) = \mathbf{A}\pmb{x}(t) + \pmb{b}\,u(t)
+$$
+
+$$
+\dot{\pmb{x}}(t) = \pmb{f}(\pmb{x}(t)) + \pmb{b}\,u(t)
+$$
+:::
+
+::::
+
+
+## executable code demo
+you can toggle the echo option at the top of the code block to either render the code or not render it. There are also quarto options to fold the code (make it so you have to click to open it) and you can set some of these options at the top of the document.
+
+note that you need to have all relevant python packages installed in the environment that you run this from.
+```{python}
+#| echo: false
+import numpy as np
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+mpl.rcParams["font.size"] = 24
+
+d = 101
+z = np.linspace(0,1,d)
+
+A = (-2*np.diag(np.ones((d,))) + np.diag(np.ones((d-1,)),1) + np.diag(np.ones((d-1,)),-1))*(d-1)
+A[:51,:] = 0.8*A[:51,:]
+b = np.sin(2*np.pi*z)
+x = np.linalg.solve(A,b)
+
+# plotting 
+fig,ax = plt.subplots(2,1,figsize=(6,4),sharex=True)
+ax[0].plot(z,b,label='b')
+ax[0].set_ylabel('b')
+ax[0].legend()
+ax[1].plot(z,x,label='x')
+ax[1].legend()
+ax[1].set_ylabel('x')
+ax[1].set_xlabel('z')
+plt.show()
+```
+
+
+# Bibliography
