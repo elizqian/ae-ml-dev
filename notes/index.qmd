@@ -1,5 +1,3 @@
 # Preface {.unnumbered}
 
-This is a Quarto book.
-
-To learn more about Quarto books visit <https://quarto.org/docs/books>.
+This is the class website where all relevant notes and class information will be stored for AE4803 AIM. To get started, click the Introduction button to the left. 

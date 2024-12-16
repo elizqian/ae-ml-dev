@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "AE 4803 AIM: Course Notes",
     "section": "",
-    "text": "Preface\nThis is a Quarto book.\nTo learn more about Quarto books visit https://quarto.org/docs/books.",
+    "text": "Preface\nThis is the class website where all relevant notes and class information will be stored for AE4803 AIM. To get started, click the Introduction button to the left.",
     "crumbs": [
       "Preface"
     ]
@@ -144,7 +144,7 @@
     "href": "11_ls.html#further-reading",
     "title": "2  Linear Least Squares Problems",
     "section": "2.7 Further reading",
-    "text": "2.7 Further reading\nLinear Algebra Crash Course (Section A.1)\nThe Matrix Cookbook (Petersen and Pedersen (2012))\n\n\n\n\n\nPetersen, Kaare Brandt, and Michael Syskind Pedersen. 2012. “The Matrix Cookbook.” https://www.math.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf.",
+    "text": "2.7 Further reading\nLinear Algebra Crash Course (?sec-linalg)\nThe Matrix Cookbook (Petersen and Pedersen (2012))\n\n\n\n\n\nPetersen, Kaare Brandt, and Michael Syskind Pedersen. 2012. “The Matrix Cookbook.” https://www.math.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf.",
     "crumbs": [
       "<span class='chapter-number'>2</span>  <span class='chapter-title'>Linear Least Squares Problems</span>"
     ]
