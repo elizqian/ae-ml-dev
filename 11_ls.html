@@ -84,7 +84,7 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./12_lslinalg.html" rel="next">
+<link href="./00_linalg.html" rel="next">
 <link href="./01_intro.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -208,36 +208,6 @@ window.Quarto = {
   <div class="sidebar-item-container"> 
   <a href="./11_ls.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Linear Least Squares Problems</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./12_lslinalg.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">LLS: Linear Algebra Perspective</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./13_lsnla.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">LLS: Computational Considerations</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./20_ugbo.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Unconstrained Gradient Based Optimization (UGBO)</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./21_ugbo2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Unconstrained Gradient Based Optimization (UGBO) II - Steepest Descent</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">References</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -619,7 +589,7 @@ R = \frac{\sum (\hat{y}_i -\bar{\hat{y}})(y_i - \bar{y})}{\sqrt{\sum (\hat{y}_i 
 <h2 data-number="2.6" class="anchored" data-anchor-id="exercises"><span class="header-section-number">2.6</span> Exercises</h2>
 <ol type="1">
 <li><p>Recall that the loss-function for least-squares regression is given by <span class="math inline">\(\mathcal{L}(\beta) = \frac 1N|| X \beta - Y||_2^2\)</span>. Show that the gradient of <span class="math inline">\(\mathcal{L}\)</span> with respect to <span class="math inline">\(\beta\)</span> is given by <span class="math inline">\(\nabla_\beta \mathcal{L} = \frac2N \left( X^\top X \beta - X^\top Y\right)\)</span></p>
-<p><em>Hint:</em> you may find the following identities from the Matrix Cookbook <span class="citation" data-cites="petersen2012matrix">(<a href="references.html#ref-petersen2012matrix" role="doc-biblioref">Petersen and Pedersen 2012</a>)</span> useful. For <span class="math inline">\(v,u\in\mathbb{R}^n\)</span> and <span class="math inline">\(A\in\mathbb{R}^{n\times n}\)</span>, the following hold:</p>
+<p><em>Hint:</em> you may find the following identities from the Matrix Cookbook <span class="citation" data-cites="petersen2012matrix">(<a href="#ref-petersen2012matrix" role="doc-biblioref">Petersen and Pedersen 2012</a>)</span> useful. For <span class="math inline">\(v,u\in\mathbb{R}^n\)</span> and <span class="math inline">\(A\in\mathbb{R}^{n\times n}\)</span>, the following hold:</p>
 <ol type="i">
 <li><span class="math inline">\(\nabla_v (v^\top A v) = 2Av\)</span></li>
 <li><span class="math inline">\(\nabla_v (v^\top u) = \nabla_v(u^\top v) = u\)</span></li>
@@ -727,11 +697,11 @@ This means we can add in *any* $\beta_0$ from the null-space and still end up wi
 <section id="further-reading" class="level2" data-number="2.7">
 <h2 data-number="2.7" class="anchored" data-anchor-id="further-reading"><span class="header-section-number">2.7</span> Further reading</h2>
 <p><em>Linear Algebra Crash Course (<a href="00_linalg.html#sec-linalg" class="quarto-xref"><span>Section A.1</span></a>)</em></p>
-<p><em>The Matrix Cookbook (<span class="citation" data-cites="petersen2012matrix">Petersen and Pedersen (<a href="references.html#ref-petersen2012matrix" role="doc-biblioref">2012</a>)</span>)</em></p>
+<p><em>The Matrix Cookbook (<span class="citation" data-cites="petersen2012matrix">Petersen and Pedersen (<a href="#ref-petersen2012matrix" role="doc-biblioref">2012</a>)</span>)</em></p>
 <hr>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
 <div id="ref-petersen2012matrix" class="csl-entry" role="listitem">
 Petersen, Kaare Brandt, and Michael Syskind Pedersen. 2012. <span>“The Matrix Cookbook.”</span> <a href="https://www.math.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf">https://www.math.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf</a>.
 </div>
@@ -1172,8 +1142,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./12_lslinalg.html" class="pagination-link" aria-label="LLS: Linear Algebra Perspective">
-        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">LLS: Linear Algebra Perspective</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./00_linalg.html" class="pagination-link" aria-label="Linear algebra review">
+        <span class="nav-page-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Linear algebra review</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
