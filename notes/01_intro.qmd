@@ -155,10 +155,3 @@ I want to emphasize that this class is not and indeed cannot (realistically) be 
 
 We will seek to develop a firm foundation in these three pillars of AI throughout the course. 
 
-## Course structure and intended learning outcomes
-
-<!-- at a high level we want to teach you how to work with all three of these, and that motivates the structure of the course assignments and learning outcomes -->
-
-learning outcomes
-
-problem solving review - meant to develop your skills in demonstrating human intelligence
