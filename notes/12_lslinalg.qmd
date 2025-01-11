@@ -1,5 +1,5 @@
 ---
-title: "LLS: Linear Algebra Perspective"
+title: "LLS: A linear algebra perspective"
 html-math-method:
   method: mathjax
   url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
@@ -12,6 +12,11 @@ We now take a deeper dive into the structure of linear least squares problems. W
 
 The intended learning outcomes of these notes are that students should be able to:
 
+1. Determine if a least-squares problem is over-, under-, or well-determined. 
+
+2. Describe the set of all solutions to over-, under-, and well-determined least squares problems. 
+
+3. Use linear algebra concepts to describe how the choice of features in a linear regression model impacts the minimizer and minima of least squares problems.
 
 ## Mathematical problem formulation
 We briefly recap the mathematical problem formulation that we consider. Given a data set $\{(z_i,y_i)\}_{i=1}^N$, where $z_i\in\R^d$ and $y_i\in\R$ are paired inputs and outputs, we choose a feature mapping $x: \R^d\to\R^n$. 
@@ -103,9 +108,9 @@ With the residual defined in @eq-res-def, the expression @eq-ls-res-min recovers
 
 [^3]: see, for example, the documentation for the numpy function [<tt>linalg.lstsq</tt>](https://numpy.org/doc/stable/reference/generated/numpy.linalg.lstsq.html) or the [scipy version](https://docs.scipy.org/doc/scipy/reference/generated/scipy.linalg.lstsq.html#scipy.linalg.lstsq)
 
-::: {.callout-note}
+<!-- ::: {.callout-note}
 explain that row redundancy can also happen if not literally the same thing
-:::
+::: -->
 
 
 ### Underdetermined least-squares problems
@@ -132,12 +137,11 @@ $$ {#eq-min-norm-ls}
 
 
 
-::: {.callout-note}
+<!-- ::: {.callout-note}
 explain that col redundancy can also happen even if $N\geq n$ if features are redundant.
-:::
+::: -->
 
-### Summary of linear least-squares problem formulation
-
+### Summary of linear least-squares problem formulation 
 For $X$ and $y$ defined as in @eq-def-X-y, to solve $X\beta=Y$ means to find the minimum-norm least-squares solution as described in @eq-min-norm-ls. This is generally what is happening under the hood when you use any scientific computing or machine learning software that has a built-in least-squares function, including
 
 - <tt>scipy.linalg.lstsq</tt>
@@ -146,25 +150,40 @@ For $X$ and $y$ defined as in @eq-def-X-y, to solve $X\beta=Y$ means to find the
 
 In a later chapter we will introduce some of the basic algorithms that are used to find (minimum-norm) least-squares solutions that these functions use. For now you should focus on understanding the precise mathematical definition of the least squares solution given in @eq-min-norm-ls.
 
+
 ## Feature selection: expressivity, accuracy, and well-posedness
+<!-- I wanted more linear algebra (range/columnspace/residual) in here but it will have to wait until later.  -->
 
-You may wonder why you should bother understanding what these built-in functions are doing if they're going to just do them for you. One reason is that you can debug machine learning code much more effectively if you understand what the code is supposed to be doing theoretically. Another reason is that considerations of well-posedness have big implications for your job as an intelligent human designer of machine learning models. 
+You may wonder why you should bother understanding what the mathematical solution is when there are built-in functions that just give it to you. One reason is that you can debug machine learning code much more effectively if you understand what the code is supposed to be doing theoretically. Another reason is that considerations of well-posedness have big implications for your job as an intelligent human designer of machine learning models. 
 
-For linear regression models, your job as an intelligent human is to decide on the *feature* mapping $x:\R^d \to\R^n$, which determines what kinds of terms appear in your learned model. 
+For linear regression models, your job as an intelligent human is to decide on the *feature* mapping $x:\R^d \to\R^n$, which determines what kinds of terms appear in your learned model. Examples of features can include:
+
+1. monomials, e.g., $1, z, z^2, z^3, \ldots$,
+
+2. Fourier features, e.g. $\sin(\pi z), \cos(\pi z), \sin(2\pi z),\cos(2\pi z), \ldots$, 
+
+3. physics-based features based on problem knowledge,
+
+4. or any other function of $z$ that you choose.
+
+<!-- examples where you might downselect (image/PDE data) -->
+
+<!-- The key is to realize that the choice of feature mapping $x$ changes the formulation of the least squares problem and thus impacts the performance of the learned model.  -->
+
+The choice of feature mapping $x$ determines the *expressivity* of the model class. The term "expressivity" describes the set of functions that the model class can represent. 
+A model class is considered highly expressive if it can represent many different types of functions. For example, recall that any continuous function can be arbitrarily well-approximated by an infinite sum of polynomial terms. Thus, the features $x_j : z \mapsto z^j$ for $j = 0,1,2,\ldots, d-1$ would be highly expressive if $d$ is large. Fourier-based features have a similar approximation result -- if our features are based on truncating a Fourier series at some frequency, the more features we have, the more expressive the model class would be. 
+
+Generally, highly expressive model classes are better able to match the training data than less expressive model classes. This is because there are more degrees of freedom (regression coefficients) that we can tweak to lower the mismatch between the model prediction and the training data. 
+However, the more features we have, the greater the risk of *overfitting*, that is, achieving a very low error on the training data with a model that will not perform well on unseen (test) data. Overfitting is especially a risk for underdetermined problems, where there are more features than data points, but can also happen even when the problem is well-determined or over-determined.
 
 
-give examples of choice of features (polynomial, fourier, random features/neural nets) as well as examples where you might downselect (image/PDE data)
+<!-- add something about cross validation, principle of parsimony?? -->
 
-explain expressivity in terms of the columnspace (range) of the features (basis), generally more features = more expressivity = more ability to match the training data
+ <!-- add feature selection example? -->
 
-point out that however, more expressivity means more likely to be underdetermined, requiring regularization
+<!-- ## Exercises -->
 
-link to overfitting and accuracy on test vs training data. move the cross validation part here?
-
-
-## Exercises
-
-- some scenarios to classify as under or over-determined or both
+<!-- - some scenarios to classify as under or over-determined or both -->
 
 
 

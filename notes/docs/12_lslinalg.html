@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.4.554">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>3&nbsp; LLS: Linear Algebra Perspective – AE 4803 AIM: Course Notes</title>
+<title>AE 4803 AIM: Course Notes - 3&nbsp; LLS: A linear algebra perspective</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -30,7 +30,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./13_lsnla.html" rel="next">
+<link href="./references.html" rel="next">
 <link href="./11_ls.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -69,7 +69,7 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript"></script>
 
 <script type="text/javascript">
@@ -107,13 +107,13 @@ window.Quarto = {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./12_lslinalg.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">LLS: Linear Algebra Perspective</span></a></li></ol></nav>
-        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./12_lslinalg.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">LLS: A linear algebra perspective</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
-      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
@@ -156,25 +156,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./12_lslinalg.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">LLS: Linear Algebra Perspective</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./13_lsnla.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">LLS: Computational Considerations</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./20_ugbo.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Unconstrained Gradient Based Optimization (UGBO)</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./21_ugbo2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Unconstrained Gradient Based Optimization (UGBO) II - Steepest Descent</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">LLS: A linear algebra perspective</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -185,9 +167,9 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
  <span class="menu-text">Appendices</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -219,7 +201,6 @@ window.Quarto = {
   <li><a href="#summary-of-linear-least-squares-problem-formulation" id="toc-summary-of-linear-least-squares-problem-formulation" class="nav-link" data-scroll-target="#summary-of-linear-least-squares-problem-formulation"><span class="header-section-number">3.2.4</span> Summary of linear least-squares problem formulation</a></li>
   </ul></li>
   <li><a href="#feature-selection-expressivity-accuracy-and-well-posedness" id="toc-feature-selection-expressivity-accuracy-and-well-posedness" class="nav-link" data-scroll-target="#feature-selection-expressivity-accuracy-and-well-posedness"><span class="header-section-number">3.3</span> Feature selection: expressivity, accuracy, and well-posedness</a></li>
-  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">3.4</span> Exercises</a></li>
   </ul>
 </nav>
     </div>
@@ -228,7 +209,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">LLS: Linear Algebra Perspective</span></h1>
+<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">LLS: A linear algebra perspective</span></h1>
 </div>
 
 
@@ -256,6 +237,11 @@ $$
 </div>
 <p>We now take a deeper dive into the structure of linear least squares problems. We will see how theoretical concepts from linear algebra can be used to describe and explain properties of learned linear regression models, and we will introduce fundamental algorithms from computational linear algebra that are used to solve linear least squares problems.</p>
 <p>The intended learning outcomes of these notes are that students should be able to:</p>
+<ol type="1">
+<li><p>Determine if a least-squares problem is over-, under-, or well-determined.</p></li>
+<li><p>Describe the set of all solutions to over-, under-, and well-determined least squares problems.</p></li>
+<li><p>Use linear algebra concepts to describe how the choice of features in a linear regression model impacts the minimizer and minima of least squares problems.</p></li>
+</ol>
 <section id="mathematical-problem-formulation" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="mathematical-problem-formulation"><span class="header-section-number">3.1</span> Mathematical problem formulation</h2>
 <p>We briefly recap the mathematical problem formulation that we consider. Given a data set <span class="math inline">\(\{(z_i,y_i)\}_{i=1}^N\)</span>, where <span class="math inline">\(z_i\in\mathbb{R}^d\)</span> and <span class="math inline">\(y_i\in\mathbb{R}\)</span> are paired inputs and outputs, we choose a feature mapping <span class="math inline">\(x: \mathbb{R}^d\to\mathbb{R}^n\)</span>. We seek to find coefficients <span class="math inline">\(\beta\in\mathbb{R}^n\)</span> so that the model</p>
@@ -312,19 +298,9 @@ r(\beta) = X\beta-Y.
 \beta^* = \arg\min_{\beta\in\mathbb{R}^n} \|r(\beta)\| = \arg\min_{\beta\in\mathbb{R}^n}\|r(\beta)\|^2
 \qquad(3.4)\]</span></span></p>
 <p>With the residual defined in <a href="#eq-res-def" class="quarto-xref">Equation&nbsp;<span>3.3</span></a>, the expression <a href="#eq-ls-res-min" class="quarto-xref">Equation&nbsp;<span>3.4</span></a> recovers our original expression for the formulation of a least-squares problem<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, <a href="11_ls.html#eq-linreg-minimization" class="quarto-xref">Equation&nbsp;<span>2.2</span></a>. In this sense, the least-squares formulation “fixes” the lack of existence of a solution to the linear system due to row redundancy. For this reason, if you see <span class="math inline">\(X\beta=Y\)</span> written for a non-invertible system<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>, the way you should understand that is in the sense of solving <a href="11_ls.html#eq-linreg-minimization" class="quarto-xref">Equation&nbsp;<span>2.2</span></a>.</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>explain that row redundancy can also happen if not literally the same thing</p>
-</div>
-</div>
+<!-- ::: {.callout-note}
+explain that row redundancy can also happen if not literally the same thing
+::: -->
 </section>
 <section id="underdetermined-least-squares-problems" class="level3" data-number="3.2.3">
 <h3 data-number="3.2.3" class="anchored" data-anchor-id="underdetermined-least-squares-problems"><span class="header-section-number">3.2.3</span> Underdetermined least-squares problems</h3>
@@ -339,19 +315,9 @@ r^* = \min_{\beta\in\mathbb{R}^n}\|r(\beta)\|.
 <p><span id="eq-min-norm-ls"><span class="math display">\[
 \beta^* = \arg\min_{\beta\in\mathbb{R}^n} \|\beta\| \quad \text{subject to } \|X\beta - Y\| = r^*.
 \qquad(3.5)\]</span></span></p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>explain that col redundancy can also happen even if <span class="math inline">\(N\geq n\)</span> if features are redundant.</p>
-</div>
-</div>
+<!-- ::: {.callout-note}
+explain that col redundancy can also happen even if $N\geq n$ if features are redundant.
+::: -->
 </section>
 <section id="summary-of-linear-least-squares-problem-formulation" class="level3" data-number="3.2.4">
 <h3 data-number="3.2.4" class="anchored" data-anchor-id="summary-of-linear-least-squares-problem-formulation"><span class="header-section-number">3.2.4</span> Summary of linear least-squares problem formulation</h3>
@@ -366,18 +332,23 @@ Note
 </section>
 <section id="feature-selection-expressivity-accuracy-and-well-posedness" class="level2" data-number="3.3">
 <h2 data-number="3.3" class="anchored" data-anchor-id="feature-selection-expressivity-accuracy-and-well-posedness"><span class="header-section-number">3.3</span> Feature selection: expressivity, accuracy, and well-posedness</h2>
-<p>You may wonder why you should bother understanding what these built-in functions are doing if they’re going to just do them for you. One reason is that you can debug machine learning code much more effectively if you understand what the code is supposed to be doing theoretically. Another reason is that considerations of well-posedness have big implications for your job as an intelligent human designer of machine learning models.</p>
-<p>For linear regression models, your job as an intelligent human is to decide on the <em>feature</em> mapping <span class="math inline">\(x:\mathbb{R}^d \to\mathbb{R}^n\)</span>, which determines what kinds of terms appear in your learned model.</p>
-<p>give examples of choice of features (polynomial, fourier, random features/neural nets) as well as examples where you might downselect (image/PDE data)</p>
-<p>explain expressivity in terms of the columnspace (range) of the features (basis), generally more features = more expressivity = more ability to match the training data</p>
-<p>point out that however, more expressivity means more likely to be underdetermined, requiring regularization</p>
-<p>link to overfitting and accuracy on test vs training data. move the cross validation part here?</p>
-</section>
-<section id="exercises" class="level2" data-number="3.4">
-<h2 data-number="3.4" class="anchored" data-anchor-id="exercises"><span class="header-section-number">3.4</span> Exercises</h2>
-<ul>
-<li>some scenarios to classify as under or over-determined or both</li>
-</ul>
+<!-- I wanted more linear algebra (range/columnspace/residual) in here but it will have to wait until later.  -->
+<p>You may wonder why you should bother understanding what the mathematical solution is when there are built-in functions that just give it to you. One reason is that you can debug machine learning code much more effectively if you understand what the code is supposed to be doing theoretically. Another reason is that considerations of well-posedness have big implications for your job as an intelligent human designer of machine learning models.</p>
+<p>For linear regression models, your job as an intelligent human is to decide on the <em>feature</em> mapping <span class="math inline">\(x:\mathbb{R}^d \to\mathbb{R}^n\)</span>, which determines what kinds of terms appear in your learned model. Examples of features can include:</p>
+<ol type="1">
+<li><p>monomials, e.g., <span class="math inline">\(1, z, z^2, z^3, \ldots\)</span>,</p></li>
+<li><p>Fourier features, e.g.&nbsp;<span class="math inline">\(\sin(\pi z), \cos(\pi z), \sin(2\pi z),\cos(2\pi z), \ldots\)</span>,</p></li>
+<li><p>physics-based features based on problem knowledge,</p></li>
+<li><p>or any other function of <span class="math inline">\(z\)</span> that you choose.</p></li>
+</ol>
+<!-- examples where you might downselect (image/PDE data) -->
+<!-- The key is to realize that the choice of feature mapping $x$ changes the formulation of the least squares problem and thus impacts the performance of the learned model.  -->
+<p>The choice of feature mapping <span class="math inline">\(x\)</span> determines the <em>expressivity</em> of the model class. The term “expressivity” describes the set of functions that the model class can represent. A model class is considered highly expressive if it can represent many different types of functions. For example, recall that any continuous function can be arbitrarily well-approximated by an infinite sum of polynomial terms. Thus, the features <span class="math inline">\(x_j : z \mapsto z^j\)</span> for <span class="math inline">\(j = 0,1,2,\ldots, d-1\)</span> would be highly expressive if <span class="math inline">\(d\)</span> is large. Fourier-based features have a similar approximation result – if our features are based on truncating a Fourier series at some frequency, the more features we have, the more expressive the model class would be.</p>
+<p>Generally, highly expressive model classes are better able to match the training data than less expressive model classes. This is because there are more degrees of freedom (regression coefficients) that we can tweak to lower the mismatch between the model prediction and the training data. However, the more features we have, the greater the risk of <em>overfitting</em>, that is, achieving a very low error on the training data with a model that will not perform well on unseen (test) data. Overfitting is especially a risk for underdetermined problems, where there are more features than data points, but can also happen even when the problem is well-determined or over-determined.</p>
+<!-- add something about cross validation, principle of parsimony?? -->
+<p><!-- add feature selection example? --></p>
+<!-- ## Exercises -->
+<!-- - some scenarios to classify as under or over-determined or both -->
 <!-- ## Using Nonlinear Features to Improve Model Performance -->
 <!-- We know the underlying formula for drag-force is: 
 
@@ -439,7 +410,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const onCopySuccess = function(e) {
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -471,29 +453,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
-  }
-  const getTextToCopy = function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-    text: getTextToCopy
   });
-  clipboard.on('success', onCopySuccess);
-  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
-    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-      text: getTextToCopy,
-      container: window.document.getElementById('quarto-embedded-source-code-modal')
-    });
-    clipboardModal.on('success', onCopySuccess);
-  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp('/' + window.location.host + '/');
@@ -501,7 +461,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {
@@ -831,8 +791,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./13_lsnla.html" class="pagination-link" aria-label="LLS: Computational Considerations">
-        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">LLS: Computational Considerations</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./references.html" class="pagination-link" aria-label="References">
+        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
