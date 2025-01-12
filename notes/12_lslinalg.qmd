@@ -8,7 +8,7 @@ html-math-method:
 
 {{< include _macros.qmd >}}
 
-We now take a deeper dive into the structure of linear least squares problems. We will see how theoretical concepts from linear algebra can be used to describe and explain properties of learned linear regression models, and we will introduce fundamental algorithms from computational linear algebra that are used to solve linear least squares problems.
+We now take a deeper dive into the structure of linear least squares problems. We will see how theoretical concepts from linear algebra can be used to describe and explain properties of learned linear regression models.
 
 The intended learning outcomes of these notes are that students should be able to:
 
@@ -171,7 +171,7 @@ For linear regression models, your job as an intelligent human is to decide on t
 <!-- The key is to realize that the choice of feature mapping $x$ changes the formulation of the least squares problem and thus impacts the performance of the learned model.  -->
 
 The choice of feature mapping $x$ determines the *expressivity* of the model class. The term "expressivity" describes the set of functions that the model class can represent. 
-A model class is considered highly expressive if it can represent many different types of functions. For example, recall that any continuous function can be arbitrarily well-approximated by an infinite sum of polynomial terms. Thus, the features $x_j : z \mapsto z^j$ for $j = 0,1,2,\ldots, d-1$ would be highly expressive if $d$ is large. Fourier-based features have a similar approximation result -- if our features are based on truncating a Fourier series at some frequency, the more features we have, the more expressive the model class would be. 
+A model class is considered highly expressive if it can represent many different types of functions. For example, recall that any continuous function can be arbitrarily well-approximated by an infinite sum of polynomial terms. Thus, the features $x_j : z \mapsto z^j$ for $j = 0,1,2,\ldots, n-1$ would be highly expressive if $d$ is large. Fourier-based features have a similar approximation result -- if our features are based on truncating a Fourier series at some frequency, the more features we have, the more expressive the model class would be. 
 
 Generally, highly expressive model classes are better able to match the training data than less expressive model classes. This is because there are more degrees of freedom (regression coefficients) that we can tweak to lower the mismatch between the model prediction and the training data. 
 However, the more features we have, the greater the risk of *overfitting*, that is, achieving a very low error on the training data with a model that will not perform well on unseen (test) data. Overfitting is especially a risk for underdetermined problems, where there are more features than data points, but can also happen even when the problem is well-determined or over-determined.

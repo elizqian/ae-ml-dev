@@ -30,7 +30,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./13_lsnla.html" rel="next">
+<link href="./references.html" rel="next">
 <link href="./11_ls.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -161,12 +161,6 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./13_lsnla.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">LLS: Computational Considerations</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
@@ -241,7 +235,7 @@ $$
 
 \definecolor{quarto-callout-note-color}{HTML}{4477AA} -->
 </div>
-<p>We now take a deeper dive into the structure of linear least squares problems. We will see how theoretical concepts from linear algebra can be used to describe and explain properties of learned linear regression models.</p>
+<p>We now take a deeper dive into the structure of linear least squares problems. We will see how theoretical concepts from linear algebra can be used to describe and explain properties of learned linear regression models, and we will introduce fundamental algorithms from computational linear algebra that are used to solve linear least squares problems.</p>
 <p>The intended learning outcomes of these notes are that students should be able to:</p>
 <ol type="1">
 <li><p>Determine if a least-squares problem is over-, under-, or well-determined.</p></li>
@@ -349,7 +343,7 @@ explain that col redundancy can also happen even if $N\geq n$ if features are re
 </ol>
 <!-- examples where you might downselect (image/PDE data) -->
 <!-- The key is to realize that the choice of feature mapping $x$ changes the formulation of the least squares problem and thus impacts the performance of the learned model.  -->
-<p>The choice of feature mapping <span class="math inline">\(x\)</span> determines the <em>expressivity</em> of the model class. The term “expressivity” describes the set of functions that the model class can represent. A model class is considered highly expressive if it can represent many different types of functions. For example, recall that any continuous function can be arbitrarily well-approximated by an infinite sum of polynomial terms. Thus, the features <span class="math inline">\(x_j : z \mapsto z^j\)</span> for <span class="math inline">\(j = 0,1,2,\ldots, n-1\)</span> would be highly expressive if <span class="math inline">\(d\)</span> is large. Fourier-based features have a similar approximation result – if our features are based on truncating a Fourier series at some frequency, the more features we have, the more expressive the model class would be.</p>
+<p>The choice of feature mapping <span class="math inline">\(x\)</span> determines the <em>expressivity</em> of the model class. The term “expressivity” describes the set of functions that the model class can represent. A model class is considered highly expressive if it can represent many different types of functions. For example, recall that any continuous function can be arbitrarily well-approximated by an infinite sum of polynomial terms. Thus, the features <span class="math inline">\(x_j : z \mapsto z^j\)</span> for <span class="math inline">\(j = 0,1,2,\ldots, d-1\)</span> would be highly expressive if <span class="math inline">\(d\)</span> is large. Fourier-based features have a similar approximation result – if our features are based on truncating a Fourier series at some frequency, the more features we have, the more expressive the model class would be.</p>
 <p>Generally, highly expressive model classes are better able to match the training data than less expressive model classes. This is because there are more degrees of freedom (regression coefficients) that we can tweak to lower the mismatch between the model prediction and the training data. However, the more features we have, the greater the risk of <em>overfitting</em>, that is, achieving a very low error on the training data with a model that will not perform well on unseen (test) data. Overfitting is especially a risk for underdetermined problems, where there are more features than data points, but can also happen even when the problem is well-determined or over-determined.</p>
 <!-- add something about cross validation, principle of parsimony?? -->
 <p><!-- add feature selection example? --></p>
@@ -797,8 +791,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./13_lsnla.html" class="pagination-link" aria-label="LLS: Computational Considerations">
-        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">LLS: Computational Considerations</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./references.html" class="pagination-link" aria-label="References">
+        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

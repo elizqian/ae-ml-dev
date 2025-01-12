@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>AE 4803 AIM: Course Notes - 4&nbsp; LLS: Computational Considerations</title>
+<title>AE 4803 AIM: Course Notes - 4&nbsp; LLS: Computational Cost</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -50,7 +50,7 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./references.html" rel="next">
+<link href="./14_lssvd.html" rel="next">
 <link href="./12_lslinalg.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -130,7 +130,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./13_lsnla.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">LLS: Computational Considerations</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./13_lsnla.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">LLS: Computational Cost</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -176,13 +176,19 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./12_lslinalg.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">LLS: Linear Algebra Perspective</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">LLS: A linear algebra perspective</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./13_lsnla.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">LLS: Computational Considerations</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">LLS: Computational Cost</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14_lssvd.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">LLS and the singular value decomposition</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -218,10 +224,17 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#algorithms-for-solving-linear-systems" id="toc-algorithms-for-solving-linear-systems" class="nav-link active" data-scroll-target="#algorithms-for-solving-linear-systems"><span class="header-section-number">4.1</span> Algorithms for solving linear systems</a>
+  <li><a href="#measuring-computational-cost" id="toc-measuring-computational-cost" class="nav-link active" data-scroll-target="#measuring-computational-cost"><span class="header-section-number">4.1</span> Measuring computational cost</a>
   <ul class="collapse">
-  <li><a href="#invertible-linear-systems" id="toc-invertible-linear-systems" class="nav-link" data-scroll-target="#invertible-linear-systems"><span class="header-section-number">4.1.1</span> Invertible linear systems</a></li>
-  <li><a href="#least-squares-problems" id="toc-least-squares-problems" class="nav-link" data-scroll-target="#least-squares-problems"><span class="header-section-number">4.1.2</span> Least squares problems</a></li>
+  <li><a href="#measuring-time-complexity-using-flops" id="toc-measuring-time-complexity-using-flops" class="nav-link" data-scroll-target="#measuring-time-complexity-using-flops"><span class="header-section-number">4.1.1</span> Measuring time complexity using FLOPs</a></li>
+  <li><a href="#measuring-memory-complexity" id="toc-measuring-memory-complexity" class="nav-link" data-scroll-target="#measuring-memory-complexity"><span class="header-section-number">4.1.2</span> Measuring memory complexity</a></li>
+  </ul></li>
+  <li><a href="#computational-cost-of-solving-linear-systems" id="toc-computational-cost-of-solving-linear-systems" class="nav-link" data-scroll-target="#computational-cost-of-solving-linear-systems"><span class="header-section-number">4.2</span> Computational cost of solving linear systems</a>
+  <ul class="collapse">
+  <li><a href="#lu-and-qr-decomposition-linear-algebra-review" id="toc-lu-and-qr-decomposition-linear-algebra-review" class="nav-link" data-scroll-target="#lu-and-qr-decomposition-linear-algebra-review"><span class="header-section-number">4.2.1</span> LU and QR decomposition: linear algebra review</a></li>
+  <li><a href="#lu-and-qr-decomposition-algorithms" id="toc-lu-and-qr-decomposition-algorithms" class="nav-link" data-scroll-target="#lu-and-qr-decomposition-algorithms"><span class="header-section-number">4.2.2</span> LU and QR decomposition: algorithms</a></li>
+  <li><a href="#invertible-linear-systems" id="toc-invertible-linear-systems" class="nav-link" data-scroll-target="#invertible-linear-systems"><span class="header-section-number">4.2.3</span> Invertible linear systems</a></li>
+  <li><a href="#least-squares-problems" id="toc-least-squares-problems" class="nav-link" data-scroll-target="#least-squares-problems"><span class="header-section-number">4.2.4</span> Least squares problems</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -231,7 +244,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">LLS: Computational Considerations</span></h1>
+<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">LLS: Computational Cost</span></h1>
 </div>
 
 
@@ -257,24 +270,148 @@ $$
 
 \definecolor{quarto-callout-note-color}{HTML}{4477AA} -->
 </div>
-<p>introduce FLOPs for matmat, matvec, etc.</p>
-<p>introduce LU and QR, give pseudocode algorithms, matrix expressions, cost of each algorithm, give python code and show nonzero residual for LU and conditioning error for QR?</p>
-<p>explain machine precision both double and single</p>
-<p>introduce the SVD in math, singular values vs rank/conditioning, explain the concept of conditioning in terms of being essentially non-invertible from the computer’s point of view, cond/rank commands</p>
-<p>show that normal equations are terribly conditioned.</p>
-<p>pseudoinverse and truncated SVD for regularization</p>
-<p>SVD + PCA??</p>
-<section id="algorithms-for-solving-linear-systems" class="level2" data-number="4.1">
-<h2 data-number="4.1" class="anchored" data-anchor-id="algorithms-for-solving-linear-systems"><span class="header-section-number">4.1</span> Algorithms for solving linear systems</h2>
-<p>We now turn our attention to the algorithms for solving equations of the form <span class="math inline">\(X\beta = Y\)</span> for invertible as well as over- or underdetermined systems. For all of these cases, the best practice is to use functions that are part of standard linear algebra packages to solve these systems. In python, both the <tt>numpy</tt> and <tt>scipy</tt> libraries have <tt>linalg</tt> packages that contain various useful linear algebra functions. Both are based on the LAPACK library, which efficiently implements many linear algebra computations in Fortran. Popular deep learning packages like PyTorch and TensorFlow have their own linear algebra packages that build on other libraries that leverage GPU computing capabilities.</p>
-<!-- add a sentence saying what things we will introduce -->
-<section id="invertible-linear-systems" class="level3" data-number="4.1.1">
-<h3 data-number="4.1.1" class="anchored" data-anchor-id="invertible-linear-systems"><span class="header-section-number">4.1.1</span> Invertible linear systems</h3>
-<p>If <span class="math inline">\(X\)</span> is invertible (and therefore square), the python functions we use to solve the system <span class="math inline">\(X\beta=Y\)</span> are <tt>numpy.linalg.solve</tt> and <tt>scipy.linalg.solve</tt>.</p>
-<p>These packages solve <span class="math inline">\(X\beta = Y\)</span> using <em>LU factorization</em>, which is a topic that should have been covered in your linear algebra class. Here’s a quick recap if you’ve forgotten<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>: any square matrix <span class="math inline">\(X\)</span> can be written (sometimes after appropriate re-ordering of the rows/columns) as the product of a lower triangular matrix <span class="math inline">\(L\)</span> with an upper triangular matrix <span class="math inline">\(U\)</span>, that is, <span class="math inline">\(X=LU\)</span>. Here’s some pseudocode for LU decomposition (without pivoting, that is, assuming no re-ordering of the rows/columns of <span class="math inline">\(X\)</span> are necessary):</p>
-<p><strong>LU decomposition: pseudocode</strong></p>
+<p>In this section we will introduce fundamental algorithms from computational linear algebra that are used to solve linear systems and linear least squares problems. We will also introduce and discuss some of the key properties and theoretical considerations when using these algorithms.</p>
+<p>The intended learning outcomes of these notes are that students should be able to:</p>
+<section id="measuring-computational-cost" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="measuring-computational-cost"><span class="header-section-number">4.1</span> Measuring computational cost</h2>
+<p>A key property of any algorithm is its computational cost. The two types of cost we are interested in are <em>time</em> and <em>memory</em>: the former describes how long an algorithm takes to run, and the latter describes how many bytes of RAM we must have available in order to run the computation. For both of these measures, we are interested in understanding how the time and memory costs change as the dimensions of the problem (the number of data <span class="math inline">\(N\)</span> or the number of features <span class="math inline">\(d\)</span>) change. These properties are often referred to as the (time or memory) <em>complexity</em> of the algorithm, or as the (time or memory) cost <em>scaling</em> of the algorithm.</p>
+<section id="measuring-time-complexity-using-flops" class="level3" data-number="4.1.1">
+<h3 data-number="4.1.1" class="anchored" data-anchor-id="measuring-time-complexity-using-flops"><span class="header-section-number">4.1.1</span> Measuring time complexity using FLOPs</h3>
+<p>We will focus on compute time first. Since compute time will vary from computer to computer, the way we measure time complexity in computational linear algebra is by counting the number of <em>floating point operations (FLOPs)</em> required by an algorithm. A single FLOP refers to the addition, subtraction, multiplication, or division of two scalar quantities. Compute speed of supercomputers is measured in FLOPs per second (also abbreviated FLOPs), and you’ll the fastest computers in the world measured in gigaFLOPs (<span class="math inline">\(10^9\)</span>), teraFLOPs (<span class="math inline">\(10^{12}\)</span>), or even exaFLOPs (<span class="math inline">\(10^{18}\)</span>). All computational linear algebra algorithms are simply comprised of a bunch of FLOPs strung together. To see this, consider adding two vectors, <span class="math inline">\(a,b\in\mathbb{R}^n\)</span>:</p>
+<p><span class="math display">\[
+a + b = \begin{pmatrix}a_1 \\ a_2 \\ \vdots \\ a_n\end{pmatrix} +
+\begin{pmatrix}b_1 \\ b_2 \\ \vdots \\ b_n\end{pmatrix}
+\]</span></p>
+<p>Since vector addition means that the corresponding elements each get added to each other, there are as many scalar addition operations as there are elements of the the vector. Thus vector addition has cost <span class="math inline">\(n\)</span>.</p>
+<p>Let’s now consider another operation between vectors, the dot product:</p>
+<p><span class="math display">\[
+a\cdot b = a^\top b = a_1b_1 + a_2b_2 + \cdots + a_nb_n
+\]</span></p>
+<p>The dot product involves <span class="math inline">\(n\)</span> element-wise multiplications followed by <span class="math inline">\((n-1)\)</span> additions. The total cost is thus <span class="math inline">\(2n-1\)</span> FLOPs.</p>
+<p>Recall that we are most interested in how the computational cost of a computation <em>scales</em> as the dimension of the problem changes. For both vector addition and the dot product between vectors, the computational cost is said to scale <em>linearly</em> with the size of the vectors <span class="math inline">\(n\)</span>. This is because the highest-order polynomial term in the cost is <span class="math inline">\(n^1\)</span>, so this linear term dominates the cost as <span class="math inline">\(n\)</span> becomes large. This means that if we increase <span class="math inline">\(n\)</span> by a factor of 10, the cost will also increase by approximately a factor of 10. Note that this is true regardless of what the constant factor in front of the <span class="math inline">\(n^1\)</span> term is. Because of this, it is common to write that the cost is <span class="math inline">\(\mathcal{O}(n)\)</span> (read this notation as “order n” or “big-O n”, although the technical definition of “big-O” is not one I plan to get into). Other common terminology is to say that the computation has “first-order” cost scaling/complexity.</p>
+<p>As a final example of FLOP-counting in action before we move on, consider matrix-vector multiplication. That is, let <span class="math inline">\(A\in\mathbb{R}^{m\times n}\)</span> and let <span class="math inline">\(b\in\mathbb{R}^n\)</span>. Then, note that</p>
+<p><span class="math display">\[
+Ab = \begin{pmatrix}a_{1,:}\cdot b \\ a_{2,:}\cdot b \\ \vdots \\ a_{m,:} \cdot b \end{pmatrix}
+\]</span></p>
+<p>where <span class="math inline">\(a_{i,:}\in\mathbb{R}^n\)</span> denotes the row vector that is the <span class="math inline">\(i\)</span>th row of <span class="math inline">\(A\)</span>. Writing it this way shows that a matrix-vector multiplication consists of <span class="math inline">\(m\)</span> dot products between two vectors of length <span class="math inline">\(n\)</span>. Thus, the total number of FLOPs is <span class="math inline">\(m(2n-1)\)</span>, which we say is <span class="math inline">\(\mathcal{O}(mn)\)</span>. If the matrix <span class="math inline">\(A\)</span> is square so that <span class="math inline">\(m=n\)</span>, we would say that matrix-vector multiplication is <span class="math inline">\(\mathcal{O}(n^2)\)</span>, i.e., it has second-order or quadratic cost scaling/complexity.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Cost scaling really describes the cost of algorithms as <span class="math inline">\(n\)</span> becomes <em>large</em>. This means that as you increase <span class="math inline">\(n\)</span> from 2 to 3, or from 3 to 30, you may not see the expected scaling in run time. This is because small computations happen fast enough the run time might be more influenced by how busy your computer is doing other things than by how many FLOPs it needs to do. However, as you increase <span class="math inline">\(n\)</span> by orders of magnitude, to 1000 and 10000 and so on, you should see the expected cost scaling as <span class="math inline">\(n\)</span> becomes larger.</p>
+</div>
+</div>
+</section>
+<section id="measuring-memory-complexity" class="level3" data-number="4.1.2">
+<h3 data-number="4.1.2" class="anchored" data-anchor-id="measuring-memory-complexity"><span class="header-section-number">4.1.2</span> Measuring memory complexity</h3>
+<p>There are essentially two considerations when measuring memory complexity of scientific computing algorithms: (1) how a computer stores a single number (scalar), and (2) how many scalars must be stored in order to carry out a computation.</p>
+<section id="floating-point-numbers-an-introduction" class="level4" data-number="4.1.2.1">
+<h4 data-number="4.1.2.1" class="anchored" data-anchor-id="floating-point-numbers-an-introduction"><span class="header-section-number">4.1.2.1</span> Floating point numbers: an introduction</h4>
+<p>Computers represent numbers using <em>binary</em>, a base-2 numeral system (our usual number system is base-10, or “decimal”). Binary uses only two digits: 0 and 1. In binary, each digit is referred to as a “bit” (short for binary digit), and a group of eight bits is called a “byte.” In base-10, the right-most digit tells us how many ones (<span class="math inline">\(10^0\)</span>) we have, the second-right-most how many tens (<span class="math inline">\(10^1\)</span>), the third-right-most how many hundreds (<span class="math inline">\(10^2\)</span>), etc. Similarly, in binary the right-most bit tells us how many ones (<span class="math inline">\(2^0\)</span>) we have, the second-right-most how many 2s (<span class="math inline">\(2^1\)</span>), the third-right-most how many 4s (<span class="math inline">\(2^2\)</span>) etc. To see this in action, consider the binary number <span class="math inline">\(1101_2\)</span> (the subscript <span class="math inline">\(\cdot_2\)</span> tells us the number should be intepreted as a binary number as opposed to one-thousand-one-hundred-one). To convert <span class="math inline">\(1101_2\)</span> to decimal, we sum the powers of 2 corresponding to each bit:</p>
+<p><span class="math display">\[
+1101_2 = (1 \times 2^3) + (1 \times 2^2) + (0 \times 2^1) + (1 \times 2^0) = 8 + 4 + 0 + 1 = 13_{10}
+\]</span></p>
+<p>How can we use binary to represent decimal numbers, as well as negative numbers? If you have ever learned programming in a language like Java or C, you will have learned that computers can store variables in different <em>data types</em>. In scientific computing, the main data types we care about are single- and double-precision <em>floats</em> (short for floating-point number), which represent numbers with decimal points (as opposed to <code>int</code>s which represent integers). The difference between single-precision float and a double-precision float is the number of binary bits the computer uses to store the number. Single precision uses 32 bits, whereas double precision uses 64 bits. These are standard data types that divide up the available bits into three parts that define a type of binary scientific notation: the sign, the mantissa or significand, and the exponent. We convert these to a value as follows:</p>
+<p><span class="math display">\[
+\text{value} = (-1)^\text{sign} \cdot \text{significand} \cdot 2^\text{exponent}
+\]</span></p>
+<ul>
+<li><p>single precision uses 1 bit for the sign, 8 bits for the exponent, and 23 bits for the “mantissa” or “significand” (the significant digits that pre-multiply the exponent)</p></li>
+<li><p>double precision uses 1 bit for the sign, 11 bits for the exponent, and 52 bits for the mantissa/significand</p></li>
+</ul>
+<p>The sign bit can be 0 or 1 — if the bit is 0 we get a positive number and otherwise the number is negative. We do something clever with the significand: just like you would usually not write down the decimal number <span class="math inline">\(13\)</span> as <span class="math inline">\(0013\)</span>, in binary we also don’t want to “waste” bits with leading 0s. Thus, the significand is understood as having an implicit “1.” in front of all the bits that are actually stored, giving us 24 binary bits of precision in single-precision floats and 53 binary bits of precision in double-precision floats (note that all these bits of precision come after the implicit “1.”, meaning they’re associated with negative powers of 2). This translates to approximately 8 (15) decimal digits of precision for single-precision (double-precision) floats. Finally, for the exponent, the 8 (11) bits can represent the decimal numbers from 0 to 255 (0 to 2047), but we want to allow negative exponents in order to represent numbers that are smaller than 1. Thus, we subtract 127 (1023) from the number stored in the exponent bits to get the actual exponent.</p>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Worked example: Converting the single-precision float “0 10000001 10100000000000000000000” to decimal
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <ol type="1">
-<li>Initialize <span class="math inline">\(L = I\)</span> (Identity matrix).</li>
+<li><strong>Extract the parts</strong>:
+<ul>
+<li>Sign bit (S): <code>0</code> (positive)</li>
+<li>Exponent bits (E): <code>10000001</code></li>
+<li>Significand (fraction) bits (F): <code>10100000000000000000000</code></li>
+</ul></li>
+<li><strong>Convert the exponent</strong>:
+<ul>
+<li>The exponent is <code>10000001</code> in binary, which is <code>129</code> in decimal.</li>
+<li>The actual exponent is: <span class="math inline">\(E - 127 = 129 - 127 = 2\)</span>.</li>
+</ul></li>
+<li><strong>Convert the fraction</strong>:
+<ul>
+<li>The fraction is <code>1.F = 1.101</code> (because the leading 1 is implied).</li>
+<li>Convert <code>1.101</code> to decimal: <span class="math inline">\(1.101_2 = (1 \times 2^0) + (1 \times 2^{-1}) + (0 \times 2^{-2}) + (1 \times 2^{-3}) = 1 + 0.5 + 0 + 0.125 = 1.625\)</span>.</li>
+</ul></li>
+<li><strong>Calculate the value</strong>: <span class="math display">\[
+(-1)^S \times 1.F \times 2^{E - 127} = (-1)^0 \times 1.625 \times 2^2 = 1 \times 1.625 \times 4 = 6.5
+\]</span></li>
+</ol>
+</div>
+</div>
+</div>
+<p>The default for most computers you will encounter is to store decimal numbers as double-precision floats, and often when you hear someone just say “float” they in fact mean a double. However, the default precision in some popular machine learning packages is single precision.</p>
+</section>
+<section id="storing-matrices-and-vectors" class="level4" data-number="4.1.2.2">
+<h4 data-number="4.1.2.2" class="anchored" data-anchor-id="storing-matrices-and-vectors"><span class="header-section-number">4.1.2.2</span> Storing matrices and vectors</h4>
+<p>If you’re exhausted by the details above the good news is that things get simpler now. When doing computations with matrices and vectors, each element of the matrix/vector is some kind of float, and the cost to store the whole matrix/vector is just the number of elements multiplied by either 32 or 64 bits, depending on what kind of float it is. So a matrix <span class="math inline">\(X\in\mathbb{R}^{1000\times 25}\)</span> stored in double precision will require <span class="math display">\[
+25000\times 64 \text{ bits}=1600000 \text{ bits} = 200000 \text{ bytes} = 200 \text{ kilobytes}
+\]</span></p>
+<p>If you’ve ever run a computation on your laptop and gotten an “Out of Memory” error, that’s your computer telling you it doesn’t have enough RAM to store all the numbers you need. This is a common challenge when working with “big data” in many ML applications: there are so many data points that we cannot load them all into memory at one time — there are some clever tricks to deal with that case that we’ll discuss later on in the course.</p>
+<p>Note that the cost to store a vector scales linearly with its length, and the cost to store an <span class="math inline">\(m\)</span>-by-<span class="math inline">\(n\)</span> matrix scales with <span class="math inline">\(mn\)</span>, or if the matrix is square with <span class="math inline">\(m=n\)</span>, then quadratically in <span class="math inline">\(n\)</span>.</p>
+<!-- add something about sparse matrices? -->
+</section>
+</section>
+</section>
+<section id="computational-cost-of-solving-linear-systems" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="computational-cost-of-solving-linear-systems"><span class="header-section-number">4.2</span> Computational cost of solving linear systems</h2>
+<!-- this set of notes: LU, QR, pseudocode, time and memory cost. as an exercise, figure out how much RAM your computer has, what's the largest system you can comfortably solve? try crashing your computer.  -->
+<p>We now assess the computational cost of two common linear algebra algorithms: (1) solving linear systems via LU decomposition, and (2) solving least squares problems via QR decomposition. We will start with a brief review of these decompositions<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> before diving into the algorithms that are used to compute them and their computational cost.</p>
+<section id="lu-and-qr-decomposition-linear-algebra-review" class="level3" data-number="4.2.1">
+<h3 data-number="4.2.1" class="anchored" data-anchor-id="lu-and-qr-decomposition-linear-algebra-review"><span class="header-section-number">4.2.1</span> LU and QR decomposition: linear algebra review</h3>
+<p>The LU decomposition is applicable to square matrices <span class="math inline">\(X\)</span>. The LU decomposition (or “factorization”) writes a square matrix <span class="math inline">\(X\)</span> as a product of a lower triangular matrix <span class="math inline">\(L\)</span> with an upper triangular matrix <span class="math inline">\(U\)</span>, that is, <span class="math inline">\(X=LU\)</span>. Sometimes we have to first re-order the rows of <span class="math inline">\(X\)</span> in order to be able to give it an LU factorization; we do this with a permutation matrix <span class="math inline">\(P\)</span>, which is a square matrix made up of permuted rows of the identity matrix <span class="math inline">\(I\)</span>. In this case, the result is called an “LU factorization with partial pivoting”, and is written as <span class="math inline">\(PX = LU\)</span>. Such a factorization (with pivoting) always exists for any square matrix (note that if no row permutation is required then we just have <span class="math inline">\(P=I\)</span>).</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Do you remember what it means for a matrix to be upper/lower triangular?</p>
+</div>
+</div>
+<p>The QR decomposition is applicable to square or tall rectangular matrices, <span class="math inline">\(X\in\mathbb{R}^{N\times n}\)</span>, where <span class="math inline">\(N\geq n\)</span>, and allows the matrix <span class="math inline">\(X\)</span> to be written as a product of an orthogonal (unitary) matrix <span class="math inline">\(Q\)</span> with an upper triangular matrix <span class="math inline">\(R\)</span>. There are two versions of the QR decomposition, the full QR decomposition and the reduced QR decomposition:</p>
+<ul>
+<li><p>in the full QR decomposition, <span class="math inline">\(X=QR\)</span> where <span class="math inline">\(Q\in\mathbb{R}^{N\times N}\)</span> is square with orthogonal columns so that <span class="math inline">\(Q^\top Q = I_N\)</span> (the <span class="math inline">\(N\)</span>-by-<span class="math inline">\(N\)</span> identity matrix), and <span class="math inline">\(R\in\mathbb{R}^{N\times n}\)</span> is an upper-triangular rectangular matrix. Note that in this case the columns of <span class="math inline">\(Q\)</span> are an orthonormal basis for <span class="math inline">\(\mathbb{R}^N\)</span>.</p></li>
+<li><p>in the reduced QR decomposition, <span class="math inline">\(X=QR\)</span> where <span class="math inline">\(Q\in\mathbb{R}^{N\times n}\)</span> is rectangular with orthogonal columns so that <span class="math inline">\(Q^\top Q = I_n\)</span> (the <span class="math inline">\(n\)</span>-by-<span class="math inline">\(n\)</span> identity), and <span class="math inline">\(R\in\mathbb{R}^{n\times n}\)</span> is a square upper triangular matrix. In this case, the columns of <span class="math inline">\(Q\)</span> are an orthonormal basis for <span class="math inline">\(\textsf{Ran}(X)\)</span> (the range/columnspace of <span class="math inline">\(X\)</span>).</p></li>
+</ul>
+<p>Unfortunately, people often say “QR decomposition” without explicitly specifying whether they mean the full or reduced version, and you have to consider the context carefully to see what they mean. But we will focus on the reduced QR decomposition because it’s most relevant for least squares problems.</p>
+<p>Similar to the LU decomposition, it will sometimes be helpful to first permute the columns of <span class="math inline">\(X\)</span> before doing a QR decomposition, leading to the expression <span class="math inline">\(XP=QR\)</span>. This is referred to as “QR factorization with partial pivoting”, or sometimes “rank-revealing QR” (for reasons that we’ll get into in a later chapter).</p>
+</section>
+<section id="lu-and-qr-decomposition-algorithms" class="level3" data-number="4.2.2">
+<h3 data-number="4.2.2" class="anchored" data-anchor-id="lu-and-qr-decomposition-algorithms"><span class="header-section-number">4.2.2</span> LU and QR decomposition: algorithms</h3>
+<p>We now turn our attention to algorithms that compute the LU and QR decompositions. To simplify our exposition, we are going to assume that no pivoting is required for either decomposition.</p>
+<section id="lu-decomposition" class="level4" data-number="4.2.2.1">
+<h4 data-number="4.2.2.1" class="anchored" data-anchor-id="lu-decomposition"><span class="header-section-number">4.2.2.1</span> LU decomposition</h4>
+<p>Here is some pseudocode for the LU decomposition without pivoting:</p>
+<p><strong>LU decomposition of <span class="math inline">\(X\in\mathbb{R}^{n\times n}\)</span> without pivoting: pseudocode</strong></p>
+<ol type="1">
+<li>Initialize <span class="math inline">\(L = I\)</span> and <span class="math inline">\(U = X\)</span>.</li>
 <li><code>for</code> <span class="math inline">\(j = 1\)</span> to <span class="math inline">\(n\)</span>:
 <ul>
 <li><code>for</code> <span class="math inline">\(i = 1\)</span> to <span class="math inline">\(j\)</span>:
@@ -282,22 +419,58 @@ $$
 <li><span class="math inline">\(s_1 = 0\)</span></li>
 <li><code>for</code> <span class="math inline">\(k = 1\)</span> to <span class="math inline">\(i\)</span>:
 <ul>
-<li><span class="math inline">\(s_1 = s_1 + U_{kj} L_{ik}\)</span></li>
+<li><span class="math inline">\(s_1 = s_1 + u_{kj} \ell_{ik}\)</span></li>
 </ul></li>
-<li><span class="math inline">\(U_{ij} = X_{ij} - s_1\)</span></li>
+<li><span class="math inline">\(u_{ij} = x_{ij} - s_1\)</span></li>
 </ul></li>
 <li><code>for</code> <span class="math inline">\(i = (j + 1)\)</span> to <span class="math inline">\(n\)</span>:
 <ul>
 <li><span class="math inline">\(s_2 = 0\)</span></li>
 <li><code>for</code> <span class="math inline">\(k = 1\)</span> to <span class="math inline">\(j - 1\)</span>:
 <ul>
-<li><span class="math inline">\(s_2 = s_2 + U_{kj}  L_{ik}\)</span></li>
+<li><span class="math inline">\(s_2 = s_2 + u_{kj}  \ell_{ik}\)</span></li>
 </ul></li>
-<li><span class="math inline">\(L_{ij} = \frac{X_{ij} - s_2}{U_{jj}}\)</span></li>
+<li><span class="math inline">\(\ell_{ij} = \frac{x_{ij} - s_2}{u_{jj}}\)</span></li>
 </ul></li>
 </ul></li>
 <li><code>return</code> <span class="math inline">\(L\)</span>, <span class="math inline">\(U\)</span></li>
 </ol>
+<p><strong>Time complexity analysis</strong></p>
+<p>Let’s understand the time complexity of LU decomposition by counting the number of FLOPs involved. Step 1 initializing two square matrices <span class="math inline">\(L,U\in\mathbb{R}^{n\times n}\)</span>. This involves initializing two array with <span class="math inline">\(n^2\)</span> values and therefore is treated as having complexity <span class="math inline">\(2n^2 = \mathcal{O}(n^2)\)</span>, although no FLOPs are technically involved.</p>
+<p>Step 2 is where things get hairy: note that there is an outer loop (<code>for</code> <span class="math inline">\(j=1,\ldots,n\)</span>) around two inner loops, each of which has an inner-most loop. We have to count the operations very carefully here using arithmetic series.</p>
+<p>Consider the first inner loop (<code>for</code> <span class="math inline">\(i=1,\ldots,j\)</span>): for each <span class="math inline">\(i\)</span>, there is one initialization operation (let’s count this as 1 FLOP) for <span class="math inline">\(s_1\)</span>, then <span class="math inline">\(i\)</span> addition operations and <span class="math inline">\(i\)</span> multiplication operations due to the inner-most for loop, and finally 1 more subtraction after the inner-most for loop, for a total of <span class="math inline">\(2i+2\)</span> operations. Thus, the total number of operations in the first inner loop is <span class="math inline">\(\sum_{i=1}^j (2i+2) = j(j+3)\)</span>. Finally we sum over the outer loop to get <span class="math inline">\(\sum_{j=1}^n j(j+3) = \frac13 n(n+1)(n+5) = \frac13n^3 + 2n^2 + \frac53 n\)</span>.</p>
+<p>We do a similar calculation for the second inner loop (<code>for</code> <span class="math inline">\(i = (j+1),\ldots,n\)</span>): for each <span class="math inline">\(i\)</span>, there is one initialization (1 FLOP) of <span class="math inline">\(s_2\)</span>, then there are <span class="math inline">\((j-1)\)</span> additions and <span class="math inline">\((j-1)\)</span> multiplications, followed by 1 subtraction and 1 division, for a total of <span class="math inline">\(2(j-1)+3=2j+1\)</span> FLOPs. Summing over this inner loop then gives us <span class="math inline">\(\sum_{i=(j+1)}^n (2j+1) = (2j+1)(n-j)\)</span> FLOPs, and then we sum over the outer loop to get <span class="math inline">\(\sum_{j=1}^n(2j+1)(n-j) = \frac16 n(2n^2 +3n-5) = \frac13n^3 + \frac12 n^2 - \frac56 n\)</span> FLOPs.</p>
+<p>Adding the total FLOPs over both loops gives us <span class="math inline">\(\frac23 n^3 + \frac52 n^2 + 5/6 n\)</span> FLOPs, where the leading term is the cubic term so we just say that LU decomposition is <span class="math inline">\(\mathcal{O}(n^3)\)</span> or “cubic” or “third-order” in cost. Again, we emphasize that this is <em>large-<span class="math inline">\(n\)</span></em> property – at small <span class="math inline">\(n\)</span> the other terms of the polynomial expression may have more of an influence, but as <span class="math inline">\(n\to\infty\)</span> you will see the leading term dominate the cost.</p>
+<p><strong>Memory complexity analysis</strong></p>
+<p>Memory complexity is a little bit simpler — we just want to look at what quantities need to be stored in RAM to do our computation: for this we can just look at the variables that appear in the algorithm, which are <span class="math inline">\(L, U, X\in\mathbb{R}^{n\times n}\)</span> along with <span class="math inline">\(s_1,s_2\in\mathbb{R}\)</span>. The latter are just two scalars, so the cost is dominated by the cost of storing the three matrices <span class="math inline">\(L,U,X\)</span>, and thus the memory complexity is <span class="math inline">\(\mathcal{O}(n^2)\)</span>.</p>
+</section>
+<section id="qr-decomposition" class="level4" data-number="4.2.2.2">
+<h4 data-number="4.2.2.2" class="anchored" data-anchor-id="qr-decomposition"><span class="header-section-number">4.2.2.2</span> QR decomposition</h4>
+<p>Here’s some pseudocode for the QR decomposition using a method called the “modified Gram-Schmidt” procedure:</p>
+<p><strong>QR decomposition of <span class="math inline">\(X\in\mathbb{R}^{N\times n}\)</span> without pivoting: pseudocode</strong></p>
+<ol type="1">
+<li>Initialize <span class="math inline">\(V = X\)</span>, <span class="math inline">\(R=0_{n\times n}\)</span>, <span class="math inline">\(Q = 0_{N\times n}\)</span>.</li>
+<li><code>for</code> <span class="math inline">\(i = 1,\ldots, n\)</span>:
+<ul>
+<li><span class="math inline">\(r_{ii} = \|v_{:,i}\|\)</span></li>
+<li><span class="math inline">\(q_{:,i} = v_{:,i}/r_{ii}\)</span></li>
+<li><code>for</code> <span class="math inline">\(j=i+1,\ldots,n\)</span>
+<ul>
+<li><span class="math inline">\(r_{ij} = q_{:,i}^\top v_{:,j}\)</span></li>
+<li><span class="math inline">\(v_{:,j} = v_{:,j} - r_{ij}q_{:,i}\)</span></li>
+</ul></li>
+</ul></li>
+</ol>
+<p>where <span class="math inline">\(v_{:,i}\)</span> and <span class="math inline">\(q_{:,i}\)</span> denote the <span class="math inline">\(i\)</span>th column vectors of <span class="math inline">\(V\)</span> and <span class="math inline">\(Q\)</span>, respectively.</p>
+<p>state that this is also cubic and leave as exercise to reader, then go into solving via forward substitution and such for LU. QR will be exercise for the class.</p>
+<p>We now turn our attention to the algorithms for solving equations of the form <span class="math inline">\(X\beta = Y\)</span> for invertible as well as over- or underdetermined systems. For all of these cases, the best practice is to use functions that are part of standard linear algebra packages to solve these systems. In python, both the <tt>numpy</tt> and <tt>scipy</tt> libraries have <tt>linalg</tt> packages that contain various useful linear algebra functions. Both are based on the LAPACK library, which efficiently implements many linear algebra computations in Fortran. Popular deep learning packages like PyTorch and TensorFlow have their own linear algebra packages that build on other libraries that leverage GPU computing capabilities.</p>
+<!-- add a sentence saying what things we will introduce -->
+</section>
+</section>
+<section id="invertible-linear-systems" class="level3" data-number="4.2.3">
+<h3 data-number="4.2.3" class="anchored" data-anchor-id="invertible-linear-systems"><span class="header-section-number">4.2.3</span> Invertible linear systems</h3>
+<p>If <span class="math inline">\(X\)</span> is invertible (and therefore square), the python functions we use to solve the system <span class="math inline">\(X\beta=Y\)</span> are <tt>numpy.linalg.solve</tt> and <tt>scipy.linalg.solve</tt>.</p>
+<p>These packages solve <span class="math inline">\(X\beta = Y\)</span> using <em>LU factorization</em>, which is a topic that should have been covered in your linear algebra class. Here’s a quick recap if you’ve forgotten[^4]: any square matrix <span class="math inline">\(X\)</span> can be written (sometimes after appropriate re-ordering of the rows/columns) as the product of a lower triangular matrix <span class="math inline">\(L\)</span> with an upper triangular matrix <span class="math inline">\(U\)</span>, that is, <span class="math inline">\(X=LU\)</span>. Here’s some pseudocode for LU decomposition (without pivoting, that is, assuming no re-ordering of the rows/columns of <span class="math inline">\(X\)</span> are necessary):</p>
 <p>Once the LU factorization of <span class="math inline">\(X\)</span> is found, then we can solve for <span class="math inline">\(\beta\)</span> in two steps:</p>
 <ol type="1">
 <li><p>Solve <span class="math inline">\(L\alpha = Y\)</span> for <span class="math inline">\(\alpha\)</span>.</p></li>
@@ -348,8 +521,8 @@ Exercise
 </div>
 </div>
 </section>
-<section id="least-squares-problems" class="level3" data-number="4.1.2">
-<h3 data-number="4.1.2" class="anchored" data-anchor-id="least-squares-problems"><span class="header-section-number">4.1.2</span> Least squares problems</h3>
+<section id="least-squares-problems" class="level3" data-number="4.2.4">
+<h3 data-number="4.2.4" class="anchored" data-anchor-id="least-squares-problems"><span class="header-section-number">4.2.4</span> Least squares problems</h3>
 <p>If <span class="math inline">\(X\)</span> is non-invertible, the python functions we use to solve <span class="math inline">\(X\beta = Y\)</span> are <tt>numpy.linalg.lstsq</tt> and <tt>scipy.linalg.lstsq</tt>. These functions can use a number of different algorithms to solve the least squares problem. A common choice is based on <em>QR decomposition</em>, which should also have been covered in your linear algebra class.</p>
 <p>Here’s a reminder of the essential facts of QR decomposition: if <span class="math inline">\(X\in\mathbb{R}^{N\times n}\)</span> has full column rank, then it can be written as the product of an orthogonal matrix <span class="math inline">\(Q\in\mathbb{R}^{N\times n}\)</span> with an upper triangular matrix <span class="math inline">\(R\in\mathbb{R}^{n\times n}\)</span>. Analogous to solving invertible systems, once we have factored <span class="math inline">\(X=QR\)</span> we can then solve the least squares problem in two steps:</p>
 <ol type="1">
@@ -370,7 +543,7 @@ Strang, Gilbert. 2022. <em>Introduction to Linear Algebra</em>.
 <section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn1"><p>if you want more of a refresher, revisit your favorite linear algebra textbook. My favorite is <span class="citation" data-cites="strang2022introduction">(<a href="references.html#ref-strang2022introduction" role="doc-biblioref">Strang 2022</a>)</span>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>if you want more of a refresher, revisit your favorite linear algebra textbook or notes. My favorite is <span class="citation" data-cites="strang2022introduction">(<a href="references.html#ref-strang2022introduction" role="doc-biblioref">Strang 2022</a>)</span>. There’s also no substitute for your own notes that reflect how you think about things – if you have your own notes, go back and look at them now!<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 
@@ -786,13 +959,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./12_lslinalg.html" class="pagination-link" aria-label="LLS: Linear Algebra Perspective">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">LLS: Linear Algebra Perspective</span></span>
+      <a href="./12_lslinalg.html" class="pagination-link" aria-label="LLS: A linear algebra perspective">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">LLS: A linear algebra perspective</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./references.html" class="pagination-link" aria-label="References">
-        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./14_lssvd.html" class="pagination-link" aria-label="LLS and the singular value decomposition">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">LLS and the singular value decomposition</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

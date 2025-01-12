@@ -1,0 +1,31 @@
+---
+title: "LLS and the singular value decomposition"
+html-math-method:
+  method: mathjax
+  url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+
+---
+
+{{< include _macros.qmd >}}
+
+In this section we will introduce fundamental algorithms from computational linear algebra that are used to solve linear systems and linear least squares problems. We will also introduce and discuss some of the key properties and theoretical considerations when using these algorithms.
+
+The intended learning outcomes of these notes are that students should be able to:
+
+
+## blah
+
+next ste of notes: machine precision, round off error, SVD and conditioning.
+
+
+python examples showing nonzero residual for LU and conditioning error for QR?
+
+
+introduce the SVD in math, singular values vs rank/conditioning, explain the concept of conditioning in terms of being essentially non-invertible from the computer's point of view, cond/rank commands
+
+show that normal equations are terribly conditioned.
+
+pseudoinverse and truncated SVD for regularization
+
+SVD + PCA??
+
