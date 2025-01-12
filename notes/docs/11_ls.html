@@ -213,13 +213,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./12_lslinalg.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">LLS: Linear Algebra Perspective</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./13_lsnla.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">LLS: Computational Considerations</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">LLS: A linear algebra perspective</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -466,14 +460,14 @@ X^\top X\beta^* = X^\top Y
 <section id="using-python-for-least-squares-regression" class="level3" data-number="2.4.1">
 <h3 data-number="2.4.1" class="anchored" data-anchor-id="using-python-for-least-squares-regression"><span class="header-section-number">2.4.1</span> Using Python for Least-Squares Regression</h3>
 <p>Now let’s explore how we can actually solve for our optimal weights, <span class="math inline">\(\beta^*\)</span>, given some training data with code. First, we need to import the libraries we need to work with matrices/vectors (<code>numpy</code>), plot results (<code>matplotlib</code>), work with dataframes (<code>pandas</code>), and easily perform more math than base python allows like <span class="math inline">\(\pi\)</span>, sines, cosines, and square-roots (<code>math</code>).</p>
-<div id="c6f2575e" class="cell" data-execution_count="1">
+<div id="3f14440d" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np </span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt </span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now let’s say we’ve imported some pandas dataframe called <code>df</code> that contains a set of empirical data from <a href="#airfoil-example">Example 1</a> (Assume it comes from experimental trials or simulations). We can print the first few rows of the dataset using the <code>df.head()</code> method:</p>
-<div id="21070da2" class="cell" data-execution_count="3">
+<div id="1382acaf" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <div>
@@ -534,22 +528,22 @@ X^\top X\beta^* = X^\top Y
 </div>
 </div>
 <p>Let’s define our input features as <span class="math inline">\(x(z) = (\alpha, \rho, v)^\top\)</span>. We can now form <span class="math inline">\(X\)</span> (our training inputs) and <span class="math inline">\(Y\)</span> (our training outputs) matrices by extracting the input features and outputs from the dataframe:</p>
-<div id="391d02ab" class="cell" data-execution_count="4">
+<div id="8ae43f3f" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The hstack method concatenates column vectors into </span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># an N x d matrix like [1 alpha rho velocity]</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.hstack((np.ones((N, <span class="dv">1</span>)), df[[<span class="st">'alpha'</span>, <span class="st">'rho'</span>, <span class="st">'velocity'</span>]].values))</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>Y <span class="op">=</span> df[<span class="st">'f_drag'</span>].values</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can solve for <span class="math inline">\(\beta^*\)</span> using the <code>np.linalg.lstsq()</code> function which efficiently solves the least-squares equation <span class="math inline">\(X \beta = Y\)</span>. The <code>rcond</code> keyword argument specifies how “well-conditioned” we want our result to be, achieved by cutting off the smallest singular values of <span class="math inline">\(X\)</span> (don’t worry too much about this for now). Setting it to <code>None</code> assumes <span class="math inline">\(X\)</span> is well-conditioned i.e.&nbsp;far from being rank-deficient. By default, the <code>lstsq()</code> function returns a list of the optimal weights, <span class="math inline">\(\beta^*\)</span>, the residuals of the training data (<span class="math inline">\(X \beta - Y\)</span>), the rank of <span class="math inline">\(X\)</span>, and the singular values of <span class="math inline">\(X\)</span>. For now, we’re only interested in <span class="math inline">\(\beta^*\)</span>, so we use <code>[0]</code> to select this value.</p>
-<div id="491f3d66" class="cell" data-execution_count="5">
+<div id="3c6c883b" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>beta_star <span class="op">=</span> np.linalg.lstsq(X, Y, rcond<span class="op">=</span><span class="va">None</span>)[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We are now able to compute the model’s predictions at the training inputs:</p>
-<div id="f9c5bb11" class="cell" data-execution_count="6">
+<div id="fe67d253" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Y_hat <span class="op">=</span> X <span class="op">@</span> beta_star</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Let’s now plot <span class="math inline">\(\hat{{Y}}\)</span> and <span class="math inline">\({Y}\)</span> to examine how closely correlated the two are. A straight line with slope 1 would mean the linear regression model exactly matched all of the training outputs:</p>
-<div id="ec8d2861" class="cell" data-execution_count="7">
+<div id="dd5c9ded" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="dv">4</span>))</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>plt.scatter(Y, Y_hat)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>plt.grid()</span>
@@ -561,7 +555,7 @@ X^\top X\beta^* = X^\top Y
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="11_ls_files/figure-html/cell-8-output-2.png" width="697" height="356" class="figure-img"></p>
+<p><img src="11_ls_files/figure-html/cell-8-output-2.png" width="697" height="350" class="figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1151,8 +1145,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./12_lslinalg.html" class="pagination-link" aria-label="LLS: Linear Algebra Perspective">
-        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">LLS: Linear Algebra Perspective</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./12_lslinalg.html" class="pagination-link" aria-label="LLS: A linear algebra perspective">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">LLS: A linear algebra perspective</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
