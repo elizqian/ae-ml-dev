@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.4.554">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>2&nbsp; Linear Least Squares Problems – AE 4803 AIM: Course Notes</title>
+<title>AE 4803 AIM: Course Notes - 2&nbsp; Linear Least Squares Problems</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -84,7 +84,7 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./00_linalg.html" rel="next">
+<link href="./12_lslinalg.html" rel="next">
 <link href="./01_intro.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -126,7 +126,7 @@ div.csl-indent {
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript"></script>
 
 <script type="text/javascript">
@@ -164,13 +164,13 @@ window.Quarto = {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./11_ls.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Linear Least Squares Problems</span></a></li></ol></nav>
-        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
-      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
@@ -210,11 +210,23 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Linear Least Squares Problems</span></span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12_lslinalg.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">LLS: A linear algebra perspective</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
  <span class="menu-text">Appendices</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -448,20 +460,21 @@ X^\top X\beta^* = X^\top Y
 <section id="using-python-for-least-squares-regression" class="level3" data-number="2.4.1">
 <h3 data-number="2.4.1" class="anchored" data-anchor-id="using-python-for-least-squares-regression"><span class="header-section-number">2.4.1</span> Using Python for Least-Squares Regression</h3>
 <p>Now let’s explore how we can actually solve for our optimal weights, <span class="math inline">\(\beta^*\)</span>, given some training data with code. First, we need to import the libraries we need to work with matrices/vectors (<code>numpy</code>), plot results (<code>matplotlib</code>), work with dataframes (<code>pandas</code>), and easily perform more math than base python allows like <span class="math inline">\(\pi\)</span>, sines, cosines, and square-roots (<code>math</code>).</p>
-<div id="c6f2575e" class="cell" data-execution_count="1">
+<div id="3f14440d" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np </span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt </span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now let’s say we’ve imported some pandas dataframe called <code>df</code> that contains a set of empirical data from <a href="#airfoil-example">Example 1</a> (Assume it comes from experimental trials or simulations). We can print the first few rows of the dataset using the <code>df.head()</code> method:</p>
-<div id="21070da2" class="cell" data-execution_count="3">
+<div id="1382acaf" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <div>
+<div>
 
 
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
@@ -513,23 +526,24 @@ X^\top X\beta^* = X^\top Y
 </div>
 </div>
 </div>
+</div>
 <p>Let’s define our input features as <span class="math inline">\(x(z) = (\alpha, \rho, v)^\top\)</span>. We can now form <span class="math inline">\(X\)</span> (our training inputs) and <span class="math inline">\(Y\)</span> (our training outputs) matrices by extracting the input features and outputs from the dataframe:</p>
-<div id="391d02ab" class="cell" data-execution_count="4">
+<div id="8ae43f3f" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The hstack method concatenates column vectors into </span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># an N x d matrix like [1 alpha rho velocity]</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.hstack((np.ones((N, <span class="dv">1</span>)), df[[<span class="st">'alpha'</span>, <span class="st">'rho'</span>, <span class="st">'velocity'</span>]].values))</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>Y <span class="op">=</span> df[<span class="st">'f_drag'</span>].values</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can solve for <span class="math inline">\(\beta^*\)</span> using the <code>np.linalg.lstsq()</code> function which efficiently solves the least-squares equation <span class="math inline">\(X \beta = Y\)</span>. The <code>rcond</code> keyword argument specifies how “well-conditioned” we want our result to be, achieved by cutting off the smallest singular values of <span class="math inline">\(X\)</span> (don’t worry too much about this for now). Setting it to <code>None</code> assumes <span class="math inline">\(X\)</span> is well-conditioned i.e.&nbsp;far from being rank-deficient. By default, the <code>lstsq()</code> function returns a list of the optimal weights, <span class="math inline">\(\beta^*\)</span>, the residuals of the training data (<span class="math inline">\(X \beta - Y\)</span>), the rank of <span class="math inline">\(X\)</span>, and the singular values of <span class="math inline">\(X\)</span>. For now, we’re only interested in <span class="math inline">\(\beta^*\)</span>, so we use <code>[0]</code> to select this value.</p>
-<div id="491f3d66" class="cell" data-execution_count="5">
+<div id="3c6c883b" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>beta_star <span class="op">=</span> np.linalg.lstsq(X, Y, rcond<span class="op">=</span><span class="va">None</span>)[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We are now able to compute the model’s predictions at the training inputs:</p>
-<div id="f9c5bb11" class="cell" data-execution_count="6">
+<div id="fe67d253" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Y_hat <span class="op">=</span> X <span class="op">@</span> beta_star</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Let’s now plot <span class="math inline">\(\hat{{Y}}\)</span> and <span class="math inline">\({Y}\)</span> to examine how closely correlated the two are. A straight line with slope 1 would mean the linear regression model exactly matched all of the training outputs:</p>
-<div id="ec8d2861" class="cell" data-execution_count="7">
+<div id="dd5c9ded" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="dv">4</span>))</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>plt.scatter(Y, Y_hat)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>plt.grid()</span>
@@ -541,7 +555,7 @@ X^\top X\beta^* = X^\top Y
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="11_ls_files/figure-html/cell-8-output-2.png" width="697" height="356" class="figure-img"></p>
+<p><img src="11_ls_files/figure-html/cell-8-output-2.png" width="697" height="350" class="figure-img"></p>
 </figure>
 </div>
 </div>
@@ -589,7 +603,7 @@ R = \frac{\sum (\hat{y}_i -\bar{\hat{y}})(y_i - \bar{y})}{\sqrt{\sum (\hat{y}_i 
 <h2 data-number="2.6" class="anchored" data-anchor-id="exercises"><span class="header-section-number">2.6</span> Exercises</h2>
 <ol type="1">
 <li><p>Recall that the loss-function for least-squares regression is given by <span class="math inline">\(\mathcal{L}(\beta) = \frac 1N|| X \beta - Y||_2^2\)</span>. Show that the gradient of <span class="math inline">\(\mathcal{L}\)</span> with respect to <span class="math inline">\(\beta\)</span> is given by <span class="math inline">\(\nabla_\beta \mathcal{L} = \frac2N \left( X^\top X \beta - X^\top Y\right)\)</span></p>
-<p><em>Hint:</em> you may find the following identities from the Matrix Cookbook <span class="citation" data-cites="petersen2012matrix">(<a href="#ref-petersen2012matrix" role="doc-biblioref">Petersen and Pedersen 2012</a>)</span> useful. For <span class="math inline">\(v,u\in\mathbb{R}^n\)</span> and <span class="math inline">\(A\in\mathbb{R}^{n\times n}\)</span>, the following hold:</p>
+<p><em>Hint:</em> you may find the following identities from the Matrix Cookbook <span class="citation" data-cites="petersen2012matrix">(<a href="references.html#ref-petersen2012matrix" role="doc-biblioref">Petersen and Pedersen 2012</a>)</span> useful. For <span class="math inline">\(v,u\in\mathbb{R}^n\)</span> and <span class="math inline">\(A\in\mathbb{R}^{n\times n}\)</span>, the following hold:</p>
 <ol type="i">
 <li><span class="math inline">\(\nabla_v (v^\top A v) = 2Av\)</span></li>
 <li><span class="math inline">\(\nabla_v (v^\top u) = \nabla_v(u^\top v) = u\)</span></li>
@@ -696,12 +710,12 @@ This means we can add in *any* $\beta_0$ from the null-space and still end up wi
 </section>
 <section id="further-reading" class="level2" data-number="2.7">
 <h2 data-number="2.7" class="anchored" data-anchor-id="further-reading"><span class="header-section-number">2.7</span> Further reading</h2>
-<p><em>Linear Algebra Crash Course (<a href="00_linalg.html#sec-linalg" class="quarto-xref"><span>Section A.1</span></a>)</em></p>
-<p><em>The Matrix Cookbook (<span class="citation" data-cites="petersen2012matrix">Petersen and Pedersen (<a href="#ref-petersen2012matrix" role="doc-biblioref">2012</a>)</span>)</em></p>
+<p><em>Linear Algebra Crash Course (<span class="quarto-unresolved-ref">?sec-linalg</span>)</em></p>
+<p><em>The Matrix Cookbook (<span class="citation" data-cites="petersen2012matrix">Petersen and Pedersen (<a href="references.html#ref-petersen2012matrix" role="doc-biblioref">2012</a>)</span>)</em></p>
 <hr>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
 <div id="ref-petersen2012matrix" class="csl-entry" role="listitem">
 Petersen, Kaare Brandt, and Michael Syskind Pedersen. 2012. <span>“The Matrix Cookbook.”</span> <a href="https://www.math.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf">https://www.math.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf</a>.
 </div>
@@ -750,7 +764,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const onCopySuccess = function(e) {
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -782,29 +807,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
-  }
-  const getTextToCopy = function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-    text: getTextToCopy
   });
-  clipboard.on('success', onCopySuccess);
-  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
-    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-      text: getTextToCopy,
-      container: window.document.getElementById('quarto-embedded-source-code-modal')
-    });
-    clipboardModal.on('success', onCopySuccess);
-  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp('/' + window.location.host + '/');
@@ -812,7 +815,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {
@@ -1142,8 +1145,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./00_linalg.html" class="pagination-link" aria-label="Linear algebra review">
-        <span class="nav-page-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Linear algebra review</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./12_lslinalg.html" class="pagination-link" aria-label="LLS: A linear algebra perspective">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">LLS: A linear algebra perspective</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
