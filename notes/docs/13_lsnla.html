@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.554">
+<meta name="generator" content="quarto-1.3.450">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -24,7 +24,6 @@ ul.task-list li input[type="checkbox"] {
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
-  margin-bottom: 0em;
 }
 .hanging-indent div.csl-entry {
   margin-left:2em;
@@ -67,13 +66,7 @@ div.csl-indent {
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 50,
-  "keyboard-shortcut": [
-    "f",
-    "/",
-    "s"
-  ],
-  "show-item-context": false,
+  "limit": 20,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -82,7 +75,6 @@ div.csl-indent {
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
-    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -92,33 +84,6 @@ div.csl-indent {
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript"></script>
 
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
-
 </head>
 
 <body class="nav-sidebar floating">
@@ -127,12 +92,12 @@ window.Quarto = {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./13_lsnla.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">LLS: Computational Cost</span></a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-        </a>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./13_lsnla.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">LLS: Computational Cost</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
@@ -142,7 +107,7 @@ window.Quarto = {
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">AE 4803 AIM: Course Notes</a> 
@@ -217,7 +182,7 @@ window.Quarto = {
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -233,9 +198,13 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#lu-and-qr-decomposition-linear-algebra-review" id="toc-lu-and-qr-decomposition-linear-algebra-review" class="nav-link" data-scroll-target="#lu-and-qr-decomposition-linear-algebra-review"><span class="header-section-number">4.2.1</span> LU and QR decomposition: linear algebra review</a></li>
   <li><a href="#lu-and-qr-decomposition-algorithms" id="toc-lu-and-qr-decomposition-algorithms" class="nav-link" data-scroll-target="#lu-and-qr-decomposition-algorithms"><span class="header-section-number">4.2.2</span> LU and QR decomposition: algorithms</a></li>
-  <li><a href="#invertible-linear-systems" id="toc-invertible-linear-systems" class="nav-link" data-scroll-target="#invertible-linear-systems"><span class="header-section-number">4.2.3</span> Invertible linear systems</a></li>
-  <li><a href="#least-squares-problems" id="toc-least-squares-problems" class="nav-link" data-scroll-target="#least-squares-problems"><span class="header-section-number">4.2.4</span> Least squares problems</a></li>
   </ul></li>
+  <li><a href="#solving-linear-systems-using-matrix-decompositions" id="toc-solving-linear-systems-using-matrix-decompositions" class="nav-link" data-scroll-target="#solving-linear-systems-using-matrix-decompositions"><span class="header-section-number">4.3</span> Solving linear systems using matrix decompositions</a>
+  <ul class="collapse">
+  <li><a href="#invertible-linear-systems" id="toc-invertible-linear-systems" class="nav-link" data-scroll-target="#invertible-linear-systems"><span class="header-section-number">4.3.1</span> Invertible linear systems</a></li>
+  <li><a href="#least-squares-problems" id="toc-least-squares-problems" class="nav-link" data-scroll-target="#least-squares-problems"><span class="header-section-number">4.3.2</span> Least squares problems</a></li>
+  </ul></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">4.4</span> Exercises</a></li>
   </ul>
 </nav>
     </div>
@@ -257,9 +226,7 @@ window.Quarto = {
   </div>
   
 
-
 </header>
-
 
 <div class="hidden">
 <!-- \renewcommand{\P}{\mathrm{P}} -->
@@ -428,7 +395,7 @@ Note
 <li><span class="math inline">\(s_2 = 0\)</span></li>
 <li><code>for</code> <span class="math inline">\(k = 1\)</span> to <span class="math inline">\(j - 1\)</span>:
 <ul>
-<li><span class="math inline">\(s_2 = s_2 + u_{kj}  \ell_{ik}\)</span></li>
+<li><span class="math inline">\(s_2 = s_2 + u_{kj} \ell_{ik}\)</span></li>
 </ul></li>
 <li><span class="math inline">\(\ell_{ij} = \frac{x_{ij} - s_2}{u_{jj}}\)</span></li>
 </ul></li>
@@ -462,16 +429,29 @@ Note
 </ul></li>
 </ol>
 <p>where <span class="math inline">\(v_{:,i}\)</span> and <span class="math inline">\(q_{:,i}\)</span> denote the <span class="math inline">\(i\)</span>th column vectors of <span class="math inline">\(V\)</span> and <span class="math inline">\(Q\)</span>, respectively.</p>
-<p>state that this is also cubic and leave as exercise to reader, then go into solving via forward substitution and such for LU. QR will be exercise for the class.</p>
-<p>We now turn our attention to the algorithms for solving equations of the form <span class="math inline">\(X\beta = Y\)</span> for invertible as well as over- or underdetermined systems. For all of these cases, the best practice is to use functions that are part of standard linear algebra packages to solve these systems. In python, both the <tt>numpy</tt> and <tt>scipy</tt> libraries have <tt>linalg</tt> packages that contain various useful linear algebra functions. Both are based on the LAPACK library, which efficiently implements many linear algebra computations in Fortran. Popular deep learning packages like PyTorch and TensorFlow have their own linear algebra packages that build on other libraries that leverage GPU computing capabilities.</p>
-<!-- add a sentence saying what things we will introduce -->
+<p>The QR decomposition has time complexity <span class="math inline">\(\mathcal{O}(N\cdot n^2)\)</span> and storage complexity <span class="math inline">\(\mathcal{O}(Nn)\)</span>. For square matrices where <span class="math inline">\(N=n\)</span>, the complexity is <span class="math inline">\(\mathcal{O}(N^3)\)</span>. In general, computing matrix decompositions will have third-order complexity: we will see another example when we get to the SVD in the next chapter.</p>
 </section>
 </section>
-<section id="invertible-linear-systems" class="level3" data-number="4.2.3">
-<h3 data-number="4.2.3" class="anchored" data-anchor-id="invertible-linear-systems"><span class="header-section-number">4.2.3</span> Invertible linear systems</h3>
-<p>If <span class="math inline">\(X\)</span> is invertible (and therefore square), the python functions we use to solve the system <span class="math inline">\(X\beta=Y\)</span> are <tt>numpy.linalg.solve</tt> and <tt>scipy.linalg.solve</tt>.</p>
-<p>These packages solve <span class="math inline">\(X\beta = Y\)</span> using <em>LU factorization</em>, which is a topic that should have been covered in your linear algebra class. Here’s a quick recap if you’ve forgotten[^4]: any square matrix <span class="math inline">\(X\)</span> can be written (sometimes after appropriate re-ordering of the rows/columns) as the product of a lower triangular matrix <span class="math inline">\(L\)</span> with an upper triangular matrix <span class="math inline">\(U\)</span>, that is, <span class="math inline">\(X=LU\)</span>. Here’s some pseudocode for LU decomposition (without pivoting, that is, assuming no re-ordering of the rows/columns of <span class="math inline">\(X\)</span> are necessary):</p>
-<p>Once the LU factorization of <span class="math inline">\(X\)</span> is found, then we can solve for <span class="math inline">\(\beta\)</span> in two steps:</p>
+</section>
+<section id="solving-linear-systems-using-matrix-decompositions" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="solving-linear-systems-using-matrix-decompositions"><span class="header-section-number">4.3</span> Solving linear systems using matrix decompositions</h2>
+<p>Finally we consider the overall cost of solving linear systems of equations using matrix decompositions. In general, the best practice when you are coding something is to use functions that are part of standard linear algebra packages to solve these systems. In python, both the <tt>numpy</tt> and <tt>scipy</tt> libraries have <tt>linalg</tt> packages that contain various useful linear algebra functions. Both are based on the LAPACK library, which efficiently implements many linear algebra computations in Fortran. Popular deep learning packages like PyTorch and TensorFlow have their own linear algebra packages that build on other libraries that leverage GPU computing capabilities. The details in this section explain what happens under the hood in these linear algebra packages: LU decomposition is used to solve invertible linear systems and QR decomposition is used to solve least squares problems where the data matrix has full column rank.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In this section, we are assuming that <span class="math inline">\(X\)</span> has full column rank (which guarantees invertibility if <span class="math inline">\(X\)</span> is square), whereas previously we did not make this assumption.</p>
+</div>
+</div>
+<section id="invertible-linear-systems" class="level3" data-number="4.3.1">
+<h3 data-number="4.3.1" class="anchored" data-anchor-id="invertible-linear-systems"><span class="header-section-number">4.3.1</span> Invertible linear systems</h3>
+<p>If <span class="math inline">\(X\)</span> is invertible (and therefore square), the python functions we use to solve the system <span class="math inline">\(X\beta=Y\)</span> are <tt>numpy.linalg.solve</tt> and <tt>scipy.linalg.solve</tt>. Both of these functions use LU decomposition to solve the system. This means they first compute the factors <span class="math inline">\(L\)</span> and <span class="math inline">\(U\)</span> and described above. Then, once the LU factorization of <span class="math inline">\(X\)</span> is found, then we can solve for <span class="math inline">\(\beta\)</span> in two steps:</p>
 <ol type="1">
 <li><p>Solve <span class="math inline">\(L\alpha = Y\)</span> for <span class="math inline">\(\alpha\)</span>.</p></li>
 <li><p>Solve <span class="math inline">\(U\beta = \alpha\)</span> for <span class="math inline">\(\beta\)</span>.</p></li>
@@ -506,39 +486,39 @@ L = \begin{pmatrix}1 &amp; &amp; \\ 2 &amp; 1 &amp; \\
 </ul></li>
 <li><code>return</code> <span class="math inline">\(\alpha\)</span></li>
 </ol>
-<p>Now that we have solved <span class="math inline">\(L\alpha = Y\)</span> for <span class="math inline">\(\alpha\)</span> using forward substitution, we need to solve <span class="math inline">\(U\beta = \alpha\)</span> for <span class="math inline">\(\beta\)</span>, where <span class="math inline">\(U\)</span> is upper triangular rather than lower triangular. This is done using <em>backward substitution</em>, which is a very similar algorithm to forward substitution. That gives us our final solution <span class="math inline">\(\beta\)</span>.</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Exercise
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Without looking it up, can you write pseudocode for a backward substitution algorithm for solving upper triangular systems?</p>
-</div>
-</div>
+<p>Forward substitution has complexity <span class="math inline">\(\mathcal{O}(n^2)\)</span>.</p>
+<p>Now that we have solved <span class="math inline">\(L\alpha = Y\)</span> for <span class="math inline">\(\alpha\)</span> using forward substitution, we need to solve <span class="math inline">\(U\beta = \alpha\)</span> for <span class="math inline">\(\beta\)</span>, where <span class="math inline">\(U\)</span> is upper triangular rather than lower triangular. This is done using <em>backward substitution</em>, which is a very similar algorithm to forward substitution and also has complexity <span class="math inline">\(\mathcal{O}(n^2)\)</span>. That gives us our final solution <span class="math inline">\(\beta\)</span>.</p>
+<p>The overall computational cost of solving an invertible linear system is dominated by the cubic cost of the LU decomposition (for large <span class="math inline">\(n\)</span>, the quadratic costs of forward and backward substitution are much cheaper than the cubic cost of LU). Thus, we say linear solves have cubic complexity.</p>
 </section>
-<section id="least-squares-problems" class="level3" data-number="4.2.4">
-<h3 data-number="4.2.4" class="anchored" data-anchor-id="least-squares-problems"><span class="header-section-number">4.2.4</span> Least squares problems</h3>
-<p>If <span class="math inline">\(X\)</span> is non-invertible, the python functions we use to solve <span class="math inline">\(X\beta = Y\)</span> are <tt>numpy.linalg.lstsq</tt> and <tt>scipy.linalg.lstsq</tt>. These functions can use a number of different algorithms to solve the least squares problem. A common choice is based on <em>QR decomposition</em>, which should also have been covered in your linear algebra class.</p>
-<p>Here’s a reminder of the essential facts of QR decomposition: if <span class="math inline">\(X\in\mathbb{R}^{N\times n}\)</span> has full column rank, then it can be written as the product of an orthogonal matrix <span class="math inline">\(Q\in\mathbb{R}^{N\times n}\)</span> with an upper triangular matrix <span class="math inline">\(R\in\mathbb{R}^{n\times n}\)</span>. Analogous to solving invertible systems, once we have factored <span class="math inline">\(X=QR\)</span> we can then solve the least squares problem in two steps:</p>
+<section id="least-squares-problems" class="level3" data-number="4.3.2">
+<h3 data-number="4.3.2" class="anchored" data-anchor-id="least-squares-problems"><span class="header-section-number">4.3.2</span> Least squares problems</h3>
+<p>If <span class="math inline">\(X\)</span> is non-invertible, the python functions we use to solve <span class="math inline">\(X\beta = Y\)</span> are <tt>numpy.linalg.lstsq</tt> and <tt>scipy.linalg.lstsq</tt>. These functions can use a number of different algorithms to solve the least squares problem, but a common choice for overdetermined least squares problems is to use QR decomposition. That is, we first compute the factors <span class="math inline">\(Q\in\mathbb{R}^{N\times n}\)</span> and <span class="math inline">\(R\in\mathbb{R}^{n\times n}\)</span> as described above. Then, we can solve for <span class="math inline">\(\beta\)</span> is two steps:</p>
+<!-- Here's a reminder of the essential facts of QR decomposition: if $X\in\R^{N\times n}$ has full column rank, then it can be written as the product of an orthogonal matrix $Q\in\R^{N\times n}$ with an upper triangular matrix $R\in\R^{n\times n}$. Analogous to solving invertible systems, once we have factored $X=QR$ we can then solve the least squares problem in two steps: -->
 <ol type="1">
 <li><p>Solve <span class="math inline">\(Q\alpha = Y\)</span> for <span class="math inline">\(\alpha\)</span>.</p></li>
 <li><p>Solve <span class="math inline">\(R\beta = \alpha\)</span> for <span class="math inline">\(\beta\)</span>.</p></li>
 </ol>
 <p>Recall that orthogonal matrices <span class="math inline">\(Q\)</span> satisfy <span class="math inline">\(Q^\top Q=I\)</span>, so this special structure lets us find <span class="math inline">\(\alpha\)</span> via a matrix multiplication, which is computationally more efficient than a full LU decomposition. Then, since <span class="math inline">\(R\)</span> is upper triangular, we can solve for <span class="math inline">\(\beta\)</span> using backward substitution.</p>
-<p>If <span class="math inline">\(X\)</span> is low-rank, there are a couple of options, but the standard one is based on the the singular value decomposition, which deserves its own set of notes, so we will defer discussion of this until later.</p>
+<p>If <span class="math inline">\(X\)</span> is does not have full column rank, there are a couple of options for solving the least squares problem, but the standard one is based on the the singular value decomposition, which deserves its own set of notes, which come next.</p>
+</section>
+</section>
+<section id="exercises" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="exercises"><span class="header-section-number">4.4</span> Exercises</h2>
+<ol type="1">
+<li>Show that the QR decomposition has time complexity <span class="math inline">\(\mathcal{O}(N n^2)\)</span>.</li>
+<li>Provide pseudocode for a backward substitution algorithm analogous to the forward substitution algorithm provided (without looking it up, which you could easily do — but if you can derive it yourself then you know you understand it).</li>
+<li>Show that forward (or backward) substitution has complexity <span class="math inline">\(\mathcal{O}(n^2)\)</span>.</li>
+<li>Show that the overall cost of solving <span class="math inline">\(X\beta=Y\)</span> via QR decomposition is <span class="math inline">\(\mathcal{O}(Nn^2)\)</span>.</li>
+<li>Determine how much RAM you have on your personal computer. How many double precision floats can you store in that space? What does this mean for the largest square linear system you can solve using your computer? What are the dimensions of the largest least squares problem you can solve using the QR decomposition on your computer?</li>
+<li>Write code to set up and solve least squares problems of arbitrary dimension and time the solve. Plot the solve times as the dimensions increase. Do you observe the expected trends? At what point does your computer run out of memory and is it approximately what you expected?</li>
+</ol>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
 <div id="ref-strang2022introduction" class="csl-entry" role="listitem">
 Strang, Gilbert. 2022. <em>Introduction to Linear Algebra</em>.
 </div>
 </div>
-</section>
 </section>
 <section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr>
@@ -627,27 +607,10 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-    var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
-    var isInternal = (href) => {
-        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
-    }
-    // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
-    for (var i=0; i<links.length; i++) {
-      const link = links[i];
-      if (!isInternal(link.href)) {
-        // undo the damage that might have been done by quarto-nav.js in the case of
-        // links that we want to consider external
-        if (link.dataset.originalHref !== undefined) {
-          link.href = link.dataset.originalHref;
-        }
-      }
-    }
-  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+  function tippyHover(el, contentFn) {
     const config = {
       allowHTML: true,
+      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -657,17 +620,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start',
+      placement: 'bottom-start'
     };
-    if (contentFn) {
-      config.content = contentFn;
-    }
-    if (onTriggerFn) {
-      config.onTrigger = onTriggerFn;
-    }
-    if (onUntriggerFn) {
-      config.onUntrigger = onUntriggerFn;
-    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -679,130 +633,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      if (note) {
-        return note.innerHTML;
-      } else {
-        return "";
-      }
-    });
-  }
-  const xrefs = window.document.querySelectorAll('a.quarto-xref');
-  const processXRef = (id, note) => {
-    // Strip column container classes
-    const stripColumnClz = (el) => {
-      el.classList.remove("page-full", "page-columns");
-      if (el.children) {
-        for (const child of el.children) {
-          stripColumnClz(child);
-        }
-      }
-    }
-    stripColumnClz(note)
-    if (id === null || id.startsWith('sec-')) {
-      // Special case sections, only their first couple elements
-      const container = document.createElement("div");
-      if (note.children && note.children.length > 2) {
-        container.appendChild(note.children[0].cloneNode(true));
-        for (let i = 1; i < note.children.length; i++) {
-          const child = note.children[i];
-          if (child.tagName === "P" && child.innerText === "") {
-            continue;
-          } else {
-            container.appendChild(child.cloneNode(true));
-            break;
-          }
-        }
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(container);
-        }
-        return container.innerHTML
-      } else {
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(note);
-        }
-        return note.innerHTML;
-      }
-    } else {
-      // Remove any anchor links if they are present
-      const anchorLink = note.querySelector('a.anchorjs-link');
-      if (anchorLink) {
-        anchorLink.remove();
-      }
-      if (window.Quarto?.typesetMath) {
-        window.Quarto.typesetMath(note);
-      }
-      // TODO in 1.5, we should make sure this works without a callout special case
-      if (note.classList.contains("callout")) {
-        return note.outerHTML;
-      } else {
-        return note.innerHTML;
-      }
-    }
-  }
-  for (var i=0; i<xrefs.length; i++) {
-    const xref = xrefs[i];
-    tippyHover(xref, undefined, function(instance) {
-      instance.disable();
-      let url = xref.getAttribute('href');
-      let hash = undefined; 
-      if (url.startsWith('#')) {
-        hash = url;
-      } else {
-        try { hash = new URL(url).hash; } catch {}
-      }
-      if (hash) {
-        const id = hash.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note !== null) {
-          try {
-            const html = processXRef(id, note.cloneNode(true));
-            instance.setContent(html);
-          } finally {
-            instance.enable();
-            instance.show();
-          }
-        } else {
-          // See if we can fetch this
-          fetch(url.split('#')[0])
-          .then(res => res.text())
-          .then(html => {
-            const parser = new DOMParser();
-            const htmlDoc = parser.parseFromString(html, "text/html");
-            const note = htmlDoc.getElementById(id);
-            if (note !== null) {
-              const html = processXRef(id, note);
-              instance.setContent(html);
-            } 
-          }).finally(() => {
-            instance.enable();
-            instance.show();
-          });
-        }
-      } else {
-        // See if we can fetch a full url (with no hash to target)
-        // This is a special case and we should probably do some content thinning / targeting
-        fetch(url)
-        .then(res => res.text())
-        .then(html => {
-          const parser = new DOMParser();
-          const htmlDoc = parser.parseFromString(html, "text/html");
-          const note = htmlDoc.querySelector('main.content');
-          if (note !== null) {
-            // This should only happen for chapter cross references
-            // (since there is no id in the URL)
-            // remove the first header
-            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
-              note.children[0].remove();
-            }
-            const html = processXRef(null, note);
-            instance.setContent(html);
-          } 
-        }).finally(() => {
-          instance.enable();
-          instance.show();
-        });
-      }
-    }, function(instance) {
+      return note.innerHTML;
     });
   }
       let selectedAnnoteEl;
@@ -846,7 +677,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
-            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -872,32 +702,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
-        // Handle positioning of the toggle
-    window.addEventListener(
-      "resize",
-      throttle(() => {
-        elRect = undefined;
-        if (selectedAnnoteEl) {
-          selectCodeLines(selectedAnnoteEl);
-        }
-      }, 10)
-    );
-    function throttle(fn, ms) {
-    let throttle = false;
-    let timer;
-      return (...args) => {
-        if(!throttle) { // first call gets through
-            fn.apply(this, args);
-            throttle = true;
-        } else { // all the others get throttled
-            if(timer) clearTimeout(timer); // cancel #2
-            timer = setTimeout(() => {
-              fn.apply(this, args);
-              timer = throttle = false;
-            }, ms);
-        }
-      };
-    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -959,18 +763,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./12_lslinalg.html" class="pagination-link" aria-label="LLS: A linear algebra perspective">
+      <a href="./12_lslinalg.html" class="pagination-link">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">LLS: A linear algebra perspective</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./14_lssvd.html" class="pagination-link" aria-label="LLS and the singular value decomposition">
+      <a href="./14_lssvd.html" class="pagination-link">
         <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">LLS and the singular value decomposition</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
-
 
 
 

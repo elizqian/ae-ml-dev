@@ -197,22 +197,19 @@ Here's some pseudocode for the QR decomposition using a method called the "modif
 
 where $v_{:,i}$ and $q_{:,i}$ denote the $i$th column vectors of $V$ and $Q$, respectively. 
 
-state that this is also cubic and leave as exercise to reader, then go into solving via forward substitution and such for LU. QR will be exercise for the class. 
+The QR decomposition has time complexity $\mathcal{O}(N\cdot n^2)$ and storage complexity $\mathcal{O}(Nn)$. For square matrices where $N=n$, the complexity is $\mathcal{O}(N^3)$. In general, computing matrix decompositions will have third-order complexity: we will see another example when we get to the SVD in the next chapter.
 
-We now turn our attention to the algorithms for solving equations of the form $X\beta = Y$ for invertible as well as over- or underdetermined systems. For all of these cases, the best practice is to use functions that are part of standard linear algebra packages to solve these systems. In python, both the <tt>numpy</tt> and <tt>scipy</tt> libraries have <tt>linalg</tt> packages that contain various useful linear algebra functions. Both are based on the LAPACK library, which efficiently implements many linear algebra computations in Fortran.
-Popular deep learning packages like PyTorch and TensorFlow have their own linear algebra packages that build on other libraries that leverage GPU computing capabilities.
+## Solving linear systems using matrix decompositions
 
-<!-- add a sentence saying what things we will introduce -->
+Finally we consider the overall cost of solving linear systems of equations using matrix decompositions. In general, the best practice when you are coding something is to use functions that are part of standard linear algebra packages to solve these systems. In python, both the <tt>numpy</tt> and <tt>scipy</tt> libraries have <tt>linalg</tt> packages that contain various useful linear algebra functions. Both are based on the LAPACK library, which efficiently implements many linear algebra computations in Fortran.
+Popular deep learning packages like PyTorch and TensorFlow have their own linear algebra packages that build on other libraries that leverage GPU computing capabilities. The details in this section explain what happens under the hood in these linear algebra packages: LU decomposition is used to solve invertible linear systems and QR decomposition is used to solve least squares problems where the data matrix has full column rank. 
+
+::: {.callout-warning}
+In this section, we are assuming that $X$ has full column rank (which guarantees invertibility if $X$ is square), whereas previously we did not make this assumption.
+:::  
 
 ### Invertible linear systems
-If $X$ is invertible (and therefore square), the python functions we use to solve the system $X\beta=Y$ are <tt>numpy.linalg.solve</tt> and <tt>scipy.linalg.solve</tt>. 
-
-These packages solve $X\beta = Y$ using *LU factorization*, which is a topic that should have been covered in your linear algebra class. Here's a quick recap if you've forgotten[^4]: any square matrix $X$ can be written (sometimes after appropriate re-ordering of the rows/columns) as the product of a lower triangular matrix $L$ with an upper triangular matrix $U$, that is, $X=LU$. Here's some pseudocode for LU decomposition (without pivoting, that is, assuming no re-ordering of the rows/columns of $X$ are necessary):
-
-
-
-Once the LU factorization of $X$ is found, then we can solve for $\beta$ in two steps:
-
+If $X$ is invertible (and therefore square), the python functions we use to solve the system $X\beta=Y$ are <tt>numpy.linalg.solve</tt> and <tt>scipy.linalg.solve</tt>. Both of these functions use LU decomposition to solve the system. This means they first compute the factors $L$ and $U$ and described above. Then, once the LU factorization of $X$ is found, then we can solve for $\beta$ in two steps:
 
 1. Solve $L\alpha = Y$ for $\alpha$.
 
@@ -250,17 +247,17 @@ The process we have just described is called *forward substitution* and is a sta
    - $\alpha_i = (Y_i - s) / L_{ii}$
 3. `return` $\alpha$
 
-Now that we have solved $L\alpha = Y$ for $\alpha$ using forward substitution, we need to solve $U\beta = \alpha$ for $\beta$, where $U$ is upper triangular rather than lower triangular. This is done using *backward substitution*, which is a very similar algorithm to forward substitution. That gives us our final solution $\beta$.
+Forward substitution has complexity $\mathcal{O}(n^2)$.
 
-::: {.callout-note}
-## Exercise
-Without looking it up, can you write pseudocode for a backward substitution algorithm for solving upper triangular systems?
-:::
+Now that we have solved $L\alpha = Y$ for $\alpha$ using forward substitution, we need to solve $U\beta = \alpha$ for $\beta$, where $U$ is upper triangular rather than lower triangular.  This is done using *backward substitution*, which is a very similar algorithm to forward substitution and also has complexity $\mathcal{O}(n^2)$. That gives us our final solution $\beta$.
+
+The overall computational cost of solving an invertible linear system is dominated by the cubic cost of the LU decomposition (for large $n$, the quadratic costs of forward and backward substitution are much cheaper than the cubic cost of LU). Thus, we say linear solves have cubic complexity. 
+
 
 ### Least squares problems
-If $X$ is non-invertible, the python functions we use to solve $X\beta = Y$ are <tt>numpy.linalg.lstsq</tt> and <tt>scipy.linalg.lstsq</tt>. These functions can use a number of different algorithms to solve the least squares problem. A common choice is based on *QR decomposition*, which should also have been covered in your linear algebra class. 
+If $X$ is non-invertible, the python functions we use to solve $X\beta = Y$ are <tt>numpy.linalg.lstsq</tt> and <tt>scipy.linalg.lstsq</tt>. These functions can use a number of different algorithms to solve the least squares problem, but a common choice for overdetermined least squares problems is to use QR decomposition. That is, we first compute the factors $Q\in\R^{N\times n}$ and $R\in\R^{n\times n}$ as described above. Then, we can solve for $\beta$ is two steps:
 
-Here's a reminder of the essential facts of QR decomposition: if $X\in\R^{N\times n}$ has full column rank, then it can be written as the product of an orthogonal matrix $Q\in\R^{N\times n}$ with an upper triangular matrix $R\in\R^{n\times n}$. Analogous to solving invertible systems, once we have factored $X=QR$ we can then solve the least squares problem in two steps:
+<!-- Here's a reminder of the essential facts of QR decomposition: if $X\in\R^{N\times n}$ has full column rank, then it can be written as the product of an orthogonal matrix $Q\in\R^{N\times n}$ with an upper triangular matrix $R\in\R^{n\times n}$. Analogous to solving invertible systems, once we have factored $X=QR$ we can then solve the least squares problem in two steps: -->
 
 1. Solve $Q\alpha = Y$ for $\alpha$.
 
@@ -268,4 +265,13 @@ Here's a reminder of the essential facts of QR decomposition: if $X\in\R^{N\time
 
 Recall that orthogonal matrices $Q$ satisfy $Q^\top Q=I$, so this special structure lets us find $\alpha$ via a matrix multiplication, which is computationally more efficient than a full LU decomposition. Then, since $R$ is upper triangular, we can solve for $\beta$ using backward substitution.
 
-If $X$ is low-rank, there are a couple of options, but the standard one is based on the the singular value decomposition, which deserves its own set of notes, so we will defer discussion of this until later. 
+If $X$ is does not have full column rank, there are a couple of options for solving the least squares problem, but the standard one is based on the the singular value decomposition, which deserves its own set of notes, which come next. 
+
+## Exercises 
+
+1. Show that the QR decomposition has time complexity $\mathcal{O}(N n^2)$.
+2. Provide pseudocode for a backward substitution algorithm analogous to the forward substitution algorithm provided (without looking it up, which you could easily do --- but if you can derive it yourself then you know you understand it).
+3. Show that forward (or backward) substitution has complexity $\mathcal{O}(n^2)$.
+4. Show that the overall cost of solving $X\beta=Y$ via QR decomposition is $\mathcal{O}(Nn^2)$.
+5. Determine how much RAM you have on your personal computer. How many double precision floats can you store in that space? What does this mean for the largest square linear system you can solve using your computer? What are the dimensions of the largest least squares problem you can solve using the QR decomposition on your computer?
+6. Write code to set up and solve least squares problems of arbitrary dimension and time the solve. Plot the solve times as the dimensions increase. Do you observe the expected trends? At what point does your computer run out of memory and is it approximately what you expected?
