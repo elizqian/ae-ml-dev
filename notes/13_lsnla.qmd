@@ -12,6 +12,12 @@ In this section we will introduce fundamental algorithms from computational line
 
 The intended learning outcomes of these notes are that students should be able to:
 
+1. Explain how LU decomposition and QR decompositions are used to solve linear systems and linear least squares problems, respectively. 
+
+2. Analyze the time complexity of numerical linear algebra algorithms by deriving expressions for the number of FLOPs in terms of matrix size
+
+3. Analyze the memory complexity and cost of numerical linear algebra algorithms in terms of both matrix size and bits of storage
+
 ## Measuring computational cost
 A key property of any algorithm is its computational cost. The two types of cost we are interested in are *time* and *memory*: the former describes how long an algorithm takes to run, and the latter describes how many bytes of RAM we must have available in order to run the computation. For both of these measures, we are interested in understanding how the time and memory costs change as the dimensions of the problem (the number of data $N$ or the number of features $d$) change. These properties are often referred to as the (time or memory) *complexity* of the algorithm, or as the (time or memory) cost *scaling* of the algorithm. 
 

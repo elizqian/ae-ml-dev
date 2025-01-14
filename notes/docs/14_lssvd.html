@@ -69,6 +69,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -175,7 +204,11 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#blah" id="toc-blah" class="nav-link active" data-scroll-target="#blah"><span class="header-section-number">5.1</span> blah</a></li>
+  <li><a href="#svd-the-basics" id="toc-svd-the-basics" class="nav-link active" data-scroll-target="#svd-the-basics"><span class="header-section-number">5.1</span> SVD: the basics</a></li>
+  <li><a href="#the-truncated-svd" id="toc-the-truncated-svd" class="nav-link" data-scroll-target="#the-truncated-svd"><span class="header-section-number">5.2</span> The truncated SVD</a></li>
+  <li><a href="#the-pseudo-inverse-and-solving-least-squares-problems" id="toc-the-pseudo-inverse-and-solving-least-squares-problems" class="nav-link" data-scroll-target="#the-pseudo-inverse-and-solving-least-squares-problems"><span class="header-section-number">5.3</span> the pseudo inverse and solving least squares problems</a></li>
+  <li><a href="#utility-in-understanding-numerical-conditioning" id="toc-utility-in-understanding-numerical-conditioning" class="nav-link" data-scroll-target="#utility-in-understanding-numerical-conditioning"><span class="header-section-number">5.4</span> utility in understanding numerical conditioning</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">5.5</span> Exercises</a></li>
   </ul>
 </nav>
     </div>
@@ -210,18 +243,54 @@ $$
 
 \definecolor{quarto-callout-note-color}{HTML}{4477AA} -->
 </div>
-<p>In this section we will introduce fundamental algorithms from computational linear algebra that are used to solve linear systems and linear least squares problems. We will also introduce and discuss some of the key properties and theoretical considerations when using these algorithms.</p>
+<p>In this section we will introduce a new matrix decomposition called the Singular Value Decomposition (SVD). The SVD is generally applicable to all matrices of any dimension or rank, and has many applications in machine learning and beyond. We will begin by defining the decomposition and then discuss some of it uses.</p>
 <p>The intended learning outcomes of these notes are that students should be able to:</p>
-<section id="blah" class="level2" data-number="5.1">
-<h2 data-number="5.1" class="anchored" data-anchor-id="blah"><span class="header-section-number">5.1</span> blah</h2>
+<section id="svd-the-basics" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="svd-the-basics"><span class="header-section-number">5.1</span> SVD: the basics</h2>
+<p>The SVD decomposes the matrix <span class="math inline">\(X\in\mathbb{R}^{N\times n}\)</span> into the product of three matrices, <span class="math inline">\(U\in\mathbb{R}^{N\times N}\)</span>, <span class="math inline">\(\Sigma\in\mathbb{R}^{N \times n}\)</span>, and <span class="math inline">\(V^\top \in\mathbb{R}^{n\times n}\)</span>, so that</p>
+<p><span id="eq-svd-product"><span class="math display">\[
+X = U\Sigma V^\top
+\qquad(5.1)\]</span></span></p>
+<p>The matrices <span class="math inline">\(U\)</span> and <span class="math inline">\(V\)</span> are orthogonal (unitary), so that <span class="math inline">\(U^\top U = I_N\)</span> and <span class="math inline">\(V^\top V = I_n\)</span>, and the matrix <span class="math inline">\(\Sigma\)</span> is diagonal. The diagonal entries of <span class="math inline">\(\Sigma\)</span> are denoted <span class="math inline">\(\sigma_1,\sigma_2,\ldots,\)</span> and are called the <em>singular values</em> of <span class="math inline">\(X\)</span>, and are always non-negative and in non-increasing order, that is: <span class="math inline">\(\sigma_1\geq \sigma_2\geq \cdots \geq 0\)</span>. <span class="math inline">\(\Sigma\)</span> is called the singular value matrix, and the number of nonzero singular values is equal to the rank of the matrix <span class="math inline">\(X\)</span>. The matrix <span class="math inline">\(U\)</span> is called the left singular vector matrix, and its columns are called the <em>left singular vectors</em>. The matrix <span class="math inline">\(V\)</span> is called the right singular vector matrix, and its columns are called the <em>right singular vectors</em>.</p>
+<!-- pseudocode in the future? -->
+<p>To compute the SVD in python, you would use <tt>numpy.linalg.svd</tt> or <tt>scipy.linalg.svd</tt>. Like other matrix decompositions, the time complexity to compute the SVD is third-order, specifically <span class="math inline">\(\mathcal{O}(\min(Nn^2, N^2n))\)</span>. (Note that when <span class="math inline">\(N&gt;n\)</span> this is the same time complexity as the QR decomposition for tall matrices.) The storage complexity is <span class="math inline">\(\mathcal{O}(\max(N,n)^2)\)</span>.</p>
+<p>Above, we have described the <em>full SVD</em>. Another version of the SVD is the <em>reduced SVD</em> or the <em>thin SVD</em><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. Let <span class="math inline">\(k = \min(N,n)\)</span>. The reduced SVD decomposes <span class="math inline">\(X\)</span> into the product <span class="math inline">\(X=U\Sigma V^\top\)</span> where <span class="math inline">\(U\in\mathbb{R}^{N\times k}\)</span>, <span class="math inline">\(\Sigma\in\mathbb{R}^{k\times k}\)</span>, and <span class="math inline">\(V\in\mathbb{R}^{n\times k}\)</span>. The matrices <span class="math inline">\(U\)</span> and <span class="math inline">\(V\)</span> are still unitary, so that <span class="math inline">\(U^\top U = I_k\)</span> and <span class="math inline">\(V^\top V = I_k\)</span> and <span class="math inline">\(\Sigma\)</span> is square and diagonal. When one of the dimensions of <span class="math inline">\(X\)</span> is much larger than the other, this can lead to signficant cost savings in both time and memory. Note that the reduced SVD is subtly different from the truncated SVD which we describe next.</p>
+<!-- add eigenvalue decomposition of square product? -->
+<!-- add the operator interpretation? rotation/stretching/scaling -->
+</section>
+<section id="the-truncated-svd" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="the-truncated-svd"><span class="header-section-number">5.2</span> The truncated SVD</h2>
+<p>Let <span class="math inline">\(k=\min(N,n)\)</span> as before. Then, we can rewrite <a href="#eq-svd-product" class="quarto-xref">Equation&nbsp;<span>5.1</span></a> as follows:</p>
+<p><span id="eq-svd-sum"><span class="math display">\[
+X = \sum_{i=1}^k u_i \sigma_i v_i^\top = \sum_{i=1}^k \sigma_i (u_i v_i^\top)
+\qquad(5.2)\]</span></span></p>
+<p>where <span class="math inline">\(u_1,\ldots,u_N\in\mathbb{R}^N\)</span> are the left singular vectors (columns of <span class="math inline">\(U\)</span>) and <span class="math inline">\(v_1,\ldots,v_n\in\mathbb{R}^n\)</span> are the right singular vectors (columns of <span class="math inline">\(V\)</span>), and <span class="math inline">\(\sigma_i\)</span> are again the diagonal entries in <span class="math inline">\(\Sigma\)</span>. The matrices <span class="math inline">\(u_1v_1^\top,\ldots,u_kv_k^\top\in\mathbb{R}^{N\times n}\)</span> are rank-1 matrices formed by taking the <em>outer product</em> of <span class="math inline">\(u_i\)</span> with <span class="math inline">\(v_i\)</span>. This notation shows that <span class="math inline">\(X\)</span> can be expressed as the sum of <span class="math inline">\(k\)</span> rank-1 matrices, so we know that <span class="math inline">\(X\)</span> has rank at most <span class="math inline">\(k\)</span>. In fact, the number of nonzero singular values is equal to the rank of <span class="math inline">\(X\)</span>.</p>
+<p>PCA features, data compression</p>
+</section>
+<section id="the-pseudo-inverse-and-solving-least-squares-problems" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="the-pseudo-inverse-and-solving-least-squares-problems"><span class="header-section-number">5.3</span> the pseudo inverse and solving least squares problems</h2>
+<p>plus truncated SVD regularization?</p>
+</section>
+<section id="utility-in-understanding-numerical-conditioning" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="utility-in-understanding-numerical-conditioning"><span class="header-section-number">5.4</span> utility in understanding numerical conditioning</h2>
 <p>next ste of notes: machine precision, round off error, SVD and conditioning.</p>
 <p>python examples showing nonzero residual for LU and conditioning error for QR?</p>
 <p>introduce the SVD in math, singular values vs rank/conditioning, explain the concept of conditioning in terms of being essentially non-invertible from the computer’s point of view, cond/rank commands</p>
 <p>show that normal equations are terribly conditioned.</p>
-<p>pseudoinverse and truncated SVD for regularization</p>
-<p>SVD + PCA??</p>
+</section>
+<section id="exercises" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="exercises"><span class="header-section-number">5.5</span> Exercises</h2>
+<ol type="1">
+<li></li>
+</ol>
 
 
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>As with many of the terms we have encountered and will encounter in this course, the term “SVD” is used in the wild to mean either the full SVD or the reduced SVD – often the distinction is not super important, but when it is you need to be able to discern from context what is meant.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
 </section>
 
 </main> <!-- /main -->

@@ -8,12 +8,50 @@ html-math-method:
 
 {{< include _macros.qmd >}}
 
-In this section we will introduce fundamental algorithms from computational linear algebra that are used to solve linear systems and linear least squares problems. We will also introduce and discuss some of the key properties and theoretical considerations when using these algorithms.
+In this section we will introduce a new matrix decomposition called the Singular Value Decomposition (SVD). The SVD is generally applicable to all matrices of any dimension or rank, and has many applications in machine learning and beyond. We will begin by defining the decomposition and then discuss some of it uses.
 
 The intended learning outcomes of these notes are that students should be able to:
 
 
-## blah
+## SVD: the basics
+
+The SVD decomposes the matrix $X\in\R^{N\times n}$ into the product of three matrices, $U\in\R^{N\times N}$, $\Sigma\in\R^{N \times n}$, and $V^\top \in\R^{n\times n}$, so that 
+
+$$
+X = U\Sigma V^\top
+$$ {#eq-svd-product}
+
+The matrices $U$ and $V$ are orthogonal (unitary), so that $U^\top U = I_N$ and $V^\top V = I_n$, and the matrix $\Sigma$ is diagonal. The diagonal entries of $\Sigma$ are denoted $\sigma_1,\sigma_2,\ldots,$ and are called the *singular values* of $X$, and are always non-negative and in non-increasing order, that is: $\sigma_1\geq \sigma_2\geq \cdots \geq 0$.  $\Sigma$ is called the singular value matrix, and the number of nonzero singular values is equal to the rank of the matrix $X$. The matrix $U$ is called the left singular vector matrix, and its columns are called the *left singular vectors*. The matrix $V$ is called the right singular vector matrix, and its columns are called the *right singular vectors*. 
+
+<!-- pseudocode in the future? -->
+
+To compute the SVD in python, you would use <tt>numpy.linalg.svd</tt> or <tt>scipy.linalg.svd</tt>. Like other matrix decompositions, the time complexity to compute the SVD is third-order, specifically $\mathcal{O}(\min(Nn^2, N^2n))$. (Note that when $N>n$ this is the same time complexity as the QR decomposition for tall matrices.) The storage complexity is $\mathcal{O}(\max(N,n)^2)$.
+
+Above, we have described the *full SVD*. Another version of the SVD is the *reduced SVD* or the *thin SVD*[^1]. 
+Let $k = \min(N,n)$. The reduced SVD decomposes $X$ into the product $X=U\Sigma V^\top$ where $U\in\R^{N\times k}$, $\Sigma\in\R^{k\times k}$, and $V\in\R^{n\times k}$. The matrices $U$ and $V$ are still unitary, so that $U^\top U = I_k$ and $V^\top V = I_k$ and $\Sigma$ is square and diagonal. When one of the dimensions of $X$ is much larger than the other, this can lead to signficant cost savings in both time and memory. Note that the reduced SVD is subtly different from the truncated SVD which we describe next. 
+
+[^1]: As with many of the terms we have encountered and will encounter in this course, the term "SVD" is used in the wild to mean either the full SVD or the reduced SVD -- often the distinction is not super important, but when it is you need to be able to discern from context what is meant.
+
+<!-- add eigenvalue decomposition of square product? -->
+
+<!-- add the operator interpretation? rotation/stretching/scaling -->
+
+## The truncated SVD
+Let $k=\min(N,n)$ as before. Then, we can rewrite @eq-svd-product as follows:
+
+$$
+X = \sum_{i=1}^k u_i \sigma_i v_i^\top = \sum_{i=1}^k \sigma_i (u_i v_i^\top)
+$$ {#eq-svd-sum}
+
+where $u_1,\ldots,u_N\in\R^N$ are the left singular vectors (columns of $U$) and $v_1,\ldots,v_n\in\R^n$ are the right singular vectors (columns of $V$), and $\sigma_i$ are again the diagonal entries in $\Sigma$. The matrices $u_1v_1^\top,\ldots,u_kv_k^\top\in\R^{N\times n}$ are rank-1 matrices formed by taking the *outer product* of $u_i$ with $v_i$. This notation shows that $X$ can be expressed as the sum of $k$ rank-1 matrices, so we know that $X$ has rank at most $k$. In fact, the number of nonzero singular values is equal to the rank of $X$. 
+
+
+PCA features, data compression
+
+## the pseudo inverse and solving least squares problems
+plus truncated SVD regularization?
+
+## utility in understanding numerical conditioning
 
 next ste of notes: machine precision, round off error, SVD and conditioning.
 
@@ -25,7 +63,6 @@ introduce the SVD in math, singular values vs rank/conditioning, explain the con
 
 show that normal equations are terribly conditioned.
 
-pseudoinverse and truncated SVD for regularization
+## Exercises 
 
-SVD + PCA??
-
+1. 
