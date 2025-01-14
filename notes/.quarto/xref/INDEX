@@ -1,0 +1,44 @@
+{
+  "index.qmd": {
+    "index.html": "eb0d0c30"
+  },
+  "intro.qmd": {
+    "intro.html": "3d06e946"
+  },
+  "summary.qmd": {
+    "summary.html": "960b84cc"
+  },
+  "references.qmd": {
+    "references.html": "04e03426"
+  },
+  "00_linalg.qmd": {
+    "00_linalg.html": "2143770a"
+  },
+  "01_ls.qmd": {
+    "01_ls.html": "5f4e9f7a"
+  },
+  "20_ugbo.qmd": {
+    "20_ugbo.html": "8a120c50"
+  },
+  "21_ugbo2.qmd": {
+    "21_ugbo2.html": "4e6b0f1d"
+  },
+  "01_intro.qmd": {
+    "01_intro.html": "bd903e0f"
+  },
+  "11_ls.qmd": {
+    "11_ls.html": "f2fbbb9b"
+  },
+  "12_lslinalg.qmd": {
+    "12_lslinalg.html": "0e7fb995"
+  },
+  "13_lsstat.qmd": {
+    "13_lsstat.html": "4ce13637"
+  },
+  "13_lsnla.qmd": {
+    "13_lsnla.html": "706bbccc"
+  },
+  "14_lssvd.qmd": {
+    "14_lssvd.html": "0224d6da"
+  }
+}

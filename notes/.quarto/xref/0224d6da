@@ -1,0 +1,1 @@
+{"entries":[{"key":"eq-svd-product","order":{"number":1,"section":[5,1,0,0,0,0,0]},"caption":""},{"key":"eq-svd-sum","order":{"number":2,"section":[5,2,0,0,0,0,0]},"caption":""}],"options":{"chapters":true},"headings":["svd-the-basics","the-truncated-svd","the-pseudo-inverse-and-solving-least-squares-problems","utility-in-understanding-numerical-conditioning","exercises"]}
