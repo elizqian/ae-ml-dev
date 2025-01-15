@@ -12,7 +12,7 @@ book:
     - 11_ls.qmd
     - 12_lslinalg.qmd
     - 13_lsnla.qmd
-    # - 14_lssvd.qmd
+    - 14_lssvd.qmd
     # - 20_ugbo.qmd
     # - 21_ugbo2.qmd
     - references.qmd
