@@ -1,5 +1,5 @@
 ---
-title: "LLS and the singular value decomposition"
+title: "The singular value decomposition"
 html-math-method:
   method: mathjax
   url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
@@ -79,31 +79,44 @@ $$
 
 [^3]: the Frobenius norm of a matrix $A$, denoted $\|A\|_F$, is the natural generalization of the Euclidean norm from vectors to matrices -- it is given by the square root of the sum of squares of all matrix elements.
 
-### Applications of the truncated SVD in scientific machine learning
+## SVD applications in scientific machine learning
 
-One application of the SVD is for data compression. If you have a very large data set $Z\in\R^{N\times d}$ with either/both $N,d$, very large, you can quickly have too much data to store easily on whatever machine is available to you. This is a common challenge in scientific simulation of partial differential equations (e.g., in computational fluid dynamics or finite element analysis of structures) where $d$ generally scales with the size of the computational mesh, which can easily have hundreds of millions of cells. Instead of storing the full data matrix, we can store the singular vectors and values needed to represent the truncated SVD. A similar idea is used to compress images for efficient storage. 
+### Data compression
+ One application of the SVD is for data compression. If you have a very large data set $Z\in\R^{N\times d}$ with either/both $N,d$, very large, you can quickly have too much data to store easily on whatever machine is available to you. This is a common challenge in scientific simulation of partial differential equations (e.g., in computational fluid dynamics or finite element analysis of structures) where $d$ generally scales with the size of the computational mesh, which can easily have hundreds of millions of cells. Instead of storing the full data matrix, we can store the singular vectors and values needed to represent the truncated SVD. A similar idea is used to compress images for efficient storage. 
 
+### PCA features 
+Another way that the SVD gets used is to define *PCA features*. PCA stands for "principal component analysis"; this language comes from a statistics perspective on the SVD which we'll elaborate on later. PCA features are defined as follows: let $Z\in\R^{d\times N}$ denote the *input matrix*[^3], and let $Z = \Phi\Xi\Psi^\top$ be the SVD *of the input matrix*, so that $\phi_1,\phi_2,\ldots$ denote the left singular vectors of $\Phi$. We can define $n<d$ PCA features as follows: for $i\leq n$, let $x_i(z) = \phi_i^\top z$. We can write the entire feature map for all $n$ features as follows: $x(z) = \Phi_n^\top z$, where $\Phi_n\in\R^{d\times n}$ consists of the leading left singular vectors of $\Phi$.
 
+[^3]: Carefully note the dimensions here: in this definition of the input matrix, each *column* of $Z$ corresponds to one datum, whereas in our feature matrix definition each *row* of $X$ corresponds to one datum. What are the dimensions of $\Phi$, $\Xi$, and $\Psi$?
 <!-- add the idea of PCA features, add something about choosing the rank of compression? -->
 
+How can we interpret PCA features? Note that the columns of $\Phi$ form an orthonormal basis for $\R^d$, and the ordering of these columns has the special property that they are in order of decreasing "importance" for representing the data in $Z$ (this is one way of interpreting the Eckart-Young theorem). Recall that $\Phi\Phi^\top=I$, so $\Phi\Phi^\top z = z$; let $\hat z = \Phi^\top z$. Then you see that $z = \Phi\hat z$, so $z$ can be written as a linear combination of the columns of $\Phi$, with weights given by $\hat z$. In essence, if we transform the input $z$ to the coordinate system defined by the basis given in $\Phi$, the coefficients of that linear combination are given in $\hat z$, so the $i$th element of $\hat z$, which is the $i$th PCA feature, $x_i(z)$, tells us the size of the component of $z$ in the direction given by $\phi_i$. By truncating to the leading $n$ PCA components, we keep the components in the $n$ largest (on average over all the data) directions, and drop the trailing smaller components.
 
-## the pseudo inverse and solving least squares problems
-plus truncated SVD regularization?
+### The Moore-Penrose Pseudoinverse
 
-## utility in understanding numerical conditioning
+Last but certainly not least I finally can tell you more about how we solve underdetermined least squares problems. The Moore-Penrose *pseudoinverse* of a matrix $X$ is generally denoted $X^\dagger$ (although some sources use $X^+$), and is given by 
 
-next ste of notes: machine precision, round off error, SVD and conditioning.
+$$ 
+X^\dagger = V \Sigma^{\dagger} U^\top,
+$$
 
+where $X = U\Sigma V^\top$ is the SVD of $X$, and the pseudoinverse of $\Sigma\in\R^{N\times n}$ is denoted $\Sigma^{\dagger}\in\R^{n\times N}$ and is given by inverting all the elements on the diagonal while leaving all other non-diagonal elements as zeroes. 
 
-python examples showing nonzero residual for LU and conditioning error for QR?
+Thus, in solving the normal equations, $X^\top X \beta = X^\top Y$, if $X^\top X$ is not invertible, we can take the pseudoinverse to arrive at the solution
 
+$$
+\beta = (X^\top X)^\dagger X^\top Y
+$$ {#eq-normal-eqs-pseudoinverse}
 
-introduce the SVD in math, singular values vs rank/conditioning, explain the concept of conditioning in terms of being essentially non-invertible from the computer's point of view, cond/rank commands
+where $\beta$ given this way is the norm-minimizing solution. 
 
-show that normal equations are terribly conditioned.
+In fact, @eq-normal-eqs-pseudoinverse is equivalent to just writing $\beta=X^\dagger Y$ (see Exercises).
+
 
 ## Exercises 
 
 1. Show that @eq-svd-product and @eq-svd-sum are equivalent (nothing fancy, just write it out using what you know about the structure of $U$, $\Sigma$, and $V$).
 
 2. Let $X\in\R^{N\times n}$ have rank $r$ and let $\beta\in\R^n$. Show that the matrix multiplication $X\beta$ can be computed using the expression @eq-svd-sum-rank in $\mathcal{O}(r(N+n))$ FLOPs.
+
+3. Show that $\beta = X^\dagger Y$ is equivalent to @eq-normal-eqs-pseudoinverse using properties of the SVD.
