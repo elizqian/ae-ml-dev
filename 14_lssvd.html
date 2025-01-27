@@ -249,6 +249,11 @@ $$
 </div>
 <p>In this section we will introduce a new matrix decomposition called the Singular Value Decomposition (SVD). The SVD is generally applicable to all matrices of any dimension or rank, and has many applications in machine learning and beyond. We will begin by defining the decomposition and then discuss some of it uses.</p>
 <p>The intended learning outcomes of these notes are that students should be able to:</p>
+<ol type="1">
+<li><p>Define the full, reduced, and truncated SVDs with correct matrix definitions; know the properties of each of the matrices in the decomposition; understand their storage and time complexities</p></li>
+<li><p>Understand the Eckart-Young Theorem and its application in scientific machine learning for data compression and principal component analysis.</p></li>
+<li><p>Define the Moore-Penrose pseudoinverse and describe how it is used to solve least-squares problems.</p></li>
+</ol>
 <section id="svd-the-basics" class="level2" data-number="5.1">
 <h2 data-number="5.1" class="anchored" data-anchor-id="svd-the-basics"><span class="header-section-number">5.1</span> SVD: the basics</h2>
 <p>The SVD decomposes the matrix <span class="math inline">\(X\in\mathbb{R}^{N\times n}\)</span> into the product of three matrices, <span class="math inline">\(U\in\mathbb{R}^{N\times N}\)</span>, <span class="math inline">\(\Sigma\in\mathbb{R}^{N \times n}\)</span>, and <span class="math inline">\(V^\top \in\mathbb{R}^{n\times n}\)</span>, so that</p>
@@ -311,6 +316,7 @@ X^\dagger = V \Sigma^{\dagger} U^\top,
 \qquad(5.5)\]</span></span></p>
 <p>where <span class="math inline">\(\beta\)</span> given this way is the norm-minimizing solution.</p>
 <p>In fact, <a href="#eq-normal-eqs-pseudoinverse" class="quarto-xref">Equation&nbsp;<span>5.5</span></a> is equivalent to just writing <span class="math inline">\(\beta=X^\dagger Y\)</span> (see Exercises).</p>
+<!-- maybe add stuff on how this is used to solve and FLOP count etc. -->
 </section>
 </section>
 <section id="exercises" class="level2" data-number="5.4">
