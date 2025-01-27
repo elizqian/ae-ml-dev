@@ -12,6 +12,12 @@ In this section we will introduce a new matrix decomposition called the Singular
 
 The intended learning outcomes of these notes are that students should be able to:
 
+1. Define the full, reduced, and truncated SVDs with correct matrix definitions; know the properties of each of the matrices in the decomposition; understand their storage and time complexities
+
+2. Understand the Eckart-Young Theorem and its application in scientific machine learning for data compression and principal component analysis. 
+
+3. Define the Moore-Penrose pseudoinverse and describe how it is used to solve least-squares problems.
+
 
 ## SVD: the basics
 
@@ -112,6 +118,7 @@ where $\beta$ given this way is the norm-minimizing solution.
 
 In fact, @eq-normal-eqs-pseudoinverse is equivalent to just writing $\beta=X^\dagger Y$ (see Exercises).
 
+<!-- maybe add stuff on how this is used to solve and FLOP count etc. -->
 
 ## Exercises 
 
