@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>5&nbsp; The singular value decomposition – AE 4803 AIM: Course Notes</title>
+<title>6&nbsp; The singular value decomposition – AE 4803 AIM: Course Notes</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -30,8 +30,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./15_svdcond.html" rel="next">
-<link href="./13_lsnla.html" rel="prev">
+<link href="./references.html" rel="next">
+<link href="./14_lssvd.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -110,7 +110,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./14_lssvd.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">The singular value decomposition</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./15_svdcond.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">The singular value decomposition</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -167,13 +167,13 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./14_lssvd.html" class="sidebar-item-text sidebar-link active">
+  <a href="./14_lssvd.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">The singular value decomposition</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./15_svdcond.html" class="sidebar-item-text sidebar-link">
+  <a href="./15_svdcond.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">The singular value decomposition</span></span></a>
   </div>
 </li>
@@ -210,15 +210,17 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#svd-the-basics" id="toc-svd-the-basics" class="nav-link active" data-scroll-target="#svd-the-basics"><span class="header-section-number">5.1</span> SVD: the basics</a></li>
-  <li><a href="#the-truncated-svd" id="toc-the-truncated-svd" class="nav-link" data-scroll-target="#the-truncated-svd"><span class="header-section-number">5.2</span> The truncated SVD</a></li>
-  <li><a href="#svd-applications-in-scientific-machine-learning" id="toc-svd-applications-in-scientific-machine-learning" class="nav-link" data-scroll-target="#svd-applications-in-scientific-machine-learning"><span class="header-section-number">5.3</span> SVD applications in scientific machine learning</a>
+  <li><a href="#svd-the-basics" id="toc-svd-the-basics" class="nav-link active" data-scroll-target="#svd-the-basics"><span class="header-section-number">6.1</span> SVD: the basics</a></li>
+  <li><a href="#the-truncated-svd" id="toc-the-truncated-svd" class="nav-link" data-scroll-target="#the-truncated-svd"><span class="header-section-number">6.2</span> The truncated SVD</a></li>
+  <li><a href="#svd-applications-in-scientific-machine-learning" id="toc-svd-applications-in-scientific-machine-learning" class="nav-link" data-scroll-target="#svd-applications-in-scientific-machine-learning"><span class="header-section-number">6.3</span> SVD applications in scientific machine learning</a>
   <ul class="collapse">
-  <li><a href="#data-compression" id="toc-data-compression" class="nav-link" data-scroll-target="#data-compression"><span class="header-section-number">5.3.1</span> Data compression</a></li>
-  <li><a href="#pca-features" id="toc-pca-features" class="nav-link" data-scroll-target="#pca-features"><span class="header-section-number">5.3.2</span> PCA features</a></li>
-  <li><a href="#the-moore-penrose-pseudoinverse" id="toc-the-moore-penrose-pseudoinverse" class="nav-link" data-scroll-target="#the-moore-penrose-pseudoinverse"><span class="header-section-number">5.3.3</span> The Moore-Penrose Pseudoinverse</a></li>
+  <li><a href="#data-compression" id="toc-data-compression" class="nav-link" data-scroll-target="#data-compression"><span class="header-section-number">6.3.1</span> Data compression</a></li>
+  <li><a href="#pca-features" id="toc-pca-features" class="nav-link" data-scroll-target="#pca-features"><span class="header-section-number">6.3.2</span> PCA features</a></li>
+  <li><a href="#the-moore-penrose-pseudoinverse" id="toc-the-moore-penrose-pseudoinverse" class="nav-link" data-scroll-target="#the-moore-penrose-pseudoinverse"><span class="header-section-number">6.3.3</span> The Moore-Penrose Pseudoinverse</a></li>
   </ul></li>
-  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">5.4</span> Exercises</a></li>
+  <li><a href="#the-pseudo-inverse-and-solving-least-squares-problems" id="toc-the-pseudo-inverse-and-solving-least-squares-problems" class="nav-link" data-scroll-target="#the-pseudo-inverse-and-solving-least-squares-problems"><span class="header-section-number">6.4</span> the pseudo inverse and solving least squares problems</a></li>
+  <li><a href="#utility-in-understanding-numerical-conditioning" id="toc-utility-in-understanding-numerical-conditioning" class="nav-link" data-scroll-target="#utility-in-understanding-numerical-conditioning"><span class="header-section-number">6.5</span> utility in understanding numerical conditioning</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">6.6</span> Exercises</a></li>
   </ul>
 </nav>
     </div>
@@ -227,7 +229,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">The singular value decomposition</span></h1>
+<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">The singular value decomposition</span></h1>
 </div>
 
 
@@ -255,17 +257,12 @@ $$
 </div>
 <p>In this section we will introduce a new matrix decomposition called the Singular Value Decomposition (SVD). The SVD is generally applicable to all matrices of any dimension or rank, and has many applications in machine learning and beyond. We will begin by defining the decomposition and then discuss some of it uses.</p>
 <p>The intended learning outcomes of these notes are that students should be able to:</p>
-<ol type="1">
-<li><p>Define the full, reduced, and truncated SVDs with correct matrix definitions; know the properties of each of the matrices in the decomposition; understand their storage and time complexities</p></li>
-<li><p>Understand the Eckart-Young Theorem and its application in scientific machine learning for data compression and principal component analysis.</p></li>
-<li><p>Define the Moore-Penrose pseudoinverse and describe how it is used to solve least-squares problems.</p></li>
-</ol>
-<section id="svd-the-basics" class="level2" data-number="5.1">
-<h2 data-number="5.1" class="anchored" data-anchor-id="svd-the-basics"><span class="header-section-number">5.1</span> SVD: the basics</h2>
+<section id="svd-the-basics" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="svd-the-basics"><span class="header-section-number">6.1</span> SVD: the basics</h2>
 <p>The SVD decomposes the matrix <span class="math inline">\(X\in\mathbb{R}^{N\times n}\)</span> into the product of three matrices, <span class="math inline">\(U\in\mathbb{R}^{N\times N}\)</span>, <span class="math inline">\(\Sigma\in\mathbb{R}^{N \times n}\)</span>, and <span class="math inline">\(V^\top \in\mathbb{R}^{n\times n}\)</span>, so that</p>
 <p><span id="eq-svd-product"><span class="math display">\[
 X = U\Sigma V^\top
-\qquad(5.1)\]</span></span></p>
+\qquad(6.1)\]</span></span></p>
 <p>The matrices <span class="math inline">\(U\)</span> and <span class="math inline">\(V\)</span> are orthogonal (unitary), so that <span class="math inline">\(U^\top U = I_N\)</span> and <span class="math inline">\(V^\top V = I_n\)</span>, and the matrix <span class="math inline">\(\Sigma\)</span> is diagonal. The diagonal entries of <span class="math inline">\(\Sigma\)</span> are denoted <span class="math inline">\(\sigma_1,\sigma_2,\ldots,\)</span> and are called the <em>singular values</em> of <span class="math inline">\(X\)</span>, and are always non-negative and in non-increasing order, that is: <span class="math inline">\(\sigma_1\geq \sigma_2\geq \cdots \geq 0\)</span>. <span class="math inline">\(\Sigma\)</span> is called the singular value matrix, and the number of nonzero singular values is equal to the rank of the matrix <span class="math inline">\(X\)</span>. The matrix <span class="math inline">\(U\)</span> is called the left singular vector matrix, and its columns are called the <em>left singular vectors</em>. The matrix <span class="math inline">\(V\)</span> is called the right singular vector matrix, and its columns are called the <em>right singular vectors</em>.</p>
 <!-- pseudocode in the future? -->
 <p>To compute the SVD in python, you would use <tt>numpy.linalg.svd</tt> or <tt>scipy.linalg.svd</tt>. Like other matrix decompositions, the time complexity to compute the SVD is third-order, specifically <span class="math inline">\(\mathcal{O}(\min(Nn^2, N^2n))\)</span>. (Note that when <span class="math inline">\(N&gt;n\)</span> this is the same time complexity as the QR decomposition for tall matrices.) The storage complexity is <span class="math inline">\(\mathcal{O}(\max(N,n)^2)\)</span>.</p>
@@ -273,18 +270,18 @@ X = U\Sigma V^\top
 <!-- add eigenvalue decomposition of square product? -->
 <!-- add the operator interpretation? rotation/stretching/scaling -->
 </section>
-<section id="the-truncated-svd" class="level2" data-number="5.2">
-<h2 data-number="5.2" class="anchored" data-anchor-id="the-truncated-svd"><span class="header-section-number">5.2</span> The truncated SVD</h2>
-<p>Let <span class="math inline">\(k=\min(N,n)\)</span> as before. Then, we can rewrite <a href="#eq-svd-product" class="quarto-xref">Equation&nbsp;<span>5.1</span></a> as follows:</p>
+<section id="the-truncated-svd" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="the-truncated-svd"><span class="header-section-number">6.2</span> The truncated SVD</h2>
+<p>Let <span class="math inline">\(k=\min(N,n)\)</span> as before. Then, we can rewrite <a href="#eq-svd-product" class="quarto-xref">Equation&nbsp;<span>6.1</span></a> as follows:</p>
 <p><span id="eq-svd-sum"><span class="math display">\[
 X = \sum_{i=1}^k u_i \sigma_i v_i^\top = \sum_{i=1}^k \sigma_i (u_i v_i^\top)
-\qquad(5.2)\]</span></span></p>
+\qquad(6.2)\]</span></span></p>
 <p>where <span class="math inline">\(u_1,\ldots,u_N\in\mathbb{R}^N\)</span> are the left singular vectors (columns of <span class="math inline">\(U\)</span>) and <span class="math inline">\(v_1,\ldots,v_n\in\mathbb{R}^n\)</span> are the right singular vectors (columns of <span class="math inline">\(V\)</span>), and <span class="math inline">\(\sigma_i\)</span> are again the diagonal entries in <span class="math inline">\(\Sigma\)</span>. The matrices <span class="math inline">\(u_1v_1^\top,\ldots,u_kv_k^\top\in\mathbb{R}^{N\times n}\)</span> are rank-1 matrices formed by taking the <em>outer product</em> of <span class="math inline">\(u_i\)</span> with <span class="math inline">\(v_i\)</span>.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> Recall that the number of nonzero singular values is equal to the matrix rank and let <span class="math inline">\(r = \textsf{rank}(X)\)</span>. Thus, we can also write</p>
 <p><span id="eq-svd-sum-rank"><span class="math display">\[
 X = \sum_{i=1}^{r} \sigma_i (u_i v_i^\top)
-\qquad(5.3)\]</span></span></p>
-<p>We say a matrix is <em>low rank</em> when its rank is less than its maximum possible rank <span class="math inline">\(k\)</span>. A low-rank matrix can be stored more efficiently than a full rank matrix: note that <span class="math inline">\(X\in\mathbb{R}^{N\times n}\)</span> generally has <span class="math inline">\(Nn\)</span> elements that must be stored, but if the the matrix has rank <span class="math inline">\(r\)</span>, then from <a href="#eq-svd-sum-rank" class="quarto-xref">Equation&nbsp;<span>5.3</span></a> you can see that it would be more efficient to store <span class="math inline">\(r\)</span> sets of <span class="math inline">\((\sigma_i, u_i, v_i)\)</span>, for a total of <span class="math inline">\(r(N+n+1)\)</span> values. (In fact if storage is your only goal, you can just store the product <span class="math inline">\(\sigma_iu_i\)</span> and ditch that last 1 in the parentheses.) Low-rank matrices are also more efficient to compute with: while a standard matrix vector multiplication <span class="math inline">\(X\beta\)</span> where <span class="math inline">\(\beta\in\mathbb{R}^n\)</span> costs <span class="math inline">\(\mathcal{O}(Nn)\)</span> FLOPs, we can do a matrix vector multiplication using the expression in <a href="#eq-svd-sum-rank" class="quarto-xref">Equation&nbsp;<span>5.3</span></a> in just <span class="math inline">\(\mathcal{O}(r(N+n))\)</span> FLOPs (see Exercises).</p>
-<p>Because low-rank matrices are more efficient to work with and to store, it is often useful to <em>approximate</em> a full-rank matrix with a low-rank matrix (or approximate a low-rank matrix with an even lower-rank matrix). By far the most common way to do this is using the <strong>truncated SVD</strong>, which just truncates the sum <a href="#eq-svd-sum" class="quarto-xref">Equation&nbsp;<span>5.2</span></a> at some <span class="math inline">\(\ell &lt; k\)</span>, as follows:</p>
+\qquad(6.3)\]</span></span></p>
+<p>We say a matrix is <em>low rank</em> when its rank is less than its maximum possible rank <span class="math inline">\(k\)</span>. A low-rank matrix can be stored more efficiently than a full rank matrix: note that <span class="math inline">\(X\in\mathbb{R}^{N\times n}\)</span> generally has <span class="math inline">\(Nn\)</span> elements that must be stored, but if the the matrix has rank <span class="math inline">\(r\)</span>, then from <a href="#eq-svd-sum-rank" class="quarto-xref">Equation&nbsp;<span>6.3</span></a> you can see that it would be more efficient to store <span class="math inline">\(r\)</span> sets of <span class="math inline">\((\sigma_i, u_i, v_i)\)</span>, for a total of <span class="math inline">\(r(N+n+1)\)</span> values. (In fact if storage is your only goal, you can just store the product <span class="math inline">\(\sigma_iu_i\)</span> and ditch that last 1 in the parentheses.) Low-rank matrices are also more efficient to compute with: while a standard matrix vector multiplication <span class="math inline">\(X\beta\)</span> where <span class="math inline">\(\beta\in\mathbb{R}^n\)</span> costs <span class="math inline">\(\mathcal{O}(Nn)\)</span> FLOPs, we can do a matrix vector multiplication using the expression in <a href="#eq-svd-sum-rank" class="quarto-xref">Equation&nbsp;<span>6.3</span></a> in just <span class="math inline">\(\mathcal{O}(r(N+n))\)</span> FLOPs (see Exercises).</p>
+<p>Because low-rank matrices are more efficient to work with and to store, it is often useful to <em>approximate</em> a full-rank matrix with a low-rank matrix (or approximate a low-rank matrix with an even lower-rank matrix). By far the most common way to do this is using the <strong>truncated SVD</strong>, which just truncates the sum <a href="#eq-svd-sum" class="quarto-xref">Equation&nbsp;<span>6.2</span></a> at some <span class="math inline">\(\ell &lt; k\)</span>, as follows:</p>
 <p><span class="math display">\[
 X_\ell = \sum_{i=1}^\ell \sigma_i(u_iv_i^\top) = U_\ell \Sigma_\ell V_\ell^\top
 \]</span></p>
@@ -292,25 +289,25 @@ X_\ell = \sum_{i=1}^\ell \sigma_i(u_iv_i^\top) = U_\ell \Sigma_\ell V_\ell^\top
 <p><strong>Theorem (Eckart-Young).</strong> <em>Let <span class="math inline">\(X\in\mathbb{R}^{N\times n}\)</span> and let <span class="math inline">\(\mathcal{M}_\ell\)</span> denote the class of matrices in <span class="math inline">\(\mathbb{R}^{N\times n}\)</span> with rank equal to or less than <span class="math inline">\(\ell\)</span>. Then, </em></p>
 <p><span id="eq-eckart-young"><span class="math display">\[
 X_\ell = \arg\min_{M_\ell \in\mathcal{M}_\ell} ||X - M_\ell||_F^2
-\qquad(5.4)\]</span></span></p>
-<p>That is, the truncated SVD is the rank-<span class="math inline">\(\ell\)</span> matrix that is closest to the original matrix <span class="math inline">\(X\)</span>. Above, we have stated the theorem in the <em>Frobenius</em> norm<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>, but it also holds for the matrix <span class="math inline">\(2\)</span>-norm. This optimality result is the reason the SVD is one of the most powerful and broadly used matrix decompositions there is. The minimum of <a href="#eq-eckart-young" class="quarto-xref">Equation&nbsp;<span>5.4</span></a> gives the error incurred by the approximation, and is given by what’s called the “tail sum” of the square of the singular values, that is,</p>
+\qquad(6.4)\]</span></span></p>
+<p>That is, the truncated SVD is the rank-<span class="math inline">\(\ell\)</span> matrix that is closest to the original matrix <span class="math inline">\(X\)</span>. Above, we have stated the theorem in the <em>Frobenius</em> norm<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>, but it also holds for the matrix <span class="math inline">\(2\)</span>-norm. This optimality result is the reason the SVD is one of the most powerful and broadly used matrix decompositions there is. The minimum of <a href="#eq-eckart-young" class="quarto-xref">Equation&nbsp;<span>6.4</span></a> gives the error incurred by the approximation, and is given by what’s called the “tail sum” of the square of the singular values, that is,</p>
 <p><span class="math display">\[
 \min_{M_\ell \in\mathcal{M}_\ell} ||X - M_\ell||_F^2 = \|X_\ell - X||_F^2 = \sum_{i=\ell+1}^k \sigma_i^2
 \]</span></p>
 </section>
-<section id="svd-applications-in-scientific-machine-learning" class="level2" data-number="5.3">
-<h2 data-number="5.3" class="anchored" data-anchor-id="svd-applications-in-scientific-machine-learning"><span class="header-section-number">5.3</span> SVD applications in scientific machine learning</h2>
-<section id="data-compression" class="level3" data-number="5.3.1">
-<h3 data-number="5.3.1" class="anchored" data-anchor-id="data-compression"><span class="header-section-number">5.3.1</span> Data compression</h3>
+<section id="svd-applications-in-scientific-machine-learning" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="svd-applications-in-scientific-machine-learning"><span class="header-section-number">6.3</span> SVD applications in scientific machine learning</h2>
+<section id="data-compression" class="level3" data-number="6.3.1">
+<h3 data-number="6.3.1" class="anchored" data-anchor-id="data-compression"><span class="header-section-number">6.3.1</span> Data compression</h3>
 <p>One application of the SVD is for data compression. If you have a very large data set <span class="math inline">\(Z\in\mathbb{R}^{N\times d}\)</span> with either/both <span class="math inline">\(N,d\)</span>, very large, you can quickly have too much data to store easily on whatever machine is available to you. This is a common challenge in scientific simulation of partial differential equations (e.g., in computational fluid dynamics or finite element analysis of structures) where <span class="math inline">\(d\)</span> generally scales with the size of the computational mesh, which can easily have hundreds of millions of cells. Instead of storing the full data matrix, we can store the singular vectors and values needed to represent the truncated SVD. A similar idea is used to compress images for efficient storage.</p>
 </section>
-<section id="pca-features" class="level3" data-number="5.3.2">
-<h3 data-number="5.3.2" class="anchored" data-anchor-id="pca-features"><span class="header-section-number">5.3.2</span> PCA features</h3>
+<section id="pca-features" class="level3" data-number="6.3.2">
+<h3 data-number="6.3.2" class="anchored" data-anchor-id="pca-features"><span class="header-section-number">6.3.2</span> PCA features</h3>
 <p>Another way that the SVD gets used is to define <em>PCA features</em>. PCA stands for “principal component analysis”; this language comes from a statistics perspective on the SVD which we’ll elaborate on later. PCA features are defined as follows: let <span class="math inline">\(Z\in\mathbb{R}^{d\times N}\)</span> denote the <em>input matrix</em><a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>, and let <span class="math inline">\(Z = \Phi\Xi\Psi^\top\)</span> be the SVD <em>of the input matrix</em>, so that <span class="math inline">\(\phi_1,\phi_2,\ldots\)</span> denote the left singular vectors of <span class="math inline">\(\Phi\)</span>. We can define <span class="math inline">\(n&lt;d\)</span> PCA features as follows: for <span class="math inline">\(i\leq n\)</span>, let <span class="math inline">\(x_i(z) = \phi_i^\top z\)</span>. We can write the entire feature map for all <span class="math inline">\(n\)</span> features as follows: <span class="math inline">\(x(z) = \Phi_n^\top z\)</span>, where <span class="math inline">\(\Phi_n\in\mathbb{R}^{d\times n}\)</span> consists of the leading left singular vectors of <span class="math inline">\(\Phi\)</span>.</p>
 <p>How can we interpret PCA features? Note that the columns of <span class="math inline">\(\Phi\)</span> form an orthonormal basis for <span class="math inline">\(\mathbb{R}^d\)</span>, and the ordering of these columns has the special property that they are in order of decreasing “importance” for representing the data in <span class="math inline">\(Z\)</span> (this is one way of interpreting the Eckart-Young theorem). Recall that <span class="math inline">\(\Phi\Phi^\top=I\)</span>, so <span class="math inline">\(\Phi\Phi^\top z = z\)</span>; let <span class="math inline">\(\hat z = \Phi^\top z\)</span>. Then you see that <span class="math inline">\(z = \Phi\hat z\)</span>, so <span class="math inline">\(z\)</span> can be written as a linear combination of the columns of <span class="math inline">\(\Phi\)</span>, with weights given by <span class="math inline">\(\hat z\)</span>. In essence, if we transform the input <span class="math inline">\(z\)</span> to the coordinate system defined by the basis given in <span class="math inline">\(\Phi\)</span>, the coefficients of that linear combination are given in <span class="math inline">\(\hat z\)</span>, so the <span class="math inline">\(i\)</span>th element of <span class="math inline">\(\hat z\)</span>, which is the <span class="math inline">\(i\)</span>th PCA feature, <span class="math inline">\(x_i(z)\)</span>, tells us the size of the component of <span class="math inline">\(z\)</span> in the direction given by <span class="math inline">\(\phi_i\)</span>. By truncating to the leading <span class="math inline">\(n\)</span> PCA components, we keep the components in the <span class="math inline">\(n\)</span> largest (on average over all the data) directions, and drop the trailing smaller components.</p>
 </section>
-<section id="the-moore-penrose-pseudoinverse" class="level3" data-number="5.3.3">
-<h3 data-number="5.3.3" class="anchored" data-anchor-id="the-moore-penrose-pseudoinverse"><span class="header-section-number">5.3.3</span> The Moore-Penrose Pseudoinverse</h3>
+<section id="the-moore-penrose-pseudoinverse" class="level3" data-number="6.3.3">
+<h3 data-number="6.3.3" class="anchored" data-anchor-id="the-moore-penrose-pseudoinverse"><span class="header-section-number">6.3.3</span> The Moore-Penrose Pseudoinverse</h3>
 <p>Last but certainly not least I finally can tell you more about how we solve underdetermined least squares problems. The Moore-Penrose <em>pseudoinverse</em> of a matrix <span class="math inline">\(X\)</span> is generally denoted <span class="math inline">\(X^\dagger\)</span> (although some sources use <span class="math inline">\(X^+\)</span>), and is given by</p>
 <p><span class="math display">\[
 X^\dagger = V \Sigma^{\dagger} U^\top,
@@ -319,18 +316,29 @@ X^\dagger = V \Sigma^{\dagger} U^\top,
 <p>Thus, in solving the normal equations, <span class="math inline">\(X^\top X \beta = X^\top Y\)</span>, if <span class="math inline">\(X^\top X\)</span> is not invertible, we can take the pseudoinverse to arrive at the solution</p>
 <p><span id="eq-normal-eqs-pseudoinverse"><span class="math display">\[
 \beta = (X^\top X)^\dagger X^\top Y
-\qquad(5.5)\]</span></span></p>
+\qquad(6.5)\]</span></span></p>
 <p>where <span class="math inline">\(\beta\)</span> given this way is the norm-minimizing solution.</p>
-<p>In fact, <a href="#eq-normal-eqs-pseudoinverse" class="quarto-xref">Equation&nbsp;<span>5.5</span></a> is equivalent to just writing <span class="math inline">\(\beta=X^\dagger Y\)</span> (see Exercises).</p>
-<!-- maybe add stuff on how this is used to solve and FLOP count etc. -->
+<p>In fact, <a href="#eq-normal-eqs-pseudoinverse" class="quarto-xref">Equation&nbsp;<span>6.5</span></a> is equivalent to just writing <span class="math inline">\(\beta=X^\dagger Y\)</span> (see Exercises).</p>
+<!-- so that $\Pi_n=\Phi_n\Phi_n^\top$ for any $n<d$ defines an orthogonal projection onto the columnspace of $\Phi_n$. -->
 </section>
 </section>
-<section id="exercises" class="level2" data-number="5.4">
-<h2 data-number="5.4" class="anchored" data-anchor-id="exercises"><span class="header-section-number">5.4</span> Exercises</h2>
+<section id="the-pseudo-inverse-and-solving-least-squares-problems" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="the-pseudo-inverse-and-solving-least-squares-problems"><span class="header-section-number">6.4</span> the pseudo inverse and solving least squares problems</h2>
+<p>plus truncated SVD regularization?</p>
+</section>
+<section id="utility-in-understanding-numerical-conditioning" class="level2" data-number="6.5">
+<h2 data-number="6.5" class="anchored" data-anchor-id="utility-in-understanding-numerical-conditioning"><span class="header-section-number">6.5</span> utility in understanding numerical conditioning</h2>
+<p>next ste of notes: machine precision, round off error, SVD and conditioning.</p>
+<p>python examples showing nonzero residual for LU and conditioning error for QR?</p>
+<p>introduce the SVD in math, singular values vs rank/conditioning, explain the concept of conditioning in terms of being essentially non-invertible from the computer’s point of view, cond/rank commands</p>
+<p>show that normal equations are terribly conditioned.</p>
+</section>
+<section id="exercises" class="level2" data-number="6.6">
+<h2 data-number="6.6" class="anchored" data-anchor-id="exercises"><span class="header-section-number">6.6</span> Exercises</h2>
 <ol type="1">
-<li><p>Show that <a href="#eq-svd-product" class="quarto-xref">Equation&nbsp;<span>5.1</span></a> and <a href="#eq-svd-sum" class="quarto-xref">Equation&nbsp;<span>5.2</span></a> are equivalent (nothing fancy, just write it out using what you know about the structure of <span class="math inline">\(U\)</span>, <span class="math inline">\(\Sigma\)</span>, and <span class="math inline">\(V\)</span>).</p></li>
-<li><p>Let <span class="math inline">\(X\in\mathbb{R}^{N\times n}\)</span> have rank <span class="math inline">\(r\)</span> and let <span class="math inline">\(\beta\in\mathbb{R}^n\)</span>. Show that the matrix multiplication <span class="math inline">\(X\beta\)</span> can be computed using the expression <a href="#eq-svd-sum-rank" class="quarto-xref">Equation&nbsp;<span>5.3</span></a> in <span class="math inline">\(\mathcal{O}(r(N+n))\)</span> FLOPs.</p></li>
-<li><p>Show that <span class="math inline">\(\beta = X^\dagger Y\)</span> is equivalent to <a href="#eq-normal-eqs-pseudoinverse" class="quarto-xref">Equation&nbsp;<span>5.5</span></a> using properties of the SVD.</p></li>
+<li><p>Show that <a href="#eq-svd-product" class="quarto-xref">Equation&nbsp;<span>6.1</span></a> and <a href="#eq-svd-sum" class="quarto-xref">Equation&nbsp;<span>6.2</span></a> are equivalent (nothing fancy, just write it out using what you know about the structure of <span class="math inline">\(U\)</span>, <span class="math inline">\(\Sigma\)</span>, and <span class="math inline">\(V\)</span>).</p></li>
+<li><p>Let <span class="math inline">\(X\in\mathbb{R}^{N\times n}\)</span> have rank <span class="math inline">\(r\)</span> and let <span class="math inline">\(\beta\in\mathbb{R}^n\)</span>. Show that the matrix multiplication <span class="math inline">\(X\beta\)</span> can be computed using the expression <a href="#eq-svd-sum-rank" class="quarto-xref">Equation&nbsp;<span>6.3</span></a> in <span class="math inline">\(\mathcal{O}(r(N+n))\)</span> FLOPs.</p></li>
+<li><p>Show that <span class="math inline">\(\beta = X^\dagger Y\)</span> is equivalent to <a href="#eq-normal-eqs-pseudoinverse" class="quarto-xref">Equation&nbsp;<span>6.5</span></a> using properties of the SVD.</p></li>
 </ol>
 
 
@@ -340,7 +348,7 @@ X^\dagger = V \Sigma^{\dagger} U^\top,
 <ol>
 <li id="fn1"><p>As with many of the terms we have encountered and will encounter in this course, the term “SVD” is used in the wild to mean either the full SVD or the reduced SVD – often the distinction is not super important, but when it is you need to be able to discern from context what is meant.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>Recall that the rank of a matrix describes the number of linearly independent rows/columns of the matrix; to see that <span class="math inline">\(ab^\top\)</span> has rank 1 when <span class="math inline">\(a,b\)</span> are vectors, note that the <span class="math inline">\(j\)</span>th row of <span class="math inline">\(ab^\top\)</span> is given by <span class="math inline">\(a_jb^\top\)</span>, where <span class="math inline">\(a_j\in\mathbb{R}\)</span> is the <span class="math inline">\(j\)</span>th element of <span class="math inline">\(a\)</span>, so that <span class="math inline">\(ab^\top\)</span> is just the same row multiplied by different constants.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn3"><p>the Frobenius norm of a matrix <span class="math inline">\(A\)</span>, denoted <span class="math inline">\(\|A\|_F\)</span>, is the natural generalization of the Euclidean norm from vectors to matrices – it is given by the square root of the sum of squares of all matrix elements.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Carefully note the dimensions here: in this definition of the input matrix, each <em>column</em> of <span class="math inline">\(Z\)</span> corresponds to one datum, whereas in our feature matrix definition each <em>row</em> of <span class="math inline">\(X\)</span> corresponds to one datum. What are the dimensions of <span class="math inline">\(\Phi\)</span>, <span class="math inline">\(\Xi\)</span>, and <span class="math inline">\(\Psi\)</span>? <!-- add the idea of PCA features, add something about choosing the rank of compression? --><a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn4"><p>Carefully note the dimensions here: in this definition of the input matrix, each <em>column</em> of <span class="math inline">\(Z\)</span> corresponds to one datum, whereas in our feature matrix definition each <em>row</em> of <span class="math inline">\(X\)</span> corresponds to one datum. What are the dimensions of <span class="math inline">\(\Phi\)</span>, <span class="math inline">\(\Xi\)</span>, and <span class="math inline">\(\Psi\)</span>? <!-- add the idea of PCA features, add something about choosing the rank of compression? --><a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
@@ -765,13 +773,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./13_lsnla.html" class="pagination-link" aria-label="LLS: Computational Cost">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">LLS: Computational Cost</span></span>
+      <a href="./14_lssvd.html" class="pagination-link" aria-label="The singular value decomposition">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">The singular value decomposition</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./15_svdcond.html" class="pagination-link" aria-label="The singular value decomposition">
-        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">The singular value decomposition</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./references.html" class="pagination-link" aria-label="References">
+        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
