@@ -25,5 +25,3 @@ def get_data(N, random_seed = 42):
 N_datapoints = 50
 df = get_data(N_datapoints, random_seed = 42)
 
-X_df = df[['P1', 'rho', 'v1', 'v2']]
-Y_df = df['P2']
