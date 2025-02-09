@@ -30,7 +30,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./references.html" rel="next">
+<link href="./15_svdcond.html" rel="next">
 <link href="./13_lsnla.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -169,6 +169,12 @@ window.Quarto = {
   <div class="sidebar-item-container"> 
   <a href="./14_lssvd.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">The singular value decomposition</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./15_svdcond.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Precision, conditioning, and regularization</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -334,7 +340,7 @@ X^\dagger = V \Sigma^{\dagger} U^\top,
 <ol>
 <li id="fn1"><p>As with many of the terms we have encountered and will encounter in this course, the term “SVD” is used in the wild to mean either the full SVD or the reduced SVD – often the distinction is not super important, but when it is you need to be able to discern from context what is meant.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>Recall that the rank of a matrix describes the number of linearly independent rows/columns of the matrix; to see that <span class="math inline">\(ab^\top\)</span> has rank 1 when <span class="math inline">\(a,b\)</span> are vectors, note that the <span class="math inline">\(j\)</span>th row of <span class="math inline">\(ab^\top\)</span> is given by <span class="math inline">\(a_jb^\top\)</span>, where <span class="math inline">\(a_j\in\mathbb{R}\)</span> is the <span class="math inline">\(j\)</span>th element of <span class="math inline">\(a\)</span>, so that <span class="math inline">\(ab^\top\)</span> is just the same row multiplied by different constants.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn3"><p>Carefully note the dimensions here: in this definition of the input matrix, each <em>column</em> of <span class="math inline">\(Z\)</span> corresponds to one datum, whereas in our feature matrix definition each <em>row</em> of <span class="math inline">\(X\)</span> corresponds to one datum. What are the dimensions of <span class="math inline">\(\Phi\)</span>, <span class="math inline">\(\Xi\)</span>, and <span class="math inline">\(\Psi\)</span>? <!-- add the idea of PCA features, add something about choosing the rank of compression? --><a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>the Frobenius norm of a matrix <span class="math inline">\(A\)</span>, denoted <span class="math inline">\(\|A\|_F\)</span>, is the natural generalization of the Euclidean norm from vectors to matrices – it is given by the square root of the sum of squares of all matrix elements.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn4"><p>Carefully note the dimensions here: in this definition of the input matrix, each <em>column</em> of <span class="math inline">\(Z\)</span> corresponds to one datum, whereas in our feature matrix definition each <em>row</em> of <span class="math inline">\(X\)</span> corresponds to one datum. What are the dimensions of <span class="math inline">\(\Phi\)</span>, <span class="math inline">\(\Xi\)</span>, and <span class="math inline">\(\Psi\)</span>? <!-- add the idea of PCA features, add something about choosing the rank of compression? --><a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
@@ -756,8 +762,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./references.html" class="pagination-link" aria-label="References">
-        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./15_svdcond.html" class="pagination-link" aria-label="Precision, conditioning, and regularization">
+        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Precision, conditioning, and regularization</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

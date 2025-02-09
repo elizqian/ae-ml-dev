@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.554">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>AE 4803 AIM: Course Notes - 6&nbsp; Precision, conditioning, and regularization</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./references.html" rel="next">
+<link href="./14_lssvd.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./15_svdcond.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Precision, conditioning, and regularization</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">AE 4803 AIM: Course Notes</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11_ls.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Linear Least Squares Problems</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12_lslinalg.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">LLS: A linear algebra perspective</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13_lsnla.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">LLS: Computational Cost</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14_lssvd.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">The singular value decomposition</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./15_svdcond.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Precision, conditioning, and regularization</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./00_linalg.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Linear algebra review</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#rounding-errors-and-numerical-precision" id="toc-rounding-errors-and-numerical-precision" class="nav-link active" data-scroll-target="#rounding-errors-and-numerical-precision"><span class="header-section-number">6.1</span> Rounding errors and numerical precision</a></li>
+  <li><a href="#conditioning" id="toc-conditioning" class="nav-link" data-scroll-target="#conditioning"><span class="header-section-number">6.2</span> Conditioning</a>
+  <ul class="collapse">
+  <li><a href="#the-condition-number" id="toc-the-condition-number" class="nav-link" data-scroll-target="#the-condition-number"><span class="header-section-number">6.2.1</span> The condition number</a></li>
+  </ul></li>
+  <li><a href="#conditioning-of-matrix-computations" id="toc-conditioning-of-matrix-computations" class="nav-link" data-scroll-target="#conditioning-of-matrix-computations"><span class="header-section-number">6.3</span> Conditioning of matrix computations</a></li>
+  <li><a href="#conditioning-of-regression-problems" id="toc-conditioning-of-regression-problems" class="nav-link" data-scroll-target="#conditioning-of-regression-problems"><span class="header-section-number">6.4</span> Conditioning of regression problems</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">6.5</span> Exercises</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Precision, conditioning, and regularization</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="hidden">
+<!-- \renewcommand{\P}{\mathrm{P}} -->
+<!-- $$
+\DeclarePairedDelimiters{\set}{\{}{\}}
+\DeclareMathOperator*{\argmax}{argmax}
+$$
+
+\definecolor{quarto-callout-note-color}{HTML}{4477AA} -->
+</div>
+<!-- text introducing the section -->
+<p>The intended learning outcomes of these notes are that students should be able to:</p>
+<ol type="1">
+<li><p>Define rounding and truncation errors, explain how they arise, and discuss their implications for computations in machine learning.</p></li>
+<li><p>Define conditioning, the condition number of a problem, and the condition number of a matrix; describe the implications for computations in machine learning.</p></li>
+<li><p>Describe how conditioning challenges are exacerbated or mitigated by solving the normal equations and scaling data.</p></li>
+<li><p>Describe how conditioning challenges can be addressed through regularization strategies such as using the truncated SVD or ridge regression.</p></li>
+</ol>
+<section id="rounding-errors-and-numerical-precision" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="rounding-errors-and-numerical-precision"><span class="header-section-number">6.1</span> Rounding errors and numerical precision</h2>
+<p>Recall that computers store numbers using a finite number of bits. This means that the precision with which computers can run calculations is <em>limited</em> or <em>finite</em>. This can cause problems in computations in several ways, which we will discuss in this section. For the purposes of illustration, we will consider a theoretical computer that stores decimal numbers with 3 decimal digits of precision; i.e., you get three significant figures total<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
+<p>The first type of error that computers incur is <strong>rounding error</strong>, which describes what happens when computers cannot exactly represent a number using the bits it has. For our theoretical computer, an easy example is the number <span class="math inline">\(1/3\)</span>, which we all know cannot be represented exactly using finite decimal digits. With our 3 digits of precision, the best we can do is represent the number as <span class="math inline">\(0.333\)</span>, which means we incur a rounding error of <span class="math inline">\(0.000333333\ldots= \mathcal{O}(10^{-4})\)</span>.</p>
+<p>The second type of error that computers incur is <strong>truncation error</strong>, which describes what happens when the computer executes an arithmetic operation and does not have the precision to store the result, so it has to truncate the result (one could also view this as simply another setting in which rounding errors occur, and the semantics are not so important). Consider adding the numbers <span class="math inline">\(2.12\)</span> and <span class="math inline">\(14.2\)</span>. Our theoretical computer with 3 digits of precision would yield the result <span class="math inline">\(2.12 + 14.2 = 16.3\)</span>, incurring an error of <span class="math inline">\(0.02=\mathcal{O}(10^{-2})\)</span>.</p>
+<p>We are interested in understanding the size of these errors in representing numbers relative to the size of the numbers themselves: this relative error is called the <em>precision</em> of our number representation. In the first example above, the relative error is <span class="math inline">\(\frac{3.33\bar 3\times 10^{-4}}{0.333}=\mathcal{O}(10^{-4})\)</span>. In the second example above, the relative error is <span class="math inline">\(\frac{0.02}{16.3}=\mathcal{O}(10^{-4})\)</span>. The relative errors in both examples are approximately the same size! This is because the <em>precision</em> of a computer representation of the number is fully specified by the number of digits that can be stored. The size of these errors has a special name and notation: we call <span class="math inline">\(\epsilon\)</span> the <em>machine precision</em> and it describes the relative size or rounding/truncation errors in a given number representation. For double precision, <span class="math inline">\(\epsilon \approx 10^{-16}\)</span>, and in single precision, <span class="math inline">\(\epsilon\approx 10^{-8}\)</span>.</p>
+<p>Rounding and truncation errors happen all the time in computing. The main takeaway of this section is that you can pretty much always assume you incur an error of size <span class="math inline">\(\epsilon\)</span> in anything you are computing.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Machine precision vs “machine zero”
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In some contexts you will see <span class="math inline">\(\epsilon\)</span> referred to as “machine zero”. For example, suppose you solve <span class="math inline">\(\texttt{x = np.linalg.solve(A,b)}\)</span> for some matrices <span class="math inline">\(\texttt{A}\)</span> and <span class="math inline">\(\texttt{b}\)</span> and then print <span class="math inline">\(\texttt{A @ x - b}\)</span>. The result is going to be some nonzero number that is <span class="math inline">\(\mathcal{O}(\epsilon)\)</span>. In this case, one might say “that’s machine zero”, because <span class="math inline">\(\texttt{Ax}=\texttt{b}\)</span> is true up to an error of machine precision, so we say the error is basically as small as what the machine can represent. However, we caution that <span class="math inline">\(\epsilon\)</span> is <em>not</em> the smallest number a machine can represent: machine precision depends only on the number of bits used for the significand, but the exponent bits play a more important role in representing the size of a number. The smallest number that can be represented in double precision is <span class="math inline">\(\mathcal{O}(10^{-308})\)</span>.</p>
+</div>
+</div>
+</section>
+<section id="conditioning" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="conditioning"><span class="header-section-number">6.2</span> Conditioning</h2>
+<p>The term “conditioning” describes how sensitive a <em>problem</em> is to changes in its inputs. When we say “problem” in this context, the notion is very abstract – generally speaking, we could be speaking of <em>any</em> mathematical problem, for example:</p>
+<ul>
+<li><p>Given two numbers <span class="math inline">\(a,b\in\mathbb{R}\)</span>, find <span class="math inline">\(a+b\)</span></p></li>
+<li><p>Given a matrix <span class="math inline">\(A\in\mathbb{R}^{n\times n}\)</span> and vector <span class="math inline">\(b\in\mathbb{R}^{n}\)</span>, find <span class="math inline">\(x\)</span> satisfying <span class="math inline">\(Ax=b\)</span></p></li>
+<li><p>Given a matrix <span class="math inline">\(X\in\mathbb{R}^{N\times n}\)</span> and a vector <span class="math inline">\(\beta\in\mathbb{R}^n\)</span>, find <span class="math inline">\(X\beta\)</span></p></li>
+<li><p>Given a matrix <span class="math inline">\(X\in\mathbb{R}^{N\times n}\)</span> and a vector <span class="math inline">\(Y\in\mathbb{R}^N\)</span>, find <span class="math inline">\(\beta\)</span> that minimizes <span class="math inline">\(\|X\beta-Y\|^2\)</span></p></li>
+</ul>
+<p>The things that are “given” in a mathematical problem are called the problem’s <em>inputs</em>.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> The thing that you have to “find” is the problem’s <em>solution</em>.</p>
+<p>A problem is said to be <em>well-conditioned</em> if small changes in its inputs lead to small changes in its solution. A problem is said to be <em>ill-conditioned</em> if small changes in its inputs can lead to big changes in its solution. We emphasize that conditioning is a property of the <em>problem</em> itself, not of the algorithm that is used to solve it.</p>
+<p>We care about conditioning because of the prevalence of errors in the inputs we give to a problem. As we have discussed above, all computations are subject to rounding and truncation errors with relative size <span class="math inline">\(\mathcal{O}(\epsilon)\)</span>. However, errors can also arise in other ways. For example, if we are solving a regression problem where the output data in <span class="math inline">\(Y\)</span> come from experimental measurements, the data generally are not perfect measurements of the quantity but are subject to measurement error. Errors can also arise from earlier steps in our computational workflow, e.g., if the input to our current problem was the solution to a previous problem that we solved inexactly.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></p>
+<p><strong>Example: Subtraction is ill-conditioned</strong></p>
+<p>Suppose we want to estimate the change in lift over a model wing as the angle of attack is changed, so we set up the wing in a wind tunnel and take measurements at different angles of attack and then estimate the slope of the lift vs angle of attack line<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. A table with our angles of attack, the “true” lift values, and those that are measured experimentally is given below. Note that due to measurement errors, the inputs to our problem (the lift values) incur an relative error of <span class="math inline">\(\mathcal{O}(10^{-3})\)</span>.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>AoA</th>
+<th>True lift</th>
+<th>Measured lift</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>15 deg</td>
+<td>252.49 N</td>
+<td>252 N</td>
+</tr>
+<tr class="even">
+<td>17 deg</td>
+<td>253.51 N</td>
+<td>254 N</td>
+</tr>
+</tbody>
+</table>
+<p>Based on our measured lift, we’d calculate a slope of 1 Newton per degree change in angle of attack. However, the <em>true</em> slope is closer to 1/2 Newton per degree change in angle of attack. This means our calculation of the <em>solution</em> of the problem (estimating the slope) incurs a relative error of <span class="math inline">\(\mathcal{O}(1)\)</span>, or 100%! You see that despite small changes to the inputs of the problem, we have obtained large changes to the solution of the problem.</p>
+<p>As this example illustrates, subtracting numbers that are close together can often lead to large errors in the solution of the subtraction problem. This phenomenon is sometimes called <strong>catastrophic cancellation</strong>.</p>
+<section id="the-condition-number" class="level3" data-number="6.2.1">
+<h3 data-number="6.2.1" class="anchored" data-anchor-id="the-condition-number"><span class="header-section-number">6.2.1</span> The condition number</h3>
+<p>Consider this question: given a perturbation of a problem’s inputs of relative size <span class="math inline">\(\delta\)</span>, what is the relative size of the resulting perturbation of the problem’s solution? You may feel intuitively that the answer depends on what our starting inputs were<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> — so computational engineers ask this modified question: given a mathematical problem, what is the <em>worst case</em> perturbation of the problem’s solution over <em>all possible perturbations of all possible inputs</em>? The answer is defined to be the <em>condition number</em> of a problem, which we will denote by <span class="math inline">\(\kappa\)</span>.<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a></p>
+<p>It is possible to do some highly technical mathematical stuff to define and analyze condition numbers of various problems. I am not going to do that here, although I can suggest some graduate level texts on numerical linear algebra if you’d like to read more<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a>. Instead, I’m going to be informal here. Let <span class="math inline">\(\delta\)</span> denote the relative size of the perturbation to a problem’s inputs (the “given” quantities). Let <span class="math inline">\(\Delta\)</span> denote the resulting relative size of the perturbation to the problem’s solution. Then,</p>
+<p><span class="math display">\[
+\Delta \leq \kappa \delta
+\]</span></p>
+<p>In words, <span class="math inline">\(\kappa\delta\)</span> is an upper bound on the relative change in the solution due to a relative change in the inputs of size <span class="math inline">\(\delta\)</span>. Note the adjective “relative” sprinkled throughout here: if <span class="math inline">\(\kappa = 100\)</span>, and <span class="math inline">\(\delta=0.01\)</span>, this means a 1% relative change in the inputs can lead to a 100% relative change in the solution!</p>
+</section>
+</section>
+<section id="conditioning-of-matrix-computations" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="conditioning-of-matrix-computations"><span class="header-section-number">6.3</span> Conditioning of matrix computations</h2>
+<p>The condition number of matrix <span class="math inline">\(X\)</span> is denoted <span class="math inline">\(\kappa(X)\)</span> and defined to be</p>
+<p><span class="math display">\[
+\kappa(X) = \sigma_{\rm max}(X)/\sigma_{\rm min}(X)
+\]</span></p>
+<p>where <span class="math inline">\(\sigma_{\rm max}(X)\)</span> and <span class="math inline">\(\sigma_{\rm min}(X)\)</span> denote the largest and smallest singular values of <span class="math inline">\(X\)</span>, respectively. Note that the smallest singular value of a rank-deficient matrix is 0, which means that rank-deficient matrices have <em>infinite</em> condition number!</p>
+<p>It turns out (informally summarizing a lot of highly technical stuff here), that most problems involving a matrix have condition number given by the matrix condition number. This includes matrix inversion, least squares problems, matrix multiplication, computing various matrix decompositions, and more.</p>
+<p>The implications for us are as follows: since we can assume that in any given problem we incur errors of relative size <span class="math inline">\(\epsilon\)</span>, if we have a matrix condition number <span class="math inline">\(\kappa(X)=\mathcal{O}(\epsilon^{-1})\)</span>, we would expect large (100%) relative errors in our solution. In double precision, this means that <span class="math inline">\(\kappa(X)=\mathcal{O}(10^15-10^16)\)</span> is a red flag. In single precision, <span class="math inline">\(\kappa(X)=\mathcal{O}(10^7-10^8)\)</span> is already problematic.</p>
+<p>A final note: remember that the condition number describes the <em>worst case</em> error in the problem’s solution. There are many inputs (in fact most inputs) that will not incur this worst case error, and will have a much lower error. But the higher the condition number, the worse off you are – certainly if you see something like <span class="math inline">\(\kappa(X)=\mathcal{O}(10^32)\)</span> I would treat any results of computation with that matrix with deep skepticism.</p>
+</section>
+<section id="conditioning-of-regression-problems" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="conditioning-of-regression-problems"><span class="header-section-number">6.4</span> Conditioning of regression problems</h2>
+<p>We now return our focus to our least squares problem <span class="math inline">\(X\beta =Y\)</span> and consider the conditioning of <span class="math inline">\(X\)</span>, described by <span class="math inline">\(\kappa(X)\)</span>. Matrices that are ill-conditioned can be described as “close to singular” in the sense that their columns are close to being linearly dependent. One setting in which this arises is in polynomial regression, if the features that define the columns of <span class="math inline">\(X\)</span> are simply chosen to be monomials <span class="math inline">\(z,z^2, z^3,\)</span> etc. Ill-conditioning can also arise if columns of <span class="math inline">\(X\)</span> are on very different scales, e.g., if <span class="math inline">\(x(z) = (z_1, z_2, \ldots )^\top\)</span> and the variable described by <span class="math inline">\(z_1\)</span> is <span class="math inline">\(\mathcal{O}(10^6)\)</span> while the variable described by <span class="math inline">\(z_2\)</span> is <span class="math inline">\(\mathcal{O}(10^{-3})\)</span>.</p>
+<p>What do you do if you have an ill-conditioned feature matrix <span class="math inline">\(X\)</span>? First off, two quick things:</p>
+<ol type="1">
+<li><p>Do not form and solve the normal equations to find <span class="math inline">\(\beta\)</span>. This is because the conditioning of solveing the normal equations <span class="math inline">\(X^\top X\beta = X^\top Y\)</span> depends on the condition number of the matrix <span class="math inline">\(X^\top X\)</span>, which turns out to be the <span class="math inline">\(\kappa(X)^2\)</span>, so whatever ill-conditioning you have, forming the normal equations makes it worse.</p></li>
+<li><p>This is one of the reasons why it is standard machine learning practice to scale all your input/feature data to be vary on roughly the same orders of magnitude as a preprocessing step, before proceeding with any regression.</p></li>
+</ol>
+<p>Ok, suppose you’ve scaled your data, but you’re still dealing with an ill-conditioned feature matrix <span class="math inline">\(X\)</span>. Then, we turn to <em>regularization</em> to rescue us. “Regularization” is a general mathematical philosophy that describes replacing a hard-to-solve problem with an easier-to-solve problem that is close to the original problem we wanted to solve, and solving the easier problem instead. Regularization comes up in many places across computational science and engineering. In our setting, “hard-to-solve” means “ill-conditioned”, and there are two main strategies for defining new problems that improve the conditioning of the problem.</p>
+<p><strong>Strategy 1: regularization via the truncated SVD.</strong> Recall that <span class="math inline">\(\beta^* = X^\dagger Y = (V_r\Sigma_r^{-1} U_r^\top)\)</span> where <span class="math inline">\(r=\textsf{rank}(X)\)</span> and <span class="math inline">\(X=U_r\Sigma_rV_r^\top\)</span> is the truncated SVD of <span class="math inline">\(X\)</span>. We can define a tolerance, <span class="math inline">\(\tau\)</span>, and let <span class="math inline">\(m\leq r\)</span> be the number of singular values that are larger than <span class="math inline">\(\tau\)</span>. Then, we would compute our regression solution be given by</p>
+<p><span class="math display">\[
+\beta^*_\tau = V_m\Sigma_m^{-1} U_m^\top
+\]</span></p>
+<p>Typical values of <span class="math inline">\(\tau\)</span> are usually small, i.e., orders of magnitude less than 1. It’s also common to set a tolerance on the <em>normalized</em> singular values, that is, divide all singular values by the largest one. Note that as written above, this strategy changes the third ingredient of our regression problem (how to choose parameters/a model). However, this is equivalent to defining our features to be the leading <span class="math inline">\(m\)</span> PCA features of the original feature matrix <span class="math inline">\(X\)</span>, i.e., this strategy can be viewed as the second ingredient of our regression problem.</p>
+<!-- needs more detail later -->
+<p><strong>Strategy 2: ridge regression.</strong> Ridge regression is known by various other names including “Tikhonov regularization” and “<span class="math inline">\(\ell^2\)</span>” (read as “ell-two”) regularization. It means redefining the third ingredient of our regression problem as follows:</p>
+<p><span class="math display">\[
+\beta^*_\lambda = \arg\min_{\beta\in\mathbb{R}^n} \|X\beta-Y\|_2^2 + \lambda \|\beta\|_2^2,
+\]</span></p>
+<p>for some positive regression parameter <span class="math inline">\(\lambda &gt;0\)</span>. This has unique local minimizer given by</p>
+<p><span class="math display">\[
+\beta^*_\lambda = (X^\top X + \lambda I_n)^{-1} (X^\top Y)
+\]</span></p>
+</section>
+<section id="exercises" class="level2" data-number="6.5">
+<h2 data-number="6.5" class="anchored" data-anchor-id="exercises"><span class="header-section-number">6.5</span> Exercises</h2>
+<ol type="1">
+<li><p>Solve the system <span class="math inline">\(Ax = b\)</span> with <span class="math inline">\(A = \begin{pmatrix}1.23 &amp; 2.34 \\ 3.45 &amp; 4.56\end{pmatrix}\)</span> and <span class="math inline">\(b = \begin{pmatrix}3.45 \\ 5.67\end{pmatrix}\)</span> by hand using row reduction and truncating all intermediate results to 3 decimal digits of precision (this means 3 sig figs total, not three points after the decimal point). This is what our theoretical computer would be doing. What is the solution you get for <span class="math inline">\(x\)</span>? What is the exact solution? What is the relative error between your solution and the exact solution and is it what you expect? Justify?</p></li>
+<li><p>Repeat exercise 1 with the perturbed right-hand side vector <span class="math inline">\(b = \begin{pmatrix}3.46 \\5.66\end{pmatrix}\)</span>. What is the perturbed solution <span class="math inline">\(x'\)</span>? Is the difference <span class="math inline">\(x-x'\)</span> what you expect? Justify.</p></li>
+<li><p>Repeat exercises 1-2 with <span class="math inline">\(A = \begin{pmatrix}0.47 &amp; -0.498 \\ -0.498 0.531\end{pmatrix}\)</span> and <span class="math inline">\(b = \begin{pmatrix}-0.685 \\ 0.728\end{pmatrix}\)</span> and <span class="math inline">\(b' = \begin{pmatrix}-0.678 \\ 0.735\end{pmatrix}\)</span>.</p></li>
+<li><p>Show that <span class="math inline">\(\kappa(X^\top X) = \kappa(X)^2\)</span>.</p></li>
+</ol>
+
+
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>Recall that in double precision, you get 53 binary digits of precision, which translates to approximately 16 decimal digits of precision. Single precision has 24 binary digits of precision, so approximately 8 decimal digits of precision.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Note that we use the term “input” here in a different sense than when we use it to describe the inputs to a <em>model</em>. The terms are certainly related, but you should be clear on the differences between inputs in the setting of “finding a model” vs inputs in the setting of “solving a problem”.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>You may wonder why we would solve a problem inexactly. The answer is that many problems in science and engineering are computationally costly (in terms of FLOPs) to solve, and it can be much faster to accept an approximate but inexact solution. If you have ever used equation solvers such as python’s <span class="math inline">\(\texttt{scipy.optimize.fsolve}\)</span> or MATLAB’s <span class="math inline">\(\texttt{fsolve}\)</span>, these functions have an input argument that defines the solver’s tolerance – tighter tolerances lead to more exact solutions at higher cost, whereas looser tolerances lead to less exact solutions at lower cost.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>I stole these numbers from the Wikipedia article on catastrophic cancellation, but dressed up the example in aerospace clothing. :)<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>if you have doubts, consider our angle of attack example and suppose that the true lift values were 252.53 and 253.48, respectively, and that the active of measurement simply leads to rounding to the nearest whole number, so 252 and 253. This leads to a relative error in the estimated slope that is much lower than in our original example with different lift values. (In this example, the starting inputs are the true values, and the perturbed inputs are the measured values).<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>A well-conditioned problem typically has condition number around <span class="math inline">\(\mathcal{O}(1)\)</span>, whereas ill-conditioned problems have condition numbers around say <span class="math inline">\(\mathcal{O}(10^12)\)</span> or higher. There is not really a dividing line between well-conditioned and poorly conditioned problems, it is a spectrum. Whether a problem is sufficiently ill-conditioned to cause problems for you depends on what you are doing. In most cases in my experience, up to <span class="math inline">\(\mathcal{O}(10^6)\)</span>-ish is pretty safe, but it really, truly depends.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>See, e.g., Trefethen and Bau, <em>Numerical Linear Algebra</em>; or Demmel, <em>Applied Numerical Linear Algebra</em>.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./14_lssvd.html" class="pagination-link" aria-label="The singular value decomposition">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">The singular value decomposition</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./references.html" class="pagination-link" aria-label="References">
+        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
