@@ -1,5 +1,5 @@
 ---
-title: "Conditioning and regularization"
+title: "Precision, conditioning, and regularization"
 html-math-method:
   method: mathjax
   url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
@@ -12,14 +12,152 @@ html-math-method:
 
 The intended learning outcomes of these notes are that students should be able to:
 
+1. Define rounding and truncation errors, explain how they arise, and discuss their implications for computations in machine learning. 
+
+2. Define conditioning, the condition number of a problem, and the condition number of a matrix; describe the implications for computations in machine learning.
+
+3. Describe how conditioning challenges are exacerbated or mitigated by solving the normal equations and scaling data. 
+
+4. Describe how conditioning challenges can be addressed through regularization strategies such as using the truncated SVD or ridge regression.
+
 
 ## Rounding errors and numerical precision
+Recall that computers store numbers using a finite number of bits. This means that the precision with which computers can run calculations is *limited* or *finite*. This can cause problems in computations in several ways, which we will discuss in this section. For the purposes of illustration, we will consider a theoretical computer that stores decimal numbers with 3 decimal digits of precision; i.e., you get three significant figures total[^1].
+
+[^1]: Recall that in double precision, you get 53 binary digits of precision, which translates to approximately 16 decimal digits of precision. Single precision has 24 binary digits of precision, so approximately 8 decimal digits of precision. 
+
+The first type of error that computers incur is **rounding error**, which describes what happens when computers cannot exactly represent a number using the bits it has. For our theoretical computer, an easy example is the number $1/3$, which we all know cannot be represented exactly using finite decimal digits. With our 3 digits of precision, the best we can do is represent the number as $0.333$, which means we incur a rounding error of $0.000333333\ldots= \mathcal{O}(10^{-4})$. 
+
+The second type of error that computers incur is **truncation error**, which describes what happens when the computer executes an arithmetic operation and does not have the precision to store the result, so it has to truncate the result (one could also view this as simply another setting in which rounding errors occur, and the semantics are not so important). Consider adding the numbers $2.12$ and $14.2$. Our theoretical computer with 3 digits of precision would yield the result $2.12 + 14.2 = 16.3$, incurring an error of $0.02=\mathcal{O}(10^{-2})$.
+
+We are interested in understanding the size of these errors in representing numbers relative to the size of the numbers themselves: this relative error is called the *precision* of our number representation. In the first example above, the relative error is $\frac{3.33\bar 3\times 10^{-4}}{0.333}=\mathcal{O}(10^{-4})$. In the second example above, the relative error is $\frac{0.02}{16.3}=\mathcal{O}(10^{-4})$. The relative errors in both examples are approximately the same size! This is because the *precision* of a computer representation of the number is fully specified by the number of digits that can be stored. The size of these errors has a special name and notation: we call $\epsilon$ the *machine precision* and it describes the relative size or rounding/truncation errors in a given number representation. For double precision, $\epsilon \approx 10^{-16}$, and in single precision, $\epsilon\approx 10^{-8}$.
+
+Rounding and truncation errors happen all the time in computing. The main takeaway of this section is that you can pretty much always assume you incur an error of size $\epsilon$ in anything you are computing. 
+
+::: {.callout-warning}
+## Machine precision vs "machine zero"
+In some contexts you will see $\epsilon$ referred to as "machine zero". For example, suppose you solve $\texttt{x = np.linalg.solve(A,b)}$ for some matrices $\texttt{A}$ and $\texttt{b}$ and then print $\texttt{A @ x - b}$. The result is going to be some nonzero number that is $\mathcal{O}(\epsilon)$. In this case, one might say "that's machine zero", because $\texttt{Ax}=\texttt{b}$ is true up to an error of machine precision, so we say the error is basically as small as what the machine can represent. However, we caution that $\epsilon$ is *not* the smallest number a machine can represent: machine precision depends only on the number of bits used for the significand, but the exponent bits play a more important role in representing the size of a number. The smallest number that can be represented in double precision is $\mathcal{O}(10^{-308})$.
+:::
 
 
 ## Conditioning
+
+The term "conditioning" describes how sensitive a *problem* is to changes in its inputs. When we say "problem" in this context, the notion is very abstract -- generally speaking, we could be speaking of *any* mathematical problem, for example:
+
+* Given two numbers $a,b\in\R$, find $a+b$
+
+* Given a matrix $A\in\R^{n\times n}$ and vector $b\in\R^{n}$, find $x$ satisfying $Ax=b$
+
+* Given a matrix $X\in\R^{N\times n}$ and a vector $\beta\in\R^n$, find $X\beta$
+
+* Given a matrix $X\in\R^{N\times n}$ and a vector $Y\in\R^N$, find $\beta$ that minimizes $\|X\beta-Y\|^2$
+
+The things that are "given" in a mathematical problem are called the problem's *inputs*.[^2] The thing that you have to "find" is the problem's *solution*. 
+
+[^2]: Note that we use the term "input" here in a different sense than when we use it to describe the inputs to a *model*. The terms are certainly related, but you should be clear on the differences between inputs in the setting of "finding a model" vs inputs in the setting of "solving a problem".
+
+A problem is said to be *well-conditioned* if small changes in its inputs lead to small changes in its solution. A problem is said to be *ill-conditioned* if small changes in its inputs can lead to big changes in its solution. We emphasize that conditioning is a property of the *problem* itself, not of the algorithm that is used to solve it. 
+
+We care about conditioning because of the prevalence of errors in the inputs we give to a problem. As we have discussed above, all computations are subject to rounding and truncation errors with relative size $\mathcal{O}(\epsilon)$. However, errors can also arise in other ways. 
+For example, if we are solving a regression problem where the output data in $Y$ come from experimental measurements, the data generally are not perfect measurements of the quantity but are subject to measurement error. Errors can also arise from earlier steps in our computational workflow, e.g., if the input to our current problem was the solution to a previous problem that we solved inexactly.[^3]
+
+[^3]: You may wonder why we would solve a problem inexactly. The answer is that many problems in science and engineering are computationally costly (in terms of FLOPs) to solve, and it can be much faster to accept an approximate but inexact solution. If you have ever used equation solvers such as python's $\texttt{scipy.optimize.fsolve}$ or MATLAB's $\texttt{fsolve}$, these functions have an input argument that defines the solver's tolerance -- tighter tolerances lead to more exact solutions at higher cost, whereas looser tolerances lead to less exact solutions at lower cost.
+
+**Example: Subtraction is ill-conditioned**
+
+Suppose we want to estimate the change in lift over a model wing as the angle of attack is changed, so we set up the wing in a wind tunnel and take measurements at different angles of attack and then estimate the slope of the lift vs angle of attack line[^4]. A table with our angles of attack, the "true" lift values, and those that are measured experimentally is given below. Note that due to measurement errors, the inputs to our problem (the lift values) incur an relative error of $\mathcal{O}(10^{-3})$.
+
+[^4]: I stole these numbers from the Wikipedia article on catastrophic cancellation, but dressed up the example in aerospace clothing. :) 
+
+|   AoA  | True lift| Measured lift | 
+|--------|----------|----------|
+| 15 deg | 252.49 N |  252 N  | 
+| 17 deg | 253.51 N |  254 N  | 
+
+Based on our measured lift, we'd calculate a slope of 1 Newton per degree change in angle of attack. However, the *true* slope is closer to 1/2 Newton per degree change in angle of attack. This means our calculation of the *solution* of the problem (estimating the slope) incurs a relative error of $\mathcal{O}(1)$, or 100%! You see that despite small changes to the inputs of the problem, we have obtained large changes to the solution of the problem.
+
+As this example illustrates, subtracting numbers that are close together can often lead to large errors in the solution of the subtraction problem. This phenomenon is sometimes called **catastrophic cancellation**.
+
+
+
+### The condition number
+
+Consider this question: given a perturbation of a problem's inputs of relative size $\delta$, what is the relative size of the resulting perturbation of the problem's solution? You may feel intuitively that the answer depends on what our starting inputs were[^5] --- so computational engineers ask this modified question: given a mathematical problem, what is the *worst case* perturbation of the problem's solution over *all possible perturbations of all possible inputs*? The answer is defined to be the *condition number* of a problem, which we will denote by $\kappa$.[^6] 
+
+
+[^5]: if you have doubts, consider our angle of attack example and suppose that the true lift values were 252.53 and 253.48, respectively, and that the active of measurement simply leads to rounding to the nearest whole number, so 252 and 253. This leads to a relative error in the estimated slope that is much lower than in our original example with different lift values. (In this example, the starting inputs are the true values, and the perturbed inputs are the measured values).
+
+
+[^6]: A well-conditioned problem typically has condition number around $\mathcal{O}(1)$, whereas ill-conditioned problems have condition numbers around say $\mathcal{O}(10^12)$ or higher. There is not really a dividing line between well-conditioned and poorly conditioned problems, it is a spectrum. Whether a problem is sufficiently ill-conditioned to cause problems for you depends on what you are doing. In most cases in my experience, up to $\mathcal{O}(10^6)$-ish is pretty safe, but it really, truly depends.
+
+It is possible to do some highly technical mathematical stuff to define and analyze condition numbers of various problems. I am not going to do that here, although I can suggest some graduate level texts on numerical linear algebra if you'd like to read more[^7]. Instead, I'm going to be informal here. Let $\delta$ denote the relative size of the perturbation to a problem's inputs (the "given" quantities). Let $\Delta$ denote the resulting relative size of the perturbation to the problem's solution. Then, 
+
+$$
+\Delta \leq \kappa \delta
+$$
+
+[^7]: See, e.g., Trefethen and Bau, *Numerical Linear Algebra*; or Demmel, *Applied Numerical Linear Algebra*.
+
+In words, $\kappa\delta$ is an upper bound on the relative change in the solution due to a relative change in the inputs of size $\delta$. Note the adjective "relative" sprinkled throughout here: if $\kappa = 100$, and $\delta=0.01$, this means a 1% relative change in the inputs can lead to a 100% relative change in the solution! 
+
+## Conditioning of matrix computations
+
+The condition number of matrix $X$ is denoted $\kappa(X)$ and defined to be
+
+$$
+\kappa(X) = \sigma_{\rm max}(X)/\sigma_{\rm min}(X)
+$$
+
+where $\sigma_{\rm max}(X)$ and $\sigma_{\rm min}(X)$ denote the largest and smallest singular values of $X$, respectively. Note that the smallest singular value of a rank-deficient matrix is 0, which means that rank-deficient matrices have *infinite* condition number!
+
+It turns out (informally summarizing a lot of highly technical stuff here), that most problems involving a matrix have condition number given by the matrix condition number. This includes matrix inversion, least squares problems, matrix multiplication, computing various matrix decompositions, and more. 
+
+The implications for us are as follows: since we can assume that in any given problem we incur errors of relative size $\epsilon$, if we have a matrix condition number $\kappa(X)=\mathcal{O}(\epsilon^{-1})$, we would expect large (100%) relative errors in our solution. In double precision, this means that $\kappa(X)=\mathcal{O}(10^15-10^16)$ is a red flag. In single precision, $\kappa(X)=\mathcal{O}(10^7-10^8)$ is already problematic.
+
+A final note: remember that the condition number describes the *worst case* error in the problem's solution. There are many inputs (in fact most inputs) that will not incur this worst case error, and will have a much lower error. But the higher the condition number, the worse off you are -- certainly if you see something like $\kappa(X)=\mathcal{O}(10^32)$ I would treat any results of computation with that matrix with deep skepticism.
+
+## Conditioning of regression problems
+
+We now return our focus to our least squares problem $X\beta =Y$ and consider the conditioning of $X$, described by $\kappa(X)$. Matrices that are ill-conditioned can be described as "close to singular" in the sense that their columns are close to being linearly dependent. One setting in which this arises is in polynomial regression, if the features that define the columns of $X$ are simply chosen to be monomials $z,z^2, z^3,$ etc. Ill-conditioning can also arise if columns of $X$ are on very different scales, e.g., if $x(z) = (z_1, z_2, \ldots )^\top$ and the variable described by $z_1$ is $\mathcal{O}(10^6)$ while the variable described by $z_2$ is $\mathcal{O}(10^{-3})$.
+
+What do you do if you have an ill-conditioned feature matrix $X$? First off, two quick things:
+
+1. Do not form and solve the normal equations to find $\beta$. This is because the conditioning of solveing the normal equations $X^\top X\beta = X^\top Y$ depends on the condition number of the matrix $X^\top X$, which turns out to be the $\kappa(X)^2$, so whatever ill-conditioning you have, forming the normal equations makes it worse.
+
+2. This is one of the reasons why it is standard machine learning practice to scale all your input/feature data to be vary on roughly the same orders of magnitude as a preprocessing step, before proceeding with any regression. 
+
+Ok, suppose you've scaled your data, but you're still dealing with an ill-conditioned feature matrix $X$. Then, we turn to *regularization* to rescue us. "Regularization" is a general mathematical philosophy that describes replacing a hard-to-solve problem with an easier-to-solve problem that is close to the original problem we wanted to solve, and solving the easier problem instead. Regularization comes up in many places across computational science and engineering. In our setting, "hard-to-solve" means "ill-conditioned", and there are two main strategies for defining new problems that improve the conditioning of the problem.
+
+**Strategy 1: regularization via the truncated SVD.** Recall that $\beta^* = X^\dagger Y = (V_r\Sigma_r^{-1} U_r^\top)$ where $r=\textsf{rank}(X)$ and $X=U_r\Sigma_rV_r^\top$ is the truncated SVD of $X$. We can define a tolerance, $\tau$, and let $m\leq r$ be the number of singular values that are larger than $\tau$. Then, we would compute our regression solution be given by 
+
+$$
+\beta^*_\tau = V_m\Sigma_m^{-1} U_m^\top
+$$
+
+Typical values of $\tau$ are usually small, i.e., orders of magnitude less than 1. It's also common to set a tolerance on the *normalized* singular values, that is, divide all singular values by the largest one. Note that as written above, this strategy changes the third ingredient of our regression problem (how to choose parameters/a model). However, this is equivalent to defining our features to be the leading $m$ PCA features of the original feature matrix $X$, i.e., this strategy can be viewed as the second ingredient of our regression problem. 
+
+<!-- needs more detail later -->
+
+**Strategy 2: ridge regression.** Ridge regression is known by various other names including "Tikhonov regularization" and "$\ell^2$" (read as "ell-two") regularization. It means redefining the third ingredient of our regression problem as follows:
+
+$$
+\beta^*_\lambda = \arg\min_{\beta\in\R^n} \|X\beta-Y\|_2^2 + \lambda \|\beta\|_2^2,
+$$
+
+for some positive regression parameter $\lambda >0$. This has unique local minimizer given by
+
+$$
+\beta^*_\lambda = (X^\top X + \lambda I_n)^{-1} (X^\top Y)
+$$
 
 
 
 ## Exercises 
 
-1. 
+1. Solve the system $Ax = b$ with $A = \begin{pmatrix}1.23 & 2.34 \\ 3.45 & 4.56\end{pmatrix}$ and $b = \begin{pmatrix}3.45 \\ 5.67\end{pmatrix}$ by hand using row reduction and truncating all intermediate results to 3 decimal digits of precision (this means 3 sig figs total, not three points after the decimal point). This is what our theoretical computer would be doing. What is the solution you get for $x$? What is the exact solution? What is the relative error between your solution and the exact solution and is it what you expect? Justify?
+
+2. Repeat exercise 1 with the perturbed right-hand side vector $b = \begin{pmatrix}3.46 \\5.66\end{pmatrix}$. What is the perturbed solution $x'$? Is the difference $x-x'$ what you expect? Justify.
+
+3. Repeat exercises 1-2 with $A = \begin{pmatrix}0.47 & -0.498 \\ -0.498 0.531\end{pmatrix}$ and $b = \begin{pmatrix}-0.685 \\ 0.728\end{pmatrix}$ and $b' = \begin{pmatrix}-0.678 \\ 0.735\end{pmatrix}$.
+
+4. Show that $\kappa(X^\top X) = \kappa(X)^2$.

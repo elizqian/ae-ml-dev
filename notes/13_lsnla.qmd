@@ -8,6 +8,7 @@ html-math-method:
 
 {{< include _macros.qmd >}}
 
+
 In this section we will introduce fundamental algorithms from computational linear algebra that are used to solve linear systems and linear least squares problems. We will also introduce and discuss some of the key properties and theoretical considerations when using these algorithms.
 
 The intended learning outcomes of these notes are that students should be able to:
