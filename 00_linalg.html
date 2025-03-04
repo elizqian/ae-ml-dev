@@ -212,6 +212,12 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./20_ugbo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Unconstrained Gradient Based Optimization (UGBO)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
@@ -360,7 +366,7 @@ Examples of <code>numpy</code> allowing mathematically invalid operations
 <div class="callout-body-container callout-body">
 <p>Mathematically, none of the following are valid operations. However, <code>numpy</code> allows us to do them by secretly adding in a vector of ones so that the vector/matrix dimensions are valid. This can be confusing for new programmers.</p>
 <p><em>Adding a scalar to a vector</em></p>
-<div id="de8dafbb" class="cell" data-execution_count="1">
+<div id="59f63afd" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np </span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Defining a vector </span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>u <span class="op">=</span> np.array([</span>
@@ -377,7 +383,7 @@ Examples of <code>numpy</code> allowing mathematically invalid operations
 </div>
 </div>
 <p><em>Adding a row-vector to a column-vector</em></p>
-<div id="d32be7ee" class="cell" data-execution_count="2">
+<div id="2276f95f" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reshaping u to a column-vector </span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>u <span class="op">=</span> u.reshape((<span class="dv">3</span>,<span class="dv">1</span>))</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>

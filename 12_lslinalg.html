@@ -179,6 +179,12 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./20_ugbo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Unconstrained Gradient Based Optimization (UGBO)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
@@ -282,7 +288,7 @@ y_1 \\ \vdots \\ y_N
 <p><span id="eq-ls-matrix"><span class="math display">\[
 X\beta = Y
 \qquad(3.2)\]</span></span></p>
-<p>This is a different notation than the minimization (<a href="11_ls.html#eq-linreg-minimization" class="quarto-xref">Equation&nbsp;<span>2.2</span></a>) introduced earlier, but is also fairly common. One way to think of the expression <a href="#eq-ls-matrix" class="quarto-xref">Equation&nbsp;<span>3.2</span></a> is to note that our goal is to find <span class="math inline">\(\beta\)</span> so that <span class="math inline">\(X\beta\)</span> is as close to <span class="math inline">\(Y\)</span> is possible – where ideally we would have <span class="math inline">\(X\beta = Y\)</span>. But <a href="#eq-ls-matrix" class="quarto-xref">Equation&nbsp;<span>3.2</span></a> has a more precise and technical meaning. The goal of these notes is to explain that precise technical definition and its implications for model learning.</p>
+<p>This is a different notation than the minimization (<span class="quarto-unresolved-ref">?eq-linreg-minimization</span>) introduced earlier, but is also fairly common. One way to think of the expression <a href="#eq-ls-matrix" class="quarto-xref">Equation&nbsp;<span>3.2</span></a> is to note that our goal is to find <span class="math inline">\(\beta\)</span> so that <span class="math inline">\(X\beta\)</span> is as close to <span class="math inline">\(Y\)</span> is possible – where ideally we would have <span class="math inline">\(X\beta = Y\)</span>. But <a href="#eq-ls-matrix" class="quarto-xref">Equation&nbsp;<span>3.2</span></a> has a more precise and technical meaning. The goal of these notes is to explain that precise technical definition and its implications for model learning.</p>
 </section>
 <section id="well-posedness-of-xbeta-y" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="well-posedness-of-xbeta-y"><span class="header-section-number">3.2</span> Well-posedness of <span class="math inline">\(X\beta = Y\)</span></h2>
@@ -315,7 +321,7 @@ r(\beta) = X\beta-Y.
 <p><span id="eq-ls-res-min"><span class="math display">\[
 \beta^* = \arg\min_{\beta\in\mathbb{R}^n} \|r(\beta)\| = \arg\min_{\beta\in\mathbb{R}^n}\|r(\beta)\|^2
 \qquad(3.4)\]</span></span></p>
-<p>With the residual defined in <a href="#eq-res-def" class="quarto-xref">Equation&nbsp;<span>3.3</span></a>, the expression <a href="#eq-ls-res-min" class="quarto-xref">Equation&nbsp;<span>3.4</span></a> recovers our original expression for the formulation of a least-squares problem<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, <a href="11_ls.html#eq-linreg-minimization" class="quarto-xref">Equation&nbsp;<span>2.2</span></a>. In this sense, the least-squares formulation “fixes” the lack of existence of a solution to the linear system due to row redundancy. For this reason, if you see <span class="math inline">\(X\beta=Y\)</span> written for a non-invertible system<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>, the way you should understand that is in the sense of solving <a href="11_ls.html#eq-linreg-minimization" class="quarto-xref">Equation&nbsp;<span>2.2</span></a>.</p>
+<p>With the residual defined in <a href="#eq-res-def" class="quarto-xref">Equation&nbsp;<span>3.3</span></a>, the expression <a href="#eq-ls-res-min" class="quarto-xref">Equation&nbsp;<span>3.4</span></a> recovers our original expression for the formulation of a least-squares problem<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, <span class="quarto-unresolved-ref">?eq-linreg-minimization</span>. In this sense, the least-squares formulation “fixes” the lack of existence of a solution to the linear system due to row redundancy. For this reason, if you see <span class="math inline">\(X\beta=Y\)</span> written for a non-invertible system<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>, the way you should understand that is in the sense of solving <span class="quarto-unresolved-ref">?eq-linreg-minimization</span>.</p>
 <!-- ::: {.callout-note}
 explain that row redundancy can also happen if not literally the same thing
 ::: -->
