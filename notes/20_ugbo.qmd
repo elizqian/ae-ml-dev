@@ -11,12 +11,21 @@ execute:
     freeze: auto
 ---
 
-# Problem Motivation 
+The intended learning outcomes of these notes are that students should be able to:
+
+1. Define local and global minimizers of a function.
+
+2. Describe the first-order necessary condition for a minimizer and apply this knowledge to find critical points of a function. 
+
+3. Describe the second-order sufficient conditions for a minimizer and apply this knowledge to find minimizers of a function. 
+
+
+## Problem formulation
 In this lecture, we will be focusing on the following optimization problem,
 
-$$\min_x f(x)$$
+$$\min_\theta f(\theta)$$
 
-where $f: \mathbb{R}^n \to \mathbb{R}$ is our *objective function* (or loss function), and $x\in\mathbb{R}^n$ is a vector of parameters (variables) which we can change. Minimization problems arise in numerous physical and real-world circumstances, including:
+where $f: \mathbb{R}^n \to \mathbb{R}$ is our *objective function* (or loss function), and $\theta\in\mathbb{R}^n$ is a vector of parameters (variables) which we can change. Minimization problems arise in numerous physical and real-world circumstances, including:
 
 * adjusting parameters to optimize performance in engeneering design
 * finding the minimum state of energy in a system
@@ -24,21 +33,20 @@ where $f: \mathbb{R}^n \to \mathbb{R}$ is our *objective function* (or loss func
 
 For this lecture, our approach for solving the above minimization problem will be a *gradient-based* one. This means that we will make use of information from the gradient of $f$ (first-order information), and the curvature of $f$ (second-order information).
 
-# Solutions, Gradient, and Curvature
-## What are we looking for?
+## Definitions: minimizers
 
 To start, we first need to motivate some fundamental definitions regarding the nature of the solution we are looking for.
 
-**Definition:** We say that a point $x^\star$ is a *global minimizer* of $f$ if:
-$$f(x^\star)\leq f(x) \text{ for all }x\in \mathcal{D}\subseteq\mathbb{R}^n.$$ 
+**Definition:** We say that a point $\theta^\star$ is a *global minimizer* of $f$ if:
+$$f(\theta^\star)\leq f(\theta) \text{ for all }\theta\in \mathcal{D}\subseteq\mathbb{R}^n.$$ 
 
 Although a global minimizer is the most desireable outcome from our minimization problem, finding a global minimizer is often quite challenging. This is because a global minimizer may not always exist, and because we often only possess *local* information about the function $f$. This motivates the following defintion:
 
-**Definition:** We say that a point $x^\star$ is a *local minimizer* of $f$ if there exists some open set $\mathcal{B}$, that contains $x^\star$, such that:
+**Definition:** We say that a point $\theta^\star$ is a *local minimizer* of $f$ if there exists some open set $\mathcal{B}$, that contains $\theta^\star$, such that:
 $$
-f(x^\star)\leq f(x) \text{ for all }x\in\mathcal{B}.
+f(\theta^\star)\leq f(\theta) \text{ for all }\theta\in\mathcal{B}.
 $$
-If the inequality becomes strict, then $x^\star$ is referred to as a *strict* local minimizer. To illustrate the above definitions, let us look at the function $f(x) = 2 + \cos(x) + \frac{1}{2} \cos\left(5x - \frac{1}{2}\right)$ over the domain $\mathcal{D} = [0, 3.7]$. In this domain, the function has two local minimizers and one global minimizer, as illustrated in the plot below.
+If the inequality becomes strict, then $\theta^\star$ is referred to as a *strict* local minimizer. To illustrate the above definitions, let us look at the function $f(\theta) = 2 + \cos(\theta) + \frac{1}{2} \cos\left(5\theta - \frac{1}{2}\right)$ over the domain $\mathcal{D} = [0, 3.7]$. In this domain, the function has two local minimizers and one global minimizer, as illustrated in the plot below.
 
 
 ```{python}
@@ -47,14 +55,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Define the function
-def f(x):
-    return 2 + np.cos(x) + 0.5 * np.cos(5 * x - 0.5)
+def f(theta):
+    return 2 + np.cos(theta) + 0.5 * np.cos(5 * theta - 0.5)
 
-# Generate x values
-x = np.linspace(0, 3.7, 1000)
+# Generate theta values
+theta = np.linspace(0, 3.7, 1000)
 
 # Compute y values
-y = f(x)
+y = f(theta)
 
 # Define the known minima
 local_minima = [(0.786, 2.227), (2.057, 1.065)]
@@ -62,68 +70,68 @@ global_minimum = (3.234, 0.505)
 
 # Plot the function
 plt.figure(figsize=(9.5, 5))
-plt.plot(x, y, label=r'$f(x) = 2 + \cos(x) + \frac{1}{2} \cos(5x - \frac{1}{2})$', linewidth=2)
+plt.plot(theta, y, label=r'$f(\theta) = 2 + \cos(\theta) + \frac{1}{2} \cos(5\theta - \frac{1}{2})$', linewidth=2)
 
 # Plot and label local minima
-for (xm, ym) in local_minima:
-    plt.scatter(xm, ym, color='black')
-    plt.text(xm, ym-0.1, ' Local Min', horizontalalignment='right', color='black')
+for (thetam, ym) in local_minima:
+    plt.scatter(thetam, ym, color='black')
+    plt.text(thetam, ym-0.1, ' Local Min', horizontalalignment='right', color='black')
 
 # Plot and label global minimum
 plt.scatter(*global_minimum, color='red')
 plt.text(global_minimum[0], global_minimum[1]-0.1, ' Global Min', horizontalalignment='right', color='red')
 
 plt.title('Example of local and global minimizers')
-plt.xlabel('x')
+plt.xlabel(r'$\theta$')
 plt.grid(True)
 plt.show()
 
 ```
-We now have a way to understand and characterize our solutions. However, the above definitions suggest that we need to examine all points that are next to $x^\star$ in order to properly characterize it. However, if our function is *smooth*, i.e., its higher order derivatives exist and are continuous, then we can classify $x^\star$ by examining the derivatives of $f$.
+We now have a way to understand and characterize our solutions. However, the above definitions suggest that we need to examine all points that are next to $\theta^\star$ in order to properly characterize it. However, if our function is *smooth*, i.e., its higher order derivatives exist and are continuous, then we can classify $\theta^\star$ by examining the derivatives of $f$.
 
-## Gradient
-Recall that the *gradient* of a function $f(x)$, denoted $\nabla f(x)$, is the column vector of partial derivaties with respect to each parameter:
+## First-order necessary conditions
+Recall that the *gradient* of a function $f(\theta)$, denoted $\nabla f(\theta)$, is the column vector of partial derivaties with respect to each parameter:
 $$
-\nabla f(x) = 
+\nabla f(\theta) = 
 \begin{bmatrix}
-\frac{\partial f}{\partial x_1}\\
+\frac{\partial f}{\partial \theta_1}\\
 \vdots\\
-\frac{\partial f}{\partial x_i}\\
+\frac{\partial f}{\partial \theta_i}\\
 \vdots\\
-\frac{\partial f}{\partial x_n}
+\frac{\partial f}{\partial \theta_n}
 \end{bmatrix}
 $$
-Each element of $\nabla f(x)$ captures the rate of change of the function $f$ with respect to the parameter $x_i$. The gradient of a function helps us identify *local* minimizers and allows us to state (without proof) the first fundamental result of gradient-based optimization.
+Each element of $\nabla f(\theta)$ captures the rate of change of the function $f$ with respect to the parameter $\theta_i$. The gradient of a function helps us identify *local* minimizers and allows us to state (without proof) the first fundamental result of gradient-based optimization.
 
-**Theorem (first-order necessary conditions):** If $x^\star$ is a local minimizer and $f$ is continuously differentiable in an open nieghborhood of $x^\star$, then $\nabla f(x^\star) = 0$.
+**Theorem (first-order necessary conditions):** If $\theta^\star$ is a local minimizer and $f$ is continuously differentiable in an open nieghborhood of $\theta^\star$, then $\nabla f(\theta^\star) = 0$.
 
-A point $x^\star$ is called a *stationary point* if $\nabla f(x^\star) = 0$. The above theorem guarantees that all local minimizers must be stationary points. However, the theorem cannot guarantee that all stationary points are local minimizers. This is because the conditions are necessary but not sufficient. As a counterexample, a stationary point may be a local maximizer instead of a local minimizer. In order to obtain necessary and suffient conditions, we need to move one derivative higher.
+A point $\theta^\star$ is called a *stationary point* if $\nabla f(\theta^\star) = 0$. The above theorem guarantees that all local minimizers must be stationary points. However, the theorem cannot guarantee that all stationary points are local minimizers. This is because the conditions are necessary but not sufficient. As a counterexample, a stationary point may be a local maximizer instead of a local minimizer. In order to obtain necessary and suffient conditions, we need to move one derivative higher.
 
-## Curvature
+## Second-order sufficient conditions
 The *curvature* of a function $f$ is the rate of change of the gradient, and tells us whether the slope is stationary, increasing, or decreasing. To compute the curvature of $f$, we need to take a partial derivate of every component of the gradient with respect to each coordinate direction. This leads to an $(n\times n)$ matrix of second partial derivatives called the *Hessian*:
 
 $$
-H(x) = \begin{bmatrix}
-\frac{\partial^2 f}{\partial x_1^2} & \frac{\partial^2 f}{\partial x_1 \partial x_2} & \cdots & \frac{\partial^2 f}{\partial x_1 \partial x_n} \\
-\frac{\partial^2 f}{\partial x_2 \partial x_1} & \frac{\partial^2 f}{\partial x_2^2} & \cdots & \frac{\partial^2 f}{\partial x_2 \partial x_n} \\
+H(\theta) = \begin{bmatrix}
+\frac{\partial^2 f}{\partial \theta_1^2} & \frac{\partial^2 f}{\partial \theta_1 \partial \theta_2} & \cdots & \frac{\partial^2 f}{\partial \theta_1 \partial \theta_n} \\
+\frac{\partial^2 f}{\partial \theta_2 \partial \theta_1} & \frac{\partial^2 f}{\partial \theta_2^2} & \cdots & \frac{\partial^2 f}{\partial \theta_2 \partial \theta_n} \\
 \vdots & \vdots & \ddots & \vdots \\
-\frac{\partial^2 f}{\partial x_n \partial x_1} & \frac{\partial^2 f}{\partial x_n \partial x_2} & \cdots & \frac{\partial^2 f}{\partial x_n^2}
+\frac{\partial^2 f}{\partial \theta_n \partial \theta_1} & \frac{\partial^2 f}{\partial \theta_n \partial \theta_2} & \cdots & \frac{\partial^2 f}{\partial \theta_n^2}
 \end{bmatrix}
 $$
 
-If our function $f$ has continuous second partial derivatives, then the order of differentiation does not matter and the matrix $H$ becomes symmetric. The Hessian allows us to establish two more (stronger) fundamental results of gradient-based optimization. Before stating them, let us recall that a matrix $A$ is *positive definite* if $x^\top A x > 0$ for all $x\neq 0$ and *positive semidefinite* if $x^\top A x \geq 0$ for all $x$.
+If our function $f$ has continuous second partial derivatives, then the order of differentiation does not matter and the matrix $H$ becomes symmetric. The Hessian allows us to establish two more (stronger) fundamental results of gradient-based optimization. Before stating them, let us recall that a matrix $A$ is *positive definite* if $\theta^\top A \theta > 0$ for all $\theta\neq 0$ and *positive semidefinite* if $\theta^\top A \theta \geq 0$ for all $\theta$.
 
-**Theorem (second-order necessary conditions):** If $x^\star$ is a local minimizer of $f$ and the Hessian $H$ exists and is continuous in an open neighborhood of $x^\star$, then $\nabla f(x^\star) = 0$ and $H$ is positive semidefinite.
+**Theorem (second-order necessary conditions):** If $\theta^\star$ is a local minimizer of $f$ and the Hessian $H$ exists and is continuous in an open neighborhood of $\theta^\star$, then $\nabla f(\theta^\star) = 0$ and $H$ is positive semidefinite.
 
-**Theorem (second-order sufficient conditions):** Suppose that $H$ is is continuous in an open neighborhood of $x^\star$ and that $\nabla f(x^\star) =0$ and $H$ is positive definite. Then, $x^\star$ is a *strict* local minimizer of $f$.
+**Theorem (second-order sufficient conditions):** Suppose that $H$ is is continuous in an open neighborhood of $\theta^\star$ and that $\nabla f(\theta^\star) =0$ and $H$ is positive definite. Then, $\theta^\star$ is a *strict* local minimizer of $f$.
 
-It is important to remark that the second-order sufficient condition gurantee a stronger result when compared to the second-order necessary condtions. Namely, the second-order sufficient conditions lead to a *strict* local minimizer. Furthermore, we should also note that the sufficient condtions are not necessary; it is possible for a point $x^\star$ to be a strict local minimizer but fail to satisfy the sufficient conditions. As an example, consider $f(x) = x^6$, where $x^\star = 0$ is a strict local minimizer, yet the Hessian evaluates to zero at $x^\star = 0$ and is therefore not positive definite. 
+It is important to remark that the second-order sufficient condition gurantee a stronger result when compared to the second-order necessary condtions. Namely, the second-order sufficient conditions lead to a *strict* local minimizer. Furthermore, we should also note that the sufficient condtions are not necessary; it is possible for a point $\theta^\star$ to be a strict local minimizer but fail to satisfy the sufficient conditions. As an example, consider $f(\theta) = \theta^6$, where $\theta^\star = 0$ is a strict local minimizer, yet the Hessian evaluates to zero at $\theta^\star = 0$ and is therefore not positive definite. 
 
 ## A complete example
 Here, we work our way through an example problem where we can see how the concepts from above can be applied to help us identify and characterize critical points. Consider the function:
 
 $$
-f(x_1, x_2) = 0.5x_1^4 + 2x_1^3 + 1.5x_1^2 + x_2^2 - 2x_1x_2
+f(\theta_1, \theta_2) = 0.5\theta_1^4 + 2\theta_1^3 + 1.5\theta_1^2 + \theta_2^2 - 2\theta_1\theta_2
 $$
 
 Let's plot the contours of $f$.
@@ -133,30 +141,30 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Define the function
-def f(x1, x2):
-    return 0.5 * x1**4 + 2 * x1**3 + (3/2) * x1**2 + x2**2 - 2 * x1 * x2
+def f(theta1, theta2):
+    return 0.5 * theta1**4 + 2 * theta1**3 + (3/2) * theta1**2 + theta2**2 - 2 * theta1 * theta2
 
 # Create the contour plot
-x = np.linspace(-4, 2, 1000)
+theta = np.linspace(-4, 2, 1000)
 y = np.linspace(-4, 2, 1000)
-X, Y = np.meshgrid(x, y)
-Z = f(X, Y)
+Theta, Y = np.meshgrid(theta, y)
+Z = f(Theta, Y)
 
 plt.figure(figsize=(9.5, 5))
-contour = plt.contour(X, Y, Z, levels=75)
-plt.xlabel(r'$x_1$')
-plt.ylabel(r'$x_2$')
+contour = plt.contour(Theta, Y, Z, levels=75)
+plt.xlabel(r'$\theta_1$')
+plt.ylabel(r'$\theta_2$')
 ```
 
-To start, we need to identify all critical points of $f$. We can do that by solving for all points such that $\nabla f(x) = 0$, i.e.,
+To start, we need to identify all critical points of $f$. We can do that by solving for all points such that $\nabla f(\theta) = 0$, i.e.,
 
 $$
-\nabla f(x_1, x_2) = 
+\nabla f(\theta_1, \theta_2) = 
 \begin{bmatrix}
-\frac{\partial f}{\partial x_1} \\ \frac{\partial f}{\partial x_2}
+\frac{\partial f}{\partial \theta_1} \\ \frac{\partial f}{\partial \theta_2}
 \end{bmatrix} = 
 \begin{bmatrix}
-2x_1^3 + 6x_1^2 + 3x_1 - 2x_2 \\ 2x_2 - 2x_1
+2\theta_1^3 + 6\theta_1^2 + 3\theta_1 - 2\theta_2 \\ 2\theta_2 - 2\theta_1
 \end{bmatrix} = 
 \begin{bmatrix}
 0 \\ 0
@@ -169,16 +177,16 @@ We can do that by using <code>fsolve()</code> from <code>scipy.optimize</code>.
 from scipy.optimize import fsolve
 
 # Define the first partial derivatives
-def df_dx1(x1, x2):
-    return 2 * x1**3 + 6 * x1**2 + 3 * x1 - 2 * x2
+def df_dtheta1(theta1, theta2):
+    return 2 * theta1**3 + 6 * theta1**2 + 3 * theta1 - 2 * theta2
 
-def df_dx2(x1, x2):
-    return 2 * x2 - 2 * x1
+def df_dtheta2(theta1, theta2):
+    return 2 * theta2 - 2 * theta1
 
 # Define the system of equations
 def equations(vars):
-    x1, x2 = vars
-    return [df_dx1(x1, x2), df_dx2(x1, x2)]
+    theta1, theta2 = vars
+    return [df_dtheta1(theta1, theta2), df_dtheta2(theta1, theta2)]
 
 # Solve for critical points
 initial_guesses = [(0, 0), (-1, -1), (-10, -10)]
@@ -190,10 +198,10 @@ print(critical_points)
 Now, we need to classify each critical point. To do so, let's compute the Hessian:
 
 $$
-H(x_1, x_2) = 
+H(\theta_1, \theta_2) = 
 \begin{bmatrix}
-\frac{\partial^2 f}{\partial x_1^2} & \frac{\partial^2 f}{\partial x_1 \partial x_2} \\
-\frac{\partial^2 f}{\partial x_2 \partial x_1} & \frac{\partial^2 f}{\partial x_2^2}
+\frac{\partial^2 f}{\partial \theta_1^2} & \frac{\partial^2 f}{\partial \theta_1 \partial \theta_2} \\
+\frac{\partial^2 f}{\partial \theta_2 \partial \theta_1} & \frac{\partial^2 f}{\partial \theta_2^2}
 \end{bmatrix}
 =
 \begin{bmatrix}
@@ -207,8 +215,8 @@ We now need to evaluate the Hessian at each one of the critical points and check
 
 ```{python}
 # Define the Hessian
-def Hessian(x1, x2):
-    return np.array([[6 * x1**2 + 12 * x1 + 3, -2], [-2, 2]])
+def Hessian(theta1, theta2):
+    return np.array([[6 * theta1**2 + 12 * theta1 + 3, -2], [-2, 2]])
 
 eigs = [np.linalg.eigvals(Hessian(pt[0], pt[1])) for pt in critical_points]
 
@@ -220,25 +228,25 @@ Based on these results, we know that the first and third critical points are loc
 ```{python}
 
 # Create the contour plot
-x = np.linspace(-4, 2, 1000)
+theta = np.linspace(-4, 2, 1000)
 y = np.linspace(-4, 2, 1000)
-X, Y = np.meshgrid(x, y)
-Z = f(X, Y)
+Theta, Y = np.meshgrid(theta, y)
+Z = f(Theta, Y)
 
 plt.figure(figsize=(9.5, 5))
-contour = plt.contour(X, Y, Z, levels=75)
-plt.xlabel(r'$x_1$')
-plt.ylabel(r'$x_2$')
+contour = plt.contour(Theta, Y, Z, levels=75)
+plt.xlabel(r'$\theta_1$')
+plt.ylabel(r'$\theta_2$')
 
 # Plot and label the critical points
 labels = ["local minimum", "saddle point", "global minimum"]
 
-for (x, y), label in zip(critical_points, labels):
-    plt.scatter(x, y, label=f'{label} ({x:.2f}, {y:.2f})', s=100)
+for (theta, y), label in zip(critical_points, labels):
+    plt.scatter(theta, y, label=f'{label} ({theta:.2f}, {y:.2f})', s=100)
     if label == "saddle point":
-        plt.text(x, y, f' {label}', fontsize=12, ha='right', weight='bold')
+        plt.text(theta, y, f' {label}', fontsize=12, ha='right', weight='bold')
     else:
-        plt.text(x, y, f' {label}', fontsize=12, ha='left', weight='bold')
+        plt.text(theta, y, f' {label}', fontsize=12, ha='left', weight='bold')
 
 plt.grid(False)
 plt.show()
